@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "usuarios": [],
+  "ruts_autorizados": [
+    {
+      "rut": "22785939-3",
+      "rol": "admin",
+      "nombre": "Victor Tilleria"
+    }
+  ]
+}
