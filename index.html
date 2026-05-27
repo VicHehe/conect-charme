@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conect-Charme</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-left">
+        <a href="index.html" class="logo">
+            <img src="assets/favicon.png" alt="Conect-Charme">
+            <span class="logo-text">Conect-Charme</span>
+        </a>
+    </div>
+    <div class="header-center">
+        <div class="search-bar">
+            <button id="searchBtn">🔍</button>
+            <input type="text" id="searchInput" placeholder="Buscar herramienta...">
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="avatar" id="avatarBtn"></div>
+    </div>
+</header>
+
+<div class="app-body">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <span class="nav-label">Categorías</span>
+            <a href="#" class="nav-item active" data-categoria="todas">
+                <span class="nav-icon">🏠</span>
+                <span>Todas</span>
+            </a>
+            <div id="categoriasNav"></div>
+            <hr class="nav-divider">
+            <span class="nav-label">Cuenta</span>
+            <button class="nav-item" id="btnCerrarSesion">
+                <span class="nav-icon">🚪</span>
+                <span>Cerrar sesión</span>
+            </button>
+            <div id="adminNav"></div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 id="tituloCategoria">Todas las herramientas</h1>
+            <p id="subtituloCategoria">Seleccioná una categoría en el menú</p>
+        </div>
+        <div class="card-grid" id="toolGrid"></div>
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">🔍</div>
+            <h3>Sin resultados</h3>
+            <p>No se encontraron herramientas</p>
+        </div>
+    </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/github.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/herramientas.js"></script>
+<script>
+    // Verificar sesión
+    const sesion = Auth.requiereLogin();
+    if (!sesion) throw new Error('Sin sesión');
+
+    // Avatar
+    document.getElementById('avatarBtn').textContent = sesion.nombre.charAt(0).toUpperCase();
+
+    // Mostrar panel admin en sidebar si corresponde
+    if (['subadmin', 'admin'].includes(sesion.rol)) {
+        document.getElementById('adminNav').innerHTML = `
+            <hr class="nav-divider">
+            <span class="nav-label">Administración</span>
+            <a href="admin.html" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Panel Admin</span>
+            </a>
+        `;
+    }
+
+    // Cerrar sesión
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+        Auth.cerrarSesion();
+    });
+
+    // Construir categorías únicas desde herramientas.js
+    let categoriaActiva = 'todas';
+
+    function getCategorias() {
+        const cats = {};
+        HERRAMIENTAS.forEach(h => {
+            if (!h.activo) return;
+            if (!puedeVer(h)) return;
+            if (!cats[h.categoria]) {
+                cats[h.categoria] = { nombre: h.categoria, icono: h.iconoCategoria || '📁' };
+            }
+        });
+        return Object.values(cats);
+    }
+
+    function puedeVer(h) {
+        if (!h.roles) return true;
+        return h.roles.includes(sesion.rol);
+    }
+
+    function renderCategorias() {
+        const cats = getCategorias();
+        document.getElementById('categoriasNav').innerHTML = cats.map(c => `
+            <a href="#" class="nav-item" data-categoria="${c.nombre}">
+                <span class="nav-icon">${c.icono}</span>
+                <span>${c.nombre}</span>
+            </a>
+        `).join('');
+
+        document.querySelectorAll('.nav-item[data-categoria]').forEach(el => {
+            el.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item[data-categoria]').forEach(x => x.classList.remove('active'));
+                el.classList.add('active');
+                categoriaActiva = el.dataset.categoria;
+                renderHerramientas();
+            });
+        });
+    }
+
+    function renderHerramientas(filtro = '') {
+        const term = filtro.toLowerCase();
+        let lista = HERRAMIENTAS.filter(h => {
+            if (!puedeVer(h)) return false;
+            if (categoriaActiva !== 'todas' && h.categoria !== categoriaActiva) return false;
+            if (term) {
+                return h.nombre.toLowerCase().includes(term) ||
+                       h.descripcion.toLowerCase().includes(term) ||
+                       h.tags.some(t => t.toLowerCase().includes(term));
+            }
+            return true;
+        });
+
+        const grid = document.getElementById('toolGrid');
+        const empty = document.getElementById('emptyState');
+
+        if (lista.length === 0) {
+            grid.innerHTML = '';
+            empty.style.display = '';
+            return;
+        }
+
+        empty.style.display = 'none';
+        grid.innerHTML = lista.map(h => `
+            <div class="tool-card ${!h.activo ? 'disabled' : ''}"
+                 ${h.activo && h.url ? `onclick="window.location.href='${h.url}'"` : ''}>
+                <div class="card-thumb" style="background:${h.color};">${h.icono}</div>
+                <div class="card-body">
+                    <h3>${h.nombre}</h3>
+                    <p>${h.descripcion}</p>
+                    <div class="card-tags">
+                        ${h.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                        ${!h.activo ? '<span class="badge" style="margin-left:auto;">Pronto</span>' : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Título
+        document.getElementById('tituloCategoria').textContent =
+            categoriaActiva === 'todas' ? 'Todas las herramientas' : categoriaActiva;
+    }
+
+    // Búsqueda
+    document.getElementById('searchInput').addEventListener('input', e => {
+        renderHerramientas(e.target.value);
+    });
+
+    // Toast
+    function toast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Init
+    renderCategorias();
+    renderHerramientas();
+</script>
+</body>
+</html>
