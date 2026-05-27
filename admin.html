@@ -1,1 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin · Conect-Charme</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .admin-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        .admin-card h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--blue-dark);
+            border-left: 4px solid var(--yellow);
+            padding-left: 12px;
+        }
+        .rut-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .rut-input-group input, .rut-input-group select {
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .rut-input-group input { flex: 2; min-width: 180px; }
+        .rut-input-group select { flex: 1; min-width: 120px; }
+        .tabla-ruts {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .tabla-ruts th, .tabla-ruts td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .tabla-ruts th {
+            background: var(--bg);
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .badge-admin { background: #dc2626; color: white; }
+        .badge-subadmin { background: #f59e0b; color: black; }
+        .badge-profesor { background: #2563eb; color: white; }
+        .badge-alumno { background: #6b7280; color: white; }
+        .badge-pendiente { background: #fef3c7; color: #92400e; }
+        .btn-eliminar {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .info-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
 
+<header class="app-header">
+    <div class="header-left">
+        <a href="index.html" class="logo">
+            <img src="assets/favicon.png" alt="Conect-Charme">
+            <span class="logo-text">Conect-Charme</span>
+        </a>
+    </div>
+    <div class="header-right">
+        <div class="avatar" id="avatarBtn"></div>
+    </div>
+</header>
+
+<div class="app-body">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <span class="nav-label">Navegación</span>
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Inicio</span>
+            </a>
+            <a href="admin.html" class="nav-item active">
+                <span class="nav-icon">⚙️</span>
+                <span>Panel Admin</span>
+            </a>
+            <hr class="nav-divider">
+            <button class="nav-item" id="btnCerrarSesion">
+                <span class="nav-icon">🚪</span>
+                <span>Cerrar sesión</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="admin-container">
+            <div class="page-header">
+                <h1>Panel de Administración</h1>
+                <p>Gestión de RUTs autorizados y usuarios</p>
+            </div>
+
+            <!-- Solo visible para admin (no para subadmin) -->
+            <div id="panelSuperAdmin" class="admin-card" style="display:none;">
+                <h2>👑 Crear Sub-Administrador</h2>
+                <div class="rut-input-group">
+                    <input type="text" id="nuevoSubadminRut" placeholder="RUT (ej: 12345678-9)">
+                    <input type="text" id="nuevoSubadminNombre" placeholder="Nombre completo">
+                    <button class="btn-primary" id="btnCrearSubadmin">Crear Sub-Admin</button>
+                </div>
+                <div id="msgSubadmin" class="info-text"></div>
+            </div>
+
+            <!-- Agregar RUT autorizado (visible para admin y subadmin) -->
+            <div class="admin-card">
+                <h2>➕ Agregar RUT autorizado</h2>
+                <div class="rut-input-group">
+                    <input type="text" id="nuevoRut" placeholder="RUT (ej: 12345678-9)">
+                    <input type="text" id="nuevoNombre" placeholder="Nombre completo">
+                    <select id="nuevoRol">
+                        <option value="alumno">Alumno</option>
+                        <option value="profesor">Profesor</option>
+                        <option value="subadmin">Sub-Administrador</option>
+                    </select>
+                    <button class="btn-primary" id="btnAgregarRut">Agregar</button>
+                </div>
+                <div id="msgAgregar" class="info-text"></div>
+            </div>
+
+            <!-- Lista de RUTs autorizados -->
+            <div class="admin-card">
+                <h2>📋 RUTs autorizados</h2>
+                <table class="tabla-ruts">
+                    <thead>
+                        <tr><th>RUT</th><th>Nombre</th><th>Rol</th><th>Registrado</th><th></th></tr>
+                    </thead>
+                    <tbody id="tablaRutsBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/github.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    const sesion = Auth.requiereLogin();
+    if (!sesion) throw new Error('Sin sesión');
+
+    // Verificar permisos (solo subadmin o admin pueden entrar)
+    if (!['subadmin', 'admin'].includes(sesion.rol)) {
+        alert('No tenés permiso para acceder al panel de administración');
+        window.location.href = '/index.html';
+    }
+
+    const esAdmin = sesion.rol === 'admin';
+    document.getElementById('avatarBtn').textContent = sesion.nombre.charAt(0).toUpperCase();
+
+    // Mostrar panel de super-admin solo si es admin
+    if (esAdmin) {
+        document.getElementById('panelSuperAdmin').style.display = 'block';
+    }
+
+    // Cerrar sesión
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => Auth.cerrarSesion());
+
+    function toast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    async function cargarDatos() {
+        const datos = await GitHub.leer('datos/usuarios.json');
+        if (!datos) return { ruts_autorizados: [], usuarios: [] };
+        return datos;
+    }
+
+    async function guardarDatos(datos) {
+        const sha = await GitHub.sha('datos/usuarios.json');
+        return await GitHub.escribir('datos/usuarios.json', datos, sha);
+    }
+
+    async function renderTabla() {
+        const datos = await cargarDatos();
+        const tbody = document.getElementById('tablaRutsBody');
+        tbody.innerHTML = datos.ruts_autorizados.map(r => {
+            const registrado = datos.usuarios.find(u => u.rut === r.rut);
+            const rolClass = `badge-${r.rol}`;
+            const puedeEliminar = esAdmin || (sesion.rol === 'subadmin' && r.rol !== 'admin');
+            return `
+                <tr>
+                    <td>${r.rut}</td>
+                    <td>${r.nombre || '-'}</td>
+                    <td><span class="badge ${rolClass}" style="padding:2px 8px;border-radius:20px;">${r.rol}</span></td>
+                    <td>${registrado ? '✅ Registrado' : '⏳ Pendiente'}</td>
+                    <td>${puedeEliminar ? `<button class="btn-eliminar" data-rut="${r.rut}">🗑️</button>` : ''}</td>
+                </tr>
+            `;
+        }).join('');
+
+        // Eventos para eliminar
+        document.querySelectorAll('.btn-eliminar').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const rut = btn.dataset.rut;
+                if (confirm(`¿Eliminar a ${rut} de la lista de autorizados?`)) {
+                    const datos = await cargarDatos();
+                    datos.ruts_autorizados = datos.ruts_autorizados.filter(r => r.rut !== rut);
+                    const ok = await guardarDatos(datos);
+                    if (ok) { toast('RUT eliminado'); renderTabla(); }
+                    else toast('Error al eliminar');
+                }
+            });
+        });
+    }
+
+    // Agregar RUT autorizado
+    document.getElementById('btnAgregarRut').addEventListener('click', async () => {
+        const rut = document.getElementById('nuevoRut').value.trim();
+        const nombre = document.getElementById('nuevoNombre').value.trim();
+        const rol = document.getElementById('nuevoRol').value;
+
+        if (!rut) return toast('Ingresá un RUT');
+
+        // Subadmin no puede crear otro subadmin (solo puede crear alumno/profesor)
+        if (!esAdmin && rol === 'subadmin') {
+            return toast('No tenés permiso para crear sub-administradores');
+        }
+
+        const datos = await cargarDatos();
+        if (datos.ruts_autorizados.find(r => r.rut === rut)) {
+            return toast('Este RUT ya está en la lista');
+        }
+
+        datos.ruts_autorizados.push({ rut, nombre, rol });
+        const ok = await guardarDatos(datos);
+        if (ok) {
+            toast('RUT agregado correctamente');
+            document.getElementById('nuevoRut').value = '';
+            document.getElementById('nuevoNombre').value = '';
+            renderTabla();
+        } else {
+            toast('Error al guardar');
+        }
+    });
+
+    // Crear Subadmin (solo admin)
+    if (esAdmin) {
+        document.getElementById('btnCrearSubadmin').addEventListener('click', async () => {
+            const rut = document.getElementById('nuevoSubadminRut').value.trim();
+            const nombre = document.getElementById('nuevoSubadminNombre').value.trim();
+            if (!rut || !nombre) return toast('Completá todos los campos');
+
+            const datos = await cargarDatos();
+            if (datos.ruts_autorizados.find(r => r.rut === rut)) {
+                return toast('Este RUT ya existe');
+            }
+
+            datos.ruts_autorizados.push({ rut, nombre, rol: 'subadmin' });
+            const ok = await guardarDatos(datos);
+            if (ok) {
+                toast('Sub-Administrador creado');
+                document.getElementById('nuevoSubadminRut').value = '';
+                document.getElementById('nuevoSubadminNombre').value = '';
+                renderTabla();
+            } else {
+                toast('Error al guardar');
+            }
+        });
+    }
+
+    renderTabla();
+</script>
+</body>
+</html>
