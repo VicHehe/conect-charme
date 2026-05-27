@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conect-Charme · Iniciar sesión</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .login-box {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            width: 90%;
+            max-width: 420px;
+            border: 2.5px solid var(--yellow);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+        }
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            justify-content: center;
+        }
+        .login-logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .login-logo span {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--blue-dark);
+        }
+        .tab-btns {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 12px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+        .tab-btn.active {
+            background: white;
+            color: var(--blue-dark);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--blue-dark);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .field input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            background: white;
+            color: var(--text);
+        }
+        .field input:focus {
+            outline: none;
+            border-color: var(--yellow);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .btn-submit:hover { background: var(--blue-dark); }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .msg {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            text-align: center;
+        }
+        .msg.error {
+            background: var(--red-light);
+            color: var(--red);
+            display: block;
+        }
+        .msg.success {
+            background: #dcfce7;
+            color: #16a34a;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <div class="login-logo">
+        <img src="assets/favicon.png" alt="Conect-Charme">
+        <span>Conect-Charme</span>
+    </div>
+
+    <div class="tab-btns">
+        <button class="tab-btn active" onclick="switchTab('login')">Iniciar sesión</button>
+        <button class="tab-btn" onclick="switchTab('registro')">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="panelLogin">
+        <div class="field">
+            <label>RUT</label>
+            <input type="text" id="loginRut" placeholder="12345678-9">
+        </div>
+        <div class="field">
+            <label>Contraseña</label>
+            <input type="password" id="loginPass" placeholder="••••••••">
+        </div>
+        <button class="btn-submit" id="btnLogin" onclick="login()">Iniciar sesión</button>
+        <div class="msg" id="loginMsg"></div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="panelRegistro" style="display:none;">
+        <div class="field">
+            <label>RUT</label>
+            <input type="text" id="regRut" placeholder="12345678-9">
+        </div>
+        <div class="field">
+            <label>Nombre de usuario</label>
+            <input type="text" id="regNombre" placeholder="Como querés aparecer">
+        </div>
+        <div class="field">
+            <label>Contraseña</label>
+            <input type="password" id="regPass" placeholder="••••••••">
+        </div>
+        <div class="field">
+            <label>Confirmar contraseña</label>
+            <input type="password" id="regPass2" placeholder="••••••••">
+        </div>
+        <button class="btn-submit" id="btnRegistro" onclick="registro()">Crear cuenta</button>
+        <div class="msg" id="registroMsg"></div>
+    </div>
+</div>
+
+<script src="js/github.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    // Si ya hay sesión, redirigir al index
+    if (Auth.getSesion()) window.location.href = '/index.html';
+
+    function switchTab(tab) {
+        const esLogin = tab === 'login';
+        document.getElementById('panelLogin').style.display = esLogin ? '' : 'none';
+        document.getElementById('panelRegistro').style.display = esLogin ? 'none' : '';
+        document.querySelectorAll('.tab-btn').forEach((b, i) => {
+            b.classList.toggle('active', esLogin ? i === 0 : i === 1);
+        });
+    }
+
+    function setLoading(btnId, loading) {
+        const btn = document.getElementById(btnId);
+        btn.disabled = loading;
+        btn.textContent = loading ? 'Cargando...' : btn.id === 'btnLogin' ? 'Iniciar sesión' : 'Crear cuenta';
+    }
+
+    function mostrarMsg(id, texto, tipo) {
+        const el = document.getElementById(id);
+        el.textContent = texto;
+        el.className = `msg ${tipo}`;
+    }
+
+    async function login() {
+        const rut = document.getElementById('loginRut').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        if (!rut || !pass) return mostrarMsg('loginMsg', 'Completá todos los campos', 'error');
+
+        setLoading('btnLogin', true);
+        const res = await Auth.login(rut, pass);
+        setLoading('btnLogin', false);
+
+        if (!res.ok) return mostrarMsg('loginMsg', res.error, 'error');
+
+        // Redirigir según rol
+        window.location.href = '/index.html';
+    }
+
+    async function registro() {
+        const rut = document.getElementById('regRut').value.trim();
+        const nombre = document.getElementById('regNombre').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const pass2 = document.getElementById('regPass2').value;
+
+        if (!rut || !nombre || !pass || !pass2)
+            return mostrarMsg('registroMsg', 'Completá todos los campos', 'error');
+        if (pass !== pass2)
+            return mostrarMsg('registroMsg', 'Las contraseñas no coinciden', 'error');
+        if (pass.length < 6)
+            return mostrarMsg('registroMsg', 'La contraseña debe tener al menos 6 caracteres', 'error');
+
+        setLoading('btnRegistro', true);
+        const res = await Auth.registro(rut, nombre, pass);
+        setLoading('btnRegistro', false);
+
+        if (!res.ok) return mostrarMsg('registroMsg', res.error, 'error');
+
+        mostrarMsg('registroMsg', '✅ Cuenta creada. Iniciá sesión.', 'success');
+        setTimeout(() => switchTab('login'), 1500);
+    }
+
+    // Enter para enviar
+    document.getElementById('loginPass').addEventListener('keydown', e => {
+        if (e.key === 'Enter') login();
+    });
+    document.getElementById('regPass2').addEventListener('keydown', e => {
+        if (e.key === 'Enter') registro();
+    });
+</script>
+</body>
+</html>
