@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conect-Charme — Calculadora 🧮</title>
+    <link rel="icon" type="image/png" href="png/favicon.png">
+    <link rel="stylesheet" href="../../Css/styles.css">
+    <style>
+        .calc-container {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .calc-main {
+            flex: 2;
+            min-width: 280px;
+        }
+        .calc-sidebar-historial {
+            flex: 1;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            border: 2px solid var(--border);
+            padding: 20px;
+            height: fit-content;
+        }
+        /* DISPLAY MÁS COMPACTO (~10% más pequeño) */
+        .display {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 18px;
+            text-align: right;
+        }
+        .expresion {
+            font-size: 15px;
+            color: var(--text-muted);
+            min-height: 26px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        .resultado {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--purple-dark);
+            word-break: break-word;
+        }
+        /* BOTONES MÁS COMPACTOS */
+        .botones-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .calc-btn {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text);
+            text-align: center;
+        }
+        .calc-btn:hover {
+            background: var(--purple-light);
+            border-color: var(--purple);
+            transform: translateY(-2px);
+        }
+        .calc-btn.operador {
+            background: var(--purple-light);
+            color: var(--purple-dark);
+        }
+        .calc-btn.igual {
+            background: var(--purple);
+            color: white;
+            border-color: var(--purple);
+        }
+        .calc-btn.borrar {
+            background: var(--red-light-cl);
+            color: var(--red-cl);
+        }
+        .calc-btn.guardar {
+            background: var(--green-light);
+            color: var(--green-dark);
+        }
+        .historial-item {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 4px solid var(--purple);
+        }
+        .historial-item:hover {
+            background: var(--purple-light);
+        }
+        .historial-cuenta {
+            font-family: monospace;
+            font-weight: 700;
+            word-break: break-all;
+        }
+        .historial-fecha {
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .btn-borrar-historial {
+            margin-top: 12px;
+            width: 100%;
+            background: none;
+            border: 1px dashed var(--red-cl);
+            color: var(--red-cl);
+            padding: 8px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-borrar-historial:hover {
+            background: var(--red-light-cl);
+        }
+        .postit-titulo {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--purple-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== MODAL INTERÉS HORIZONTAL (16:9) ===== */
+        .modal-custom {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-custom.active {
+            display: flex;
+        }
+        .modal-custom-content {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            max-width: 760px;
+            width: 90%;
+            border: 3px solid var(--purple);
+        }
+        .modal-custom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-custom-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--purple-dark);
+        }
+        .modal-close-custom {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        /* Layout horizontal del modal */
+        .modal-split {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .modal-left {
+            flex: 1;
+            min-width: 200px;
+        }
+        .modal-right {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .modal-field {
+            margin-bottom: 14px;
+        }
+        .modal-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--purple-dark);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .modal-field input, .modal-field select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 13px;
+            background: white;
+        }
+        .modal-result {
+            background: var(--purple-light);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .modal-result .interes-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--purple-dark);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-guardar-modal {
+            background: var(--purple);
+            color: white;
+            border: none;
+        }
+        .btn-guardar-modal:hover {
+            background: var(--purple-dark);
+        }
+        .btn-cerrar-modal {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-cerrar-modal:hover {
+            background: var(--border);
+        }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-left">
+        <a href="../estudios.html" class="back-link">←</a>
+        <div class="logo">
+            <span class="logo-icon">🧮</span>
+            <span class="logo-text">Calculadora</span>
+        </div>
+    </div>
+    <div class="header-right"></div>
+</header>
+
+<div class="app-body">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <a href="../estudios.html" class="nav-item">
+                <span class="nav-icon">←</span>
+                <span>Volver</span>
+            </a>
+        </nav>
+        <hr class="nav-divider">
+        <div style="padding: 16px;">
+            <div class="postit-titulo">📌 Funciones clave</div>
+            <ul style="font-size: 12px; color: var(--text-muted); list-style: none; padding: 0;">
+                <li style="margin-bottom: 8px;">✅ <strong>%</strong>: Calcula porcentajes (ej: 200 + 10% = 220)</li>
+                <li style="margin-bottom: 8px;">✅ <strong>√</strong>: Raíz cuadrada</li>
+                <li style="margin-bottom: 8px;">✅ <strong>xʸ</strong>: Potencias</li>
+                <li style="margin-bottom: 8px;">✅ <strong>Interés</strong>: Calculadora con tasa anual/mensual/diaria</li>
+                <li style="margin-bottom: 8px;">✅ <strong>Guardar</strong>: Almacena el resultado en el panel lateral</li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Calculadora de Estudio</h1>
+            <p>Operaciones básicas, porcentajes, interés simple y más. Guarda tus resultados importantes.</p>
+        </div>
+
+        <div class="calc-container">
+            <div class="calc-main">
+                <div class="display">
+                    <div class="expresion" id="expresion">0</div>
+                    <div class="resultado" id="resultado">0</div>
+                </div>
+
+                <div class="botones-grid">
+                    <button class="calc-btn" data-action="clear">AC</button>
+                    <button class="calc-btn" data-action="delete">⌫</button>
+                    <button class="calc-btn" data-action="percent">%</button>
+                    <button class="calc-btn operador" data-op="/">÷</button>
+                    <button class="calc-btn guardar" id="guardarBtn">💾 Guardar</button>
+
+                    <button class="calc-btn" data-num="7">7</button>
+                    <button class="calc-btn" data-num="8">8</button>
+                    <button class="calc-btn" data-num="9">9</button>
+                    <button class="calc-btn operador" data-op="*">×</button>
+                    <button class="calc-btn operador" data-op="sqrt">√</button>
+
+                    <button class="calc-btn" data-num="4">4</button>
+                    <button class="calc-btn" data-num="5">5</button>
+                    <button class="calc-btn" data-num="6">6</button>
+                    <button class="calc-btn operador" data-op="-">-</button>
+                    <button class="calc-btn operador" data-op="pow">xʸ</button>
+
+                    <button class="calc-btn" data-num="1">1</button>
+                    <button class="calc-btn" data-num="2">2</button>
+                    <button class="calc-btn" data-num="3">3</button>
+                    <button class="calc-btn operador" data-op="+">+</button>
+                    <button class="calc-btn operador" id="btnInteres">📈 Interés</button>
+
+                    <button class="calc-btn" data-num="0">0</button>
+                    <button class="calc-btn" data-num=".">.</button>
+                    <button class="calc-btn igual" data-action="equals">=</button>
+                    <button class="calc-btn" data-num="00">00</button>
+                    <button class="calc-btn" data-action="copy">📋 Copiar</button>
+                </div>
+            </div>
+
+            <div class="calc-sidebar-historial">
+                <div class="postit-titulo">📌 Guardados</div>
+                <div id="historialLista">
+                    <div style="color: var(--text-muted); font-size: 13px; text-align: center;">Guarda cálculos importantes aquí.</div>
+                </div>
+                <button id="borrarHistorialBtn" class="btn-borrar-historial">🗑️ Limpiar historial</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal personalizado para interés (HORIZONTAL) -->
+<div id="modalInteres" class="modal-custom">
+    <div class="modal-custom-content">
+        <div class="modal-custom-header">
+            <h3>📈 Interés Simple</h3>
+            <button class="modal-close-custom" id="cerrarModalInteres">✕</button>
+        </div>
+        
+        <div class="modal-split">
+            <!-- LADO IZQUIERDO: campos compactos -->
+            <div class="modal-left">
+                <div class="modal-field">
+                    <label>💰 Capital inicial</label>
+                    <input type="number" id="interesCapital" placeholder="Ej: 100000" value="100000">
+                </div>
+                <div class="modal-field">
+                    <label>📊 Tasa de interés</label>
+                    <input type="number" id="interesTasa" placeholder="Ej: 5.5" value="5.5">
+                </div>
+                <div class="modal-field">
+                    <label>⏱️ Período de la tasa</label>
+                    <select id="interesPeriodoTasa">
+                        <option value="anual">Anual</option>
+                        <option value="mensual">Mensual</option>
+                        <option value="diario">Diario</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>📅 Tiempo</label>
+                    <input type="number" id="interesTiempo" placeholder="Ej: 6" value="6">
+                </div>
+                <div class="modal-field">
+                    <label>⏱️ Período del tiempo</label>
+                    <select id="interesPeriodoTiempo">
+                        <option value="anios">Años</option>
+                        <option value="meses" selected>Meses</option>
+                        <option value="dias">Días</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- LADO DERECHO: resultado grande + botones -->
+            <div class="modal-right">
+                <div class="modal-result" id="modalResultadoInteres">
+                    <div style="font-size: 13px; color: var(--text-muted);">Interés calculado</div>
+                    <div class="interes-num" id="interesValor">$0</div>
+                    <div style="font-size: 13px; margin-top: 8px;" id="interesTotal">Total: $0</div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cerrar-modal" id="cancelarInteresModal">Cancelar</button>
+                    <button class="btn-guardar-modal" id="guardarInteresModal">✅ Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ============================================================
+       CALCULADORA - VICTOR EDITION v2
+       Interés simple con modal personalizado (anual/mensual/diario)
+    ============================================================ */
+    
+    let currentInput = "0";
+    let previousInput = "";
+    let operation = null;
+    let waitingForOperand = false;
+    
+    let historial = [];
+    const HISTORIAL_KEY = 'calculadora_historial';
+    
+    const expresionEl = document.getElementById('expresion');
+    const resultadoEl = document.getElementById('resultado');
+    const historialLista = document.getElementById('historialLista');
+    
+    function cargarHistorial() {
+        const guardado = localStorage.getItem(HISTORIAL_KEY);
+        if (guardado) {
+            try {
+                historial = JSON.parse(guardado);
+                renderHistorial();
+            } catch(e) {}
+        }
+    }
+    
+    function guardarHistorial() {
+        localStorage.setItem(HISTORIAL_KEY, JSON.stringify(historial));
+        renderHistorial();
+    }
+    
+    function añadirAlHistorial(cuenta, resultado) {
+        historial.unshift({
+            cuenta: cuenta,
+            resultado: resultado,
+            fecha: new Date().toLocaleString('es-CL')
+        });
+        if (historial.length > 20) historial.pop();
+        guardarHistorial();
+    }
+    
+    function renderHistorial() {
+        if (historial.length === 0) {
+            historialLista.innerHTML = `<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Guarda cálculos importantes aquí.</div>`;
+            return;
+        }
+        historialLista.innerHTML = historial.map((item, idx) => `
+            <div class="historial-item" onclick="copiarAlPortapapeles('${item.resultado}')">
+                <div class="historial-cuenta">${escapeHtml(item.cuenta)} = ${escapeHtml(item.resultado)}</div>
+                <div class="historial-fecha">📅 ${item.fecha}</div>
+            </div>
+        `).join('');
+    }
+    
+    function updateDisplay() {
+        resultadoEl.textContent = currentInput;
+        if (operation && !waitingForOperand) {
+            expresionEl.textContent = `${previousInput} ${getOpSymbol(operation)}`;
+        } else if (waitingForOperand && operation) {
+            expresionEl.textContent = `${previousInput} ${getOpSymbol(operation)}`;
+        } else {
+            expresionEl.textContent = currentInput;
+        }
+    }
+    
+    function getOpSymbol(op) {
+        const symbols = { '+': '+', '-': '-', '*': '×', '/': '÷', 'sqrt': '√', 'pow': '^', 'percent': '%' };
+        return symbols[op] || op;
+    }
+    
+    function compute() {
+        if (!operation || waitingForOperand) return;
+        let result;
+        const prev = parseFloat(previousInput);
+        const current = parseFloat(currentInput);
+        
+        switch(operation) {
+            case '+': result = prev + current; break;
+            case '-': result = prev - current; break;
+            case '*': result = prev * current; break;
+            case '/': 
+                if (current === 0) { alert("No se puede dividir por cero"); limpiar(); return; }
+                result = prev / current; break;
+            case 'sqrt': result = Math.sqrt(prev); break;
+            case 'pow': result = Math.pow(prev, current); break;
+            case 'percent': result = prev * (current / 100); break;
+            default: return;
+        }
+        currentInput = String(Math.round(result * 1000000) / 1000000);
+        operation = null;
+        waitingForOperand = false;
+        previousInput = "";
+        updateDisplay();
+    }
+    
+    function guardarCalculoActual() {
+        const cuentaActual = expresionEl.textContent;
+        const resActual = resultadoEl.textContent;
+        if (resActual !== "0" && cuentaActual !== "0" && cuentaActual !== "0") {
+            añadirAlHistorial(cuentaActual, resActual);
+        } else {
+            alert("No hay un cálculo para guardar");
+        }
+    }
+    
+    // Interés simple con modal personalizado
+    function actualizarVistaPreviaInteres() {
+        const capital = parseFloat(document.getElementById('interesCapital').value) || 0;
+        let tasa = parseFloat(document.getElementById('interesTasa').value) || 0;
+        const periodoTasa = document.getElementById('interesPeriodoTasa').value;
+        const tiempo = parseFloat(document.getElementById('interesTiempo').value) || 0;
+        const periodoTiempo = document.getElementById('interesPeriodoTiempo').value;
+        
+        // Convertir todo a años para la fórmula I = C * i * t
+        let tasaAnual = tasa;
+        if (periodoTasa === 'mensual') tasaAnual = tasa * 12;
+        if (periodoTasa === 'diario') tasaAnual = tasa * 365;
+        
+        let tiempoAnios = tiempo;
+        if (periodoTiempo === 'meses') tiempoAnios = tiempo / 12;
+        if (periodoTiempo === 'dias') tiempoAnios = tiempo / 365;
+        
+        const interes = capital * (tasaAnual / 100) * tiempoAnios;
+        const total = capital + interes;
+        
+        document.getElementById('interesValor').textContent = `$${Math.round(interes).toLocaleString('es-CL')}`;
+        document.getElementById('interesTotal').innerHTML = `Total: $${Math.round(total).toLocaleString('es-CL')}`;
+        
+        return { interes, total, capital, tasa, periodoTasa, tiempo, periodoTiempo };
+    }
+    
+    function guardarInteres() {
+        const capital = parseFloat(document.getElementById('interesCapital').value) || 0;
+        let tasa = parseFloat(document.getElementById('interesTasa').value) || 0;
+        const periodoTasa = document.getElementById('interesPeriodoTasa').value;
+        const tiempo = parseFloat(document.getElementById('interesTiempo').value) || 0;
+        const periodoTiempo = document.getElementById('interesPeriodoTiempo').value;
+        
+        const { interes, total } = actualizarVistaPreviaInteres();
+        
+        const cuenta = `Interés: $${capital.toLocaleString('es-CL')} al ${tasa}% ${periodoTasa} por ${tiempo} ${periodoTiempo}`;
+        const resultado = `$${Math.round(total).toLocaleString('es-CL')}`;
+        añadirAlHistorial(cuenta, resultado);
+        
+        document.getElementById('modalInteres').classList.remove('active');
+    }
+    
+    function abrirModalInteres() {
+        // Resetear valores por defecto
+        document.getElementById('interesCapital').value = "100000";
+        document.getElementById('interesTasa').value = "5.5";
+        document.getElementById('interesPeriodoTasa').value = "anual";
+        document.getElementById('interesTiempo').value = "6";
+        document.getElementById('interesPeriodoTiempo').value = "meses";
+        actualizarVistaPreviaInteres();
+        document.getElementById('modalInteres').classList.add('active');
+    }
+    
+    function copiarAlPortapapeles(texto) {
+        navigator.clipboard.writeText(texto).then(() => {
+            toast("✅ Copiado: " + texto);
+        }).catch(() => {
+            alert("No se pudo copiar");
+        });
+    }
+    
+    function toast(msg) {
+        const t = document.createElement('div');
+        t.textContent = msg;
+        t.style.position = 'fixed';
+        t.style.bottom = '20px';
+        t.style.left = '50%';
+        t.style.transform = 'translateX(-50%)';
+        t.style.backgroundColor = '#1f2937';
+        t.style.color = 'white';
+        t.style.padding = '8px 20px';
+        t.style.borderRadius = '40px';
+        t.style.fontSize = '13px';
+        t.style.zIndex = '999';
+        t.style.pointerEvents = 'none';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2000);
+    }
+    
+    function limpiar() {
+        currentInput = "0";
+        previousInput = "";
+        operation = null;
+        waitingForOperand = false;
+        updateDisplay();
+    }
+    
+    function deleteLast() {
+        if (waitingForOperand) return;
+        if (currentInput.length === 1 || currentInput === "0") {
+            currentInput = "0";
+        } else {
+            currentInput = currentInput.slice(0, -1);
+        }
+        updateDisplay();
+    }
+    
+    function inputNumber(num) {
+        if (waitingForOperand) {
+            currentInput = num;
+            waitingForOperand = false;
+        } else {
+            currentInput = currentInput === "0" ? num : currentInput + num;
+        }
+        updateDisplay();
+    }
+    
+    function inputDecimal() {
+        if (waitingForOperand) {
+            currentInput = "0.";
+            waitingForOperand = false;
+        } else if (currentInput.indexOf('.') === -1) {
+            currentInput += ".";
+        }
+        updateDisplay();
+    }
+    
+    function setOperation(op) {
+        if (operation && !waitingForOperand) compute();
+        previousInput = currentInput;
+        operation = op;
+        waitingForOperand = true;
+        updateDisplay();
+    }
+    
+    function applySqrt() {
+        const val = parseFloat(currentInput);
+        if (val < 0) { alert("Raíz cuadrada de número negativo no está soportada"); return; }
+        const result = Math.sqrt(val);
+        añadirAlHistorial(`√(${currentInput})`, String(result));
+        currentInput = String(result);
+        operation = null;
+        waitingForOperand = false;
+        updateDisplay();
+    }
+    
+    function applyPow() {
+        if (!waitingForOperand && operation === null) {
+            previousInput = currentInput;
+            operation = 'pow';
+            waitingForOperand = true;
+            updateDisplay();
+        } else if (operation) {
+            compute();
+            previousInput = currentInput;
+            operation = 'pow';
+            waitingForOperand = true;
+            updateDisplay();
+        }
+    }
+    
+    function applyPercent() {
+        const val = parseFloat(currentInput);
+        const percentVal = val / 100;
+        currentInput = String(percentVal);
+        updateDisplay();
+    }
+    
+    // Eventos
+    document.querySelectorAll('[data-num]').forEach(btn => {
+        btn.addEventListener('click', () => inputNumber(btn.dataset.num));
+    });
+    document.querySelector('[data-num="."]').addEventListener('click', inputDecimal);
+    document.querySelector('[data-action="clear"]').addEventListener('click', limpiar);
+    document.querySelector('[data-action="delete"]').addEventListener('click', deleteLast);
+    document.querySelector('[data-action="equals"]').addEventListener('click', () => compute());
+    document.querySelectorAll('[data-op]').forEach(btn => {
+        if (btn.dataset.op === 'sqrt') btn.addEventListener('click', applySqrt);
+        else if (btn.dataset.op === 'pow') btn.addEventListener('click', applyPow);
+        else if (btn.dataset.op === 'percent') btn.addEventListener('click', applyPercent);
+        else btn.addEventListener('click', () => setOperation(btn.dataset.op));
+    });
+    
+    document.getElementById('btnInteres').addEventListener('click', abrirModalInteres);
+    document.getElementById('guardarBtn').addEventListener('click', guardarCalculoActual);
+    document.getElementById('borrarHistorialBtn').addEventListener('click', () => {
+        if (confirm("¿Borrar todo el historial de cálculos guardados?")) {
+            historial = [];
+            guardarHistorial();
+        }
+    });
+    document.querySelector('[data-action="copy"]').addEventListener('click', () => {
+        copiarAlPortapapeles(resultadoEl.textContent);
+    });
+    
+    // Eventos del modal de interés
+    document.getElementById('cerrarModalInteres').addEventListener('click', () => {
+        document.getElementById('modalInteres').classList.remove('active');
+    });
+    document.getElementById('cancelarInteresModal').addEventListener('click', () => {
+        document.getElementById('modalInteres').classList.remove('active');
+    });
+    document.getElementById('guardarInteresModal').addEventListener('click', guardarInteres);
+    
+    // Actualizar vista previa al cambiar inputs
+    ['interesCapital', 'interesTasa', 'interesPeriodoTasa', 'interesTiempo', 'interesPeriodoTiempo'].forEach(id => {
+        document.getElementById(id).addEventListener('input', actualizarVistaPreviaInteres);
+        document.getElementById(id).addEventListener('change', actualizarVistaPreviaInteres);
+    });
+    
+    // Atajos de teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.key >= '0' && e.key <= '9') inputNumber(e.key);
+        if (e.key === '.') inputDecimal();
+        if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+            e.preventDefault();
+            setOperation(e.key);
+        }
+        if (e.key === 'Enter' || e.key === '=') compute();
+        if (e.key === 'Escape') limpiar();
+        if (e.key === 'Backspace') deleteLast();
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            guardarCalculoActual();
+        }
+    });
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    cargarHistorial();
+    updateDisplay();
+</script>
+</body>
+</html>

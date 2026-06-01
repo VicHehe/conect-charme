@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conect-Charme — Cuadernos 📓</title>
+    <link rel="icon" type="image/png" href="png/favicon.png">
+    <link rel="stylesheet" href="../../Css/styles.css">
+    <style>
+        #autoSaveIndicator {
+            position: fixed;
+            bottom: 20px;
+            right: 24px;
+            background: #1f2937;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 999;
+            pointer-events: none;
+        }
+        #autoSaveIndicator.show { opacity: 1; }
+
+        .sidebar-section-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 14px 16px 6px;
+        }
+
+        /* Botones de herramienta en sidebar */
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.15s;
+        }
+        .tool-btn:hover { background: var(--purple-light); color: var(--purple-dark); }
+        .tool-btn .tool-icon { font-size: 16px; width: 22px; text-align: center; }
+        .tool-btn .tool-shortcut {
+            margin-left: auto;
+            font-size: 10px;
+            background: var(--border);
+            padding: 2px 7px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* Textarea editor */
+        #inLineas {
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            line-height: 1.85;
+            min-height: 400px;
+            white-space: pre-wrap;
+        }
+
+        /* Modo lector */
+        .reader-page {
+            max-width: 680px;
+            background: #fffef5;
+            border-radius: 4px 18px 18px 4px;
+            border-left: 14px solid;
+            box-shadow: 3px 3px 18px rgba(0,0,0,0.11);
+            padding: 40px 44px 50px 38px;
+            min-height: 540px;
+            position: relative;
+            font-family: 'Georgia', serif;
+        }
+        .reader-page::before {
+            content: '';
+            position: absolute;
+            left: 54px;
+            top: 0;
+            bottom: 0;
+            width: 1.5px;
+            background: rgba(220, 80, 80, 0.22);
+        }
+        .reader-lines {
+            background-image: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 31px,
+                #b8cfe8 31px,
+                #b8cfe8 32px
+            );
+            background-position: 0 44px;
+            min-height: 460px;
+            padding-top: 4px;
+        }
+        .reader-page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e1e6b;
+            line-height: 32px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid rgba(30,30,107,0.15);
+            margin-bottom: 0;
+        }
+        .reader-page-meta {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
+            line-height: 32px;
+            margin-bottom: 0;
+        }
+        .reader-page-objetivo {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            line-height: 32px;
+        }
+        .reader-line { line-height: 32px; min-height: 32px; display: block; color: #222; font-size: 14px; }
+        .reader-line.h1 { font-size: 16px; font-weight: 700; color: #1e1e6b; text-decoration: underline; text-underline-offset: 3px; }
+        .reader-line.h2 { font-size: 14px; font-weight: 700; color: #4a3da8; font-style: italic; }
+        .reader-line.bullet::before { content: '• '; color: var(--purple); }
+        .reader-line.bullet { padding-left: 8px; }
+        .reader-line.empty { color: transparent; }
+        .reader-page-num {
+            position: absolute;
+            bottom: 14px;
+            right: 20px;
+            font-size: 12px;
+            color: #bbb;
+            font-style: italic;
+        }
+        .reader-tipo-badge {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #f0ebff;
+            color: #5b21b6;
+        }
+
+        /* Tabla de contenidos */
+        .toc-item {
+            display: block;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text);
+            transition: background 0.15s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        .toc-item:hover { background: var(--purple-light); color: var(--purple-dark); }
+        .toc-item.sin-titulo { color: var(--text-muted); font-style: italic; }
+        .toc-item-num { font-size: 10px; color: var(--text-muted); margin-right: 6px; font-weight: 700; }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 12px;
+        }
+        .stat-box {
+            background: var(--purple-light);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-box .stat-num { font-size: 20px; font-weight: 700; color: var(--purple-dark); }
+        .stat-box .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* Buscador resultados */
+        .search-result-item {
+            background: var(--purple-light);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            border: 1px solid transparent;
+            transition: border-color 0.15s;
+        }
+        .search-result-item:hover { border-color: var(--purple); }
+        .search-result-item strong { font-size: 13px; display: block; margin-bottom: 2px; }
+        .search-result-item span { color: var(--text-muted); }
+
+        .nav-page-btns {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 12px 6px;
+        }
+        .nav-page-btns button {
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+        .nav-page-btns button:hover:not(:disabled) { background: var(--purple); color: white; border-color: var(--purple); }
+        .nav-page-btns button:disabled { opacity: 0.3; cursor: not-allowed; }
+        .nav-page-info { font-size: 13px; font-weight: 700; color: var(--purple-dark); min-width: 50px; text-align: center; }
+
+        .page-jump-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .page-jump-row input {
+            width: 50px;
+            padding: 5px 8px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .page-jump-row button {
+            padding: 5px 12px;
+            background: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .mode-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            margin: 4px 8px;
+            background: var(--bg);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .mode-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .mode-badge.editor { background: var(--purple); color: white; }
+        .mode-badge.reader { background: var(--gray-mid); color: white; }
+        .btn-toggle-mode {
+            background: none; border: none; font-size: 18px;
+            cursor: pointer; padding: 4px; border-radius: 8px; transition: background 0.15s;
+        }
+        .btn-toggle-mode:hover { background: var(--border); }
+
+        .sidebar-section-inner { padding: 0 8px 8px; }
+
+        .cuaderno-header-bar {
+            margin-bottom: 20px;
+            border-left: 6px solid var(--purple);
+            padding-left: 14px;
+        }
+        .cuaderno-header-bar h1 { font-size: 22px; font-weight: 700; color: var(--purple-dark); margin-bottom: 2px; }
+        .cuaderno-header-bar p { font-size: 13px; color: var(--text-muted); }
+
+        .hoja-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            border: 2px solid var(--border);
+            max-width: 820px;
+        }
+        .editor-field { margin-bottom: 16px; }
+        .editor-field label {
+            display: block; font-size: 11px; font-weight: 800;
+            color: var(--purple-dark); margin-bottom: 6px;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .editor-field input, .editor-field textarea {
+            width: 100%; padding: 10px 14px;
+            border: 2px solid var(--border); border-radius: 12px;
+            font-size: 14px; font-family: inherit;
+            transition: border-color 0.2s; background: white; color: var(--text);
+        }
+        .editor-field input:focus, .editor-field textarea:focus {
+            outline: none; border-color: var(--purple);
+        }
+        .editor-row { display: flex; gap: 14px; margin-bottom: 16px; }
+        .editor-row .editor-field { flex: 1; margin-bottom: 0; }
+
+        .lineas-counter { font-size: 12px; text-align: right; margin-top: 5px; color: var(--text-muted); }
+        .lineas-counter.warning { color: #d97706; }
+        .lineas-counter.danger { color: var(--red); font-weight: 700; }
+
+        .words-counter { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+        .editor-actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-left">
+        <a href="../estudios.html" class="back-link">←</a>
+        <div class="logo">
+            <span class="logo-icon">📓</span>
+            <span class="logo-text">Cuadernos Digitales</span>
+        </div>
+    </div>
+    <div class="header-right">
+        <button class="btn-primary" id="btnNuevoCuaderno">+ Crear cuaderno</button>
+    </div>
+</header>
+
+<div class="app-body">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar" id="sidebar">
+
+        <!-- NAV -->
+        <nav class="sidebar-nav">
+            <button class="nav-item active" id="btnVerLista">
+                <span class="nav-icon">📓</span>
+                <span>Mis cuadernos</span>
+            </button>
+        </nav>
+
+        <!-- ===== VISTA LISTA: buscador ===== -->
+        <div id="seccionBusqueda">
+            <div class="sidebar-section-title">Buscar hojas</div>
+            <div class="sidebar-section-inner">
+                <div class="sidebar-section">
+                    <label>Cuaderno *</label>
+                    <select id="buscarEnCuaderno">
+                        <option value="">-- Elige un cuaderno --</option>
+                    </select>
+                    <label>Por fecha</label>
+                    <input type="date" id="buscarFecha">
+                    <label>Por título</label>
+                    <input type="text" id="buscarTitulo" placeholder="Título de la hoja...">
+                    <button class="btn-sidebar primary" id="btnBuscar">🔎 Buscar</button>
+                    <button class="btn-sidebar secondary" id="btnLimpiarBusqueda">🗑️ Limpiar</button>
+                    <div id="resultadosBusqueda"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VISTA EDITOR/LECTOR ===== -->
+        <div id="seccionEditor" style="display:none;">
+
+            <!-- Modo -->
+            <div class="mode-toggle-row">
+                <span>Modo:</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="mode-badge editor" id="modoBadge">Editor ✏️</span>
+                    <button class="btn-toggle-mode" id="btnToggleModo">🔄</button>
+                </div>
+            </div>
+
+            <!-- Navegación -->
+            <div class="sidebar-section-title">Navegación</div>
+            <div class="nav-page-btns">
+                <button id="btnPrimera" title="Primera">⏮</button>
+                <button id="btnAnterior" title="Anterior">◀</button>
+                <span class="nav-page-info" id="paginaInfo">1 / 1</span>
+                <button id="btnSiguiente" title="Siguiente">▶</button>
+                <button id="btnUltima" title="Última">⏭</button>
+            </div>
+            <div class="page-jump-row">
+                <span>Ir a hoja:</span>
+                <input type="number" id="saltarA" min="1" value="1">
+                <button id="btnSaltar">Ir</button>
+            </div>
+
+            <!-- Herramientas de formato (solo en editor) -->
+            <div id="seccionFormato">
+                <div class="sidebar-section-title">Formato de texto</div>
+                <div class="sidebar-section-inner">
+                    <button class="tool-btn" data-fmt="## ">
+                        <span class="tool-icon">H1</span>
+                        <span>Subtítulo principal</span>
+                        <span class="tool-shortcut">## </span>
+                    </button>
+                    <button class="tool-btn" data-fmt="### ">
+                        <span class="tool-icon">H2</span>
+                        <span>Subtítulo secundario</span>
+                        <span class="tool-shortcut">### </span>
+                    </button>
+                    <button class="tool-btn" data-fmt="- ">
+                        <span class="tool-icon">•</span>
+                        <span>Viñeta / lista</span>
+                        <span class="tool-shortcut">- </span>
+                    </button>
+                    <button class="tool-btn" data-fmt-wrap="**">
+                        <span class="tool-icon"><b>B</b></span>
+                        <span>Negrita</span>
+                        <span class="tool-shortcut">**txt**</span>
+                    </button>
+                    <button class="tool-btn" data-fmt-wrap="_">
+                        <span class="tool-icon"><i>I</i></span>
+                        <span>Cursiva</span>
+                        <span class="tool-shortcut">_txt_</span>
+                    </button>
+                    <button class="tool-btn" data-fmt-wrap="~~">
+                        <span class="tool-icon" style="text-decoration:line-through;">S</span>
+                        <span>Tachado</span>
+                        <span class="tool-shortcut">~~txt~~</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de contenidos -->
+            <div class="sidebar-section-title">Tabla de contenidos</div>
+            <div class="sidebar-section-inner">
+                <div id="tocContainer" style="max-height:200px; overflow-y:auto;"></div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="sidebar-section-title">Estadísticas</div>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-box"><div class="stat-num" id="statHojas">0</div><div class="stat-label">Hojas</div></div>
+                <div class="stat-box"><div class="stat-num" id="statLineas">0</div><div class="stat-label">Líneas</div></div>
+                <div class="stat-box"><div class="stat-num" id="statPalabras">0</div><div class="stat-label">Palabras</div></div>
+                <div class="stat-box"><div class="stat-num" id="statFecha">—</div><div class="stat-label">Últ. edición</div></div>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- ========== MAIN ========== -->
+    <main class="main-content" id="mainContent">
+
+        <!-- Vista lista -->
+        <div id="vistaLista">
+            <div class="page-header">
+                <h1>Mis cuadernos</h1>
+                <p>Organiza tus apuntes · 32 líneas por hoja · autosave activo</p>
+            </div>
+            <div class="card-grid" id="gridCuadernos"></div>
+        </div>
+
+        <!-- Vista editor/lector -->
+        <div id="vistaEditor" style="display:none;">
+            <div class="cuaderno-header-bar" id="cuadernoHeaderBar"></div>
+            <div id="hojaContenido"></div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Modal selector de color -->
+<div class="modal-overlay" id="modalColor">
+    <div class="modal-box" style="max-width:560px; max-height:80vh; overflow-y:auto;">
+        <div class="modal-header">
+            <h3>🎨 Elige un color</h3>
+            <button class="modal-close" id="btnCerrarColor">✕</button>
+        </div>
+        <div id="colorGrid"></div>
+        <div style="margin-top:20px; text-align:right;">
+            <button class="btn-secondary" id="btnCancelarColor">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Autosave indicator -->
+<div id="autoSaveIndicator">✅ Guardado automáticamente</div>
+
+<script>
+/* ============================================================
+   ESTADO Y CONSTANTES
+============================================================ */
+const STORAGE_KEY = 'cuadernos_data';
+const MAX_LINEAS = 32;
+
+let cuadernos = [];
+let idxCuaderno = null;
+let idxHoja = 0;
+let modoLector = false;
+let autoSaveTimer = null;
+
+/* ============================================================
+   COLORES
+============================================================ */
+const COLORES = {
+    "🌸 Rosas":     [{ n:"Baby Pink",    h:"#FADADD" },{ n:"Blush",       h:"#F9C6C9" },{ n:"Pastel Red",  h:"#FF6961" },{ n:"Salmon",     h:"#FFA6C9" }],
+    "💜 Morados":   [{ n:"Lavender",     h:"#E6E6FA" },{ n:"Thistle",     h:"#D8BFD8" },{ n:"Pastel Púrp", h:"#CBAACB" },{ n:"Mauve",      h:"#E0B0FF" }],
+    "💙 Azules":    [{ n:"Baby Blue",    h:"#AEEEEE" },{ n:"Powder Blue", h:"#B0E0E6" },{ n:"Periwinkle",  h:"#CCCCFF" },{ n:"Ice Blue",   h:"#D6F5FF" }],
+    "💚 Verdes":    [{ n:"Mint",         h:"#98FF98" },{ n:"Tea Green",   h:"#D0F0C0" },{ n:"Celadon",     h:"#ACE1AF" },{ n:"Pistachio",  h:"#77DD77" }],
+    "💛 Amarillos": [{ n:"Lemon",        h:"#FFFACD" },{ n:"Champagne",   h:"#F7E7CE" },{ n:"Apricot",     h:"#FBCEB1" },{ n:"Pale Gold",  h:"#E6BE8A" }],
+    "🧡 Naranjas":  [{ n:"P. Orange",    h:"#FFD8B1" },{ n:"Melon",       h:"#FFE5B4" },{ n:"Peach",       h:"#FFCBA4" },{ n:"Desert Sand",h:"#EDC9AF" }]
+};
+
+/* ============================================================
+   STORAGE
+============================================================ */
+function cargar() {
+    const d = localStorage.getItem(STORAGE_KEY);
+    cuadernos = d ? JSON.parse(d) : [];
+}
+function guardar() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cuadernos));
+}
+
+/* ============================================================
+   UTILIDADES
+============================================================ */
+function esc(t) {
+    if (!t) return '';
+    const d = document.createElement('div');
+    d.textContent = t;
+    return d.innerHTML;
+}
+function hoy() {
+    return new Date().toISOString().split('T')[0];
+}
+function mostrarAutoSave() {
+    const el = document.getElementById('autoSaveIndicator');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+/* ============================================================
+   PARSEAR MARKDOWN SIMPLE → HTML (modo lector)
+============================================================ */
+function parsearLinea(texto) {
+    if (texto === undefined || texto === null) return '<span class="reader-line empty"> </span>';
+    const t = texto;
+    if (t.startsWith('## '))  return `<span class="reader-line h1">${parsearInline(t.slice(3))}</span>`;
+    if (t.startsWith('### ')) return `<span class="reader-line h2">${parsearInline(t.slice(4))}</span>`;
+    if (t.startsWith('- '))   return `<span class="reader-line bullet">${parsearInline(t.slice(2))}</span>`;
+    if (t.trim() === '')      return `<span class="reader-line empty"> </span>`;
+    return `<span class="reader-line">${parsearInline(t)}</span>`;
+}
+
+function parsearInline(t) {
+    return esc(t)
+        .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+        .replace(/_(.+?)_/g, '<i>$1</i>')
+        .replace(/~~(.+?)~~/g, '<s>$1</s>');
+}
+
+/* ============================================================
+   MODAL COLOR
+============================================================ */
+let resolverColor = null;
+let colorElegido = null;
+
+function mostrarModalColor() {
+    return new Promise(resolve => {
+        resolverColor = resolve;
+        colorElegido = null;
+        const grid = document.getElementById('colorGrid');
+        let html = '';
+        for (const [cat, colores] of Object.entries(COLORES)) {
+            html += `<div class="color-category-title">${cat}</div><div class="color-grid">`;
+            colores.forEach(c => {
+                html += `<div class="color-option" data-hex="${c.h}" data-nombre="${c.n}">
+                    <div class="color-swatch" style="background:${c.h};"></div>
+                    <div><div class="color-name">${c.n}</div><div class="color-hex">${c.h}</div></div>
+                </div>`;
+            });
+            html += '</div>';
+        }
+        grid.innerHTML = html;
+        grid.querySelectorAll('.color-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                grid.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                colorElegido = { nombre: opt.dataset.nombre, hex: opt.dataset.hex };
+                cerrarModalColor();
+            });
+        });
+        document.getElementById('modalColor').classList.add('active');
+    });
+}
+function cerrarModalColor() {
+    document.getElementById('modalColor').classList.remove('active');
+    if (resolverColor) { resolverColor(colorElegido); resolverColor = null; }
+}
+
+/* ============================================================
+   CREAR / ELIMINAR CUADERNO
+============================================================ */
+async function crearCuaderno() {
+    const asignatura = prompt('Nombre de la asignatura:');
+    if (!asignatura || !asignatura.trim()) return;
+    const color = await mostrarModalColor();
+    if (!color) { alert('⚠️ Debes elegir un color'); return; }
+    cuadernos.push({
+        id: Date.now(),
+        asignatura: asignatura.trim(),
+        color: color.hex,
+        colorNombre: color.nombre,
+        hojas: [{ titulo:'', fecha:hoy(), objetivo:'', lineas:[] }]
+    });
+    guardar();
+    renderLista();
+    actualizarSelectBusqueda();
+}
+
+function eliminarCuaderno(idx) {
+    if (!confirm(`⚠️ ¿Eliminar "${cuadernos[idx].asignatura}"? Se perderán todas las hojas.`)) return;
+    cuadernos.splice(idx, 1);
+    guardar();
+    if (idxCuaderno === idx) volverLista();
+    else renderLista();
+    actualizarSelectBusqueda();
+}
+
+/* ============================================================
+   RENDER LISTA
+============================================================ */
+function renderLista() {
+    const grid = document.getElementById('gridCuadernos');
+    if (cuadernos.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+            <div class="empty-icon">📭</div>
+            <h3>No tienes cuadernos</h3>
+            <p>Crea tu primer cuaderno para empezar</p>
+            <button class="btn-primary" onclick="crearCuaderno()">+ Crear cuaderno</button>
+        </div>`;
+        return;
+    }
+    grid.innerHTML = cuadernos.map((c, idx) => {
+        const totalLineas = c.hojas.reduce((acc, h) => acc + (h.lineas ? h.lineas.length : 0), 0);
+        return `
+        <div style="position:relative;">
+            <button class="card-delete-btn" onclick="event.stopPropagation(); eliminarCuaderno(${idx})">🗑️ Eliminar</button>
+            <div class="tool-card" onclick="abrirCuaderno(${idx})">
+                <div class="card-thumb" style="background:${c.color};">📓</div>
+                <div class="card-body">
+                    <h3>${esc(c.asignatura)}</h3>
+                    <p>${c.hojas.length} hojas · ${totalLineas} líneas</p>
+                    <div style="width:40px;height:5px;background:${c.color};border-radius:4px;margin-top:10px;border:1px solid rgba(0,0,0,0.08);"></div>
+                    <small style="color:var(--text-muted);font-size:11px;">${c.colorNombre}</small>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+/* ============================================================
+   ABRIR / VOLVER
+============================================================ */
+function abrirCuaderno(idx) {
+    idxCuaderno = idx;
+    idxHoja = 0;
+    modoLector = false;
+    actualizarModoBadge();
+    mostrarVistaEditor();
+    renderEditor();
+    actualizarStats();
+    renderTOC();
+}
+
+function volverLista() {
+    // Guardar antes de salir si estamos en editor
+    if (idxCuaderno !== null && !modoLector) guardarSilencioso();
+    idxCuaderno = null;
+    document.getElementById('vistaLista').style.display = '';
+    document.getElementById('vistaEditor').style.display = 'none';
+    document.getElementById('seccionBusqueda').style.display = '';
+    document.getElementById('seccionEditor').style.display = 'none';
+    renderLista();
+}
+
+function mostrarVistaEditor() {
+    document.getElementById('vistaLista').style.display = 'none';
+    document.getElementById('vistaEditor').style.display = '';
+    document.getElementById('seccionBusqueda').style.display = 'none';
+    document.getElementById('seccionEditor').style.display = '';
+}
+
+/* ============================================================
+   MODO EDITOR / LECTOR
+============================================================ */
+function toggleModo() {
+    if (!modoLector) guardarSilencioso();
+    modoLector = !modoLector;
+    actualizarModoBadge();
+    renderEditor();
+}
+
+function actualizarModoBadge() {
+    const badge = document.getElementById('modoBadge');
+    const secFormato = document.getElementById('seccionFormato');
+    if (modoLector) {
+        badge.textContent = 'Lector 👁️';
+        badge.className = 'mode-badge reader';
+        if (secFormato) secFormato.style.display = 'none';
+    } else {
+        badge.textContent = 'Editor ✏️';
+        badge.className = 'mode-badge editor';
+        if (secFormato) secFormato.style.display = '';
+    }
+}
+
+/* ============================================================
+   RENDER EDITOR
+============================================================ */
+function renderEditor() {
+    if (idxCuaderno === null) return;
+    const cuaderno = cuadernos[idxCuaderno];
+
+    if (!cuaderno.hojas[idxHoja]) {
+        cuaderno.hojas[idxHoja] = { titulo:'', fecha:hoy(), objetivo:'', lineas:[] };
+        guardar();
+    }
+    const hoja = cuaderno.hojas[idxHoja];
+
+    // Header
+    document.getElementById('cuadernoHeaderBar').innerHTML = `
+        <h1 style="border-left-color:${cuaderno.color};">📓 ${esc(cuaderno.asignatura)}</h1>
+        <p>Hoja ${idxHoja + 1} de ${cuaderno.hojas.length}</p>
+    `;
+
+    // Navegador
+    document.getElementById('paginaInfo').textContent = `${idxHoja + 1} / ${cuaderno.hojas.length}`;
+    document.getElementById('saltarA').max = cuaderno.hojas.length;
+    document.getElementById('saltarA').value = idxHoja + 1;
+    document.getElementById('btnPrimera').disabled = idxHoja === 0;
+    document.getElementById('btnAnterior').disabled = idxHoja === 0;
+    document.getElementById('btnSiguiente').disabled = idxHoja === cuaderno.hojas.length - 1;
+    document.getElementById('btnUltima').disabled = idxHoja === cuaderno.hojas.length - 1;
+
+    renderTOC();
+
+    if (modoLector) renderLector(cuaderno, hoja);
+    else renderFormEditor(cuaderno, hoja);
+}
+
+/* ============================================================
+   RENDER FORM EDITOR
+============================================================ */
+function renderFormEditor(cuaderno, hoja) {
+    const lineasTxt = hoja.lineas ? hoja.lineas.join('\n') : '';
+    const count = hoja.lineas ? hoja.lineas.length : 0;
+    const wcount = contarPalabras(lineasTxt);
+    const cClass = count >= MAX_LINEAS ? 'danger' : count >= MAX_LINEAS * 0.8 ? 'warning' : '';
+
+    document.getElementById('hojaContenido').innerHTML = `
+        <div class="hoja-card">
+            <div class="editor-row">
+                <div class="editor-field" style="flex:2;">
+                    <label>Título *</label>
+                    <input type="text" id="inTitulo" value="${esc(hoja.titulo)}" placeholder="Ej: Derivadas e integrales">
+                </div>
+                <div class="editor-field" style="flex:1;">
+                    <label>Fecha *</label>
+                    <input type="date" id="inFecha" value="${hoja.fecha || hoy()}">
+                </div>
+            </div>
+            <div class="editor-field">
+                <label>Objetivo (opcional)</label>
+                <input type="text" id="inObjetivo" value="${esc(hoja.objetivo)}" placeholder="¿Qué quieres aprender hoy?">
+            </div>
+            <div class="editor-field">
+                <label>Contenido · usa ## Subtítulo, ### Sub2, - viñeta, **negrita**, _cursiva_</label>
+                <textarea id="inLineas" rows="18" placeholder="Escribe tus apuntes aquí...">${esc(lineasTxt)}</textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;">
+                    <span class="words-counter" id="contadorPalabras">${wcount} palabras</span>
+                    <span class="lineas-counter ${cClass}" id="contadorLineas">${count} / ${MAX_LINEAS} líneas</span>
+                </div>
+            </div>
+            <div class="editor-actions">
+                <button class="btn-primary" id="btnGuardar">💾 Guardar</button>
+                <button class="btn-secondary" id="btnNuevaHoja">+ Nueva hoja</button>
+                <button class="btn-danger" id="btnEliminarHoja">🗑️ Eliminar hoja</button>
+            </div>
+        </div>
+    `;
+
+    const ta = document.getElementById('inLineas');
+    ta.addEventListener('input', () => {
+        actualizarContador();
+        programarAutoSave();
+    });
+    ta.addEventListener('keydown', manejarAtajos);
+
+    document.getElementById('btnGuardar').addEventListener('click', guardarHoja);
+    document.getElementById('btnNuevaHoja').addEventListener('click', () => nuevaHoja());
+    document.getElementById('btnEliminarHoja').addEventListener('click', eliminarHoja);
+
+    // Botones de formato del sidebar
+    document.querySelectorAll('.tool-btn[data-fmt]').forEach(btn => {
+        btn.onclick = () => insertarPrefijo(btn.dataset.fmt);
+    });
+    document.querySelectorAll('.tool-btn[data-fmt-wrap]').forEach(btn => {
+        btn.onclick = () => envolverSeleccion(btn.dataset.fmtWrap);
+    });
+}
+
+/* ============================================================
+   RENDER LECTOR
+============================================================ */
+function renderLector(cuaderno, hoja) {
+    const lineas = hoja.lineas || [];
+    const linesHtml = lineas.length
+        ? lineas.map(l => parsearLinea(l)).join('')
+        : '<span class="reader-line" style="color:#bbb;font-style:italic;">Hoja vacía</span>';
+
+    document.getElementById('hojaContenido').innerHTML = `
+        <div class="reader-page" style="border-left-color:${cuaderno.color};">
+            <div class="reader-tipo-badge">Hoja ${idxHoja + 1}</div>
+            <div class="reader-lines">
+                <div class="reader-page-title">${esc(hoja.titulo) || 'Sin título'}</div>
+                <div class="reader-page-meta">📅 ${hoja.fecha || '—'}${hoja.objetivo ? ` · 🎯 ${esc(hoja.objetivo)}` : ''}</div>
+                <div style="margin-top:4px;">${linesHtml}</div>
+            </div>
+            <div class="reader-page-num">— ${idxHoja + 1} / ${cuaderno.hojas.length} —</div>
+        </div>
+    `;
+}
+
+/* ============================================================
+   TABLA DE CONTENIDOS
+============================================================ */
+function renderTOC() {
+    if (idxCuaderno === null) return;
+    const cuaderno = cuadernos[idxCuaderno];
+    const container = document.getElementById('tocContainer');
+    if (!container) return;
+
+    if (cuaderno.hojas.length === 0) {
+        container.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px;">Sin hojas aún</div>';
+        return;
+    }
+
+    container.innerHTML = cuaderno.hojas.map((h, i) => {
+        const cls = i === idxHoja ? 'toc-item' + (h.titulo ? '' : ' sin-titulo') + '; background:var(--purple-light);color:var(--purple-dark);' : '';
+        const style = i === idxHoja ? 'background:var(--purple-light);color:var(--purple-dark);' : '';
+        return `<button class="toc-item${!h.titulo ? ' sin-titulo' : ''}" style="${style}" onclick="saltarHoja(${i + 1})">
+            <span class="toc-item-num">${i + 1}.</span>${h.titulo ? esc(h.titulo) : 'Sin título'}
+        </button>`;
+    }).join('');
+}
+
+/* ============================================================
+   ESTADÍSTICAS
+============================================================ */
+function actualizarStats() {
+    if (idxCuaderno === null) return;
+    const c = cuadernos[idxCuaderno];
+    let totalLineas = 0, totalPalabras = 0, ultimaFecha = '';
+    c.hojas.forEach(h => {
+        totalLineas += h.lineas ? h.lineas.length : 0;
+        totalPalabras += contarPalabras((h.lineas || []).join(' '));
+        if (h.fecha && h.fecha > ultimaFecha) ultimaFecha = h.fecha;
+    });
+    document.getElementById('statHojas').textContent = c.hojas.length;
+    document.getElementById('statLineas').textContent = totalLineas;
+    document.getElementById('statPalabras').textContent = totalPalabras;
+    const fechaEl = document.getElementById('statFecha');
+    if (fechaEl) fechaEl.textContent = ultimaFecha ? ultimaFecha.slice(5) : '—';
+}
+
+function contarPalabras(texto) {
+    return texto.trim() === '' ? 0 : texto.trim().split(/\s+/).length;
+}
+
+/* ============================================================
+   GUARDAR
+============================================================ */
+function leerCampos() {
+    return {
+        titulo: document.getElementById('inTitulo')?.value?.trim() || '',
+        fecha: document.getElementById('inFecha')?.value || hoy(),
+        objetivo: document.getElementById('inObjetivo')?.value?.trim() || '',
+        lineas: (document.getElementById('inLineas')?.value || '').split('\n').slice(0, MAX_LINEAS)
+    };
+}
+
+function guardarSilencioso() {
+    if (idxCuaderno === null || modoLector) return;
+    const campos = leerCampos();
+    if (!campos.titulo && campos.lineas.every(l => !l.trim())) return; // hoja vacía, no guardar
+    const hoja = cuadernos[idxCuaderno].hojas[idxHoja];
+    hoja.titulo = campos.titulo;
+    hoja.fecha = campos.fecha;
+    hoja.objetivo = campos.objetivo;
+    hoja.lineas = campos.lineas;
+    guardar();
+    actualizarStats();
+    renderTOC();
+}
+
+function programarAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+        guardarSilencioso();
+        mostrarAutoSave();
+    }, 1500);
+}
+
+function guardarHoja() {
+    const campos = leerCampos();
+    if (!campos.titulo) { alert('⚠️ El título es obligatorio'); return; }
+    if (!campos.fecha) { alert('⚠️ La fecha es obligatoria'); return; }
+
+    const hoja = cuadernos[idxCuaderno].hojas[idxHoja];
+    hoja.titulo = campos.titulo;
+    hoja.fecha = campos.fecha;
+    hoja.objetivo = campos.objetivo;
+    hoja.lineas = campos.lineas;
+    guardar();
+    actualizarStats();
+    renderTOC();
+    mostrarAutoSave();
+
+    const lineasReales = campos.lineas.filter(l => l.trim()).length;
+    if (lineasReales >= MAX_LINEAS) {
+        if (confirm(`✨ ¡Llegaste al máximo de ${MAX_LINEAS} líneas!\n¿Crear nueva hoja automáticamente?`)) {
+            nuevaHoja();
+        }
+    }
+}
+
+/* ============================================================
+   NUEVA HOJA / ELIMINAR HOJA
+============================================================ */
+function nuevaHoja() {
+    // Guardar la hoja actual primero
+    guardarSilencioso();
+    const cuaderno = cuadernos[idxCuaderno];
+    cuaderno.hojas.push({ titulo:'', fecha:hoy(), objetivo:'', lineas:[] });
+    guardar();
+    idxHoja = cuaderno.hojas.length - 1;
+    renderEditor();
+    actualizarStats();
+    renderTOC();
+}
+
+function eliminarHoja() {
+    const cuaderno = cuadernos[idxCuaderno];
+    if (cuaderno.hojas.length === 1) {
+        if (confirm('⚠️ Es la única hoja. ¿Eliminar el cuaderno completo?')) {
+            eliminarCuaderno(idxCuaderno);
+            volverLista();
+        }
+        return;
+    }
+    if (!confirm('🗑️ ¿Eliminar esta hoja? No se puede deshacer.')) return;
+    cuaderno.hojas.splice(idxHoja, 1);
+    if (idxHoja >= cuaderno.hojas.length) idxHoja = cuaderno.hojas.length - 1;
+    guardar();
+    renderEditor();
+    actualizarStats();
+    renderTOC();
+}
+
+/* ============================================================
+   NAVEGACIÓN
+============================================================ */
+function cambiarHoja(delta) {
+    if (!modoLector) guardarSilencioso();
+    const c = cuadernos[idxCuaderno];
+    const nueva = idxHoja + delta;
+    if (nueva >= 0 && nueva < c.hojas.length) { idxHoja = nueva; renderEditor(); }
+}
+
+function saltarHoja(n) {
+    if (!modoLector) guardarSilencioso();
+    const c = cuadernos[idxCuaderno];
+    const target = Math.min(Math.max(1, n), c.hojas.length) - 1;
+    idxHoja = target;
+    renderEditor();
+}
+
+/* ============================================================
+   FORMATO: insertar en textarea
+============================================================ */
+function insertarPrefijo(prefijo) {
+    const ta = document.getElementById('inLineas');
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const val = ta.value;
+    // Encontrar inicio de línea
+    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+    ta.value = val.slice(0, lineStart) + prefijo + val.slice(lineStart);
+    ta.selectionStart = ta.selectionEnd = lineStart + prefijo.length + (start - lineStart);
+    ta.focus();
+    programarAutoSave();
+    actualizarContador();
+}
+
+function envolverSeleccion(marca) {
+    const ta = document.getElementById('inLineas');
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const val = ta.value;
+    const sel = val.slice(start, end) || 'texto';
+    ta.value = val.slice(0, start) + marca + sel + marca + val.slice(end);
+    ta.selectionStart = start + marca.length;
+    ta.selectionEnd = start + marca.length + sel.length;
+    ta.focus();
+    programarAutoSave();
+}
+
+/* ============================================================
+   ATAJOS DE TECLADO EN TEXTAREA
+============================================================ */
+function manejarAtajos(e) {
+    if (e.ctrlKey || e.metaKey) {
+        if (e.key === 's') { e.preventDefault(); guardarHoja(); }
+        if (e.key === 'b') { e.preventDefault(); envolverSeleccion('**'); }
+        if (e.key === 'i') { e.preventDefault(); envolverSeleccion('_'); }
+    }
+}
+
+/* ============================================================
+   CONTADOR
+============================================================ */
+function actualizarContador() {
+    const ta = document.getElementById('inLineas');
+    const counter = document.getElementById('contadorLineas');
+    const wCounter = document.getElementById('contadorPalabras');
+    if (!ta) return;
+    const lineas = ta.value.split('\n');
+    const n = lineas.length;
+    if (counter) {
+        counter.textContent = `${n} / ${MAX_LINEAS} líneas`;
+        counter.className = 'lineas-counter' + (n >= MAX_LINEAS ? ' danger' : n >= MAX_LINEAS * 0.8 ? ' warning' : '');
+    }
+    if (wCounter) {
+        wCounter.textContent = `${contarPalabras(ta.value)} palabras`;
+    }
+}
+
+/* ============================================================
+   BÚSQUEDA
+============================================================ */
+function actualizarSelectBusqueda() {
+    const sel = document.getElementById('buscarEnCuaderno');
+    sel.innerHTML = '<option value="">-- Elige un cuaderno --</option>' +
+        cuadernos.map((c, i) => `<option value="${i}">${esc(c.asignatura)}</option>`).join('');
+}
+
+function realizarBusqueda() {
+    const selIdx = document.getElementById('buscarEnCuaderno').value;
+    const fecha = document.getElementById('buscarFecha').value;
+    const titulo = document.getElementById('buscarTitulo').value.toLowerCase().trim();
+    const div = document.getElementById('resultadosBusqueda');
+
+    if (selIdx === '') { alert('⚠️ Debes elegir un cuaderno'); return; }
+    if (!fecha && !titulo) { alert('⚠️ Indica al menos una fecha o un título'); return; }
+
+    const cIdx = parseInt(selIdx);
+    const cuaderno = cuadernos[cIdx];
+    const resultados = [];
+
+    cuaderno.hojas.forEach((h, hIdx) => {
+        let ok = true;
+        if (fecha && h.fecha !== fecha) ok = false;
+        if (titulo && !(h.titulo || '').toLowerCase().includes(titulo)) ok = false;
+        if (ok) resultados.push({ hIdx, titulo: h.titulo || 'Sin título', fecha: h.fecha || '—' });
+    });
+
+    if (resultados.length === 0) {
+        div.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px;text-align:center;">Sin resultados</div>';
+        return;
+    }
+
+    div.innerHTML = resultados.map(r => `
+        <div class="search-result-item" onclick="irAResultado(${cIdx}, ${r.hIdx})">
+            <strong>${esc(r.titulo)}</strong>
+            <span>📅 ${r.fecha} · hoja ${r.hIdx + 1}</span>
+        </div>
+    `).join('');
+}
+
+function irAResultado(cIdx, hIdx) {
+    idxCuaderno = cIdx;
+    idxHoja = hIdx;
+    modoLector = true;
+    actualizarModoBadge();
+    mostrarVistaEditor();
+    renderEditor();
+    actualizarStats();
+    document.getElementById('resultadosBusqueda').innerHTML = '';
+}
+
+function limpiarBusqueda() {
+    document.getElementById('buscarEnCuaderno').value = '';
+    document.getElementById('buscarFecha').value = '';
+    document.getElementById('buscarTitulo').value = '';
+    document.getElementById('resultadosBusqueda').innerHTML = '';
+}
+
+/* ============================================================
+   EVENTOS
+============================================================ */
+document.getElementById('btnNuevoCuaderno').addEventListener('click', crearCuaderno);
+document.getElementById('btnVerLista').addEventListener('click', e => { e.preventDefault(); volverLista(); });
+document.getElementById('btnCerrarColor').addEventListener('click', cerrarModalColor);
+document.getElementById('btnCancelarColor').addEventListener('click', cerrarModalColor);
+document.getElementById('modalColor').addEventListener('click', e => { if (e.target === document.getElementById('modalColor')) cerrarModalColor(); });
+
+document.getElementById('btnPrimera').addEventListener('click', () => saltarHoja(1));
+document.getElementById('btnAnterior').addEventListener('click', () => cambiarHoja(-1));
+document.getElementById('btnSiguiente').addEventListener('click', () => cambiarHoja(1));
+document.getElementById('btnUltima').addEventListener('click', () => { if (idxCuaderno !== null) saltarHoja(cuadernos[idxCuaderno].hojas.length); });
+document.getElementById('btnSaltar').addEventListener('click', () => {
+    const v = parseInt(document.getElementById('saltarA').value);
+    if (!isNaN(v)) saltarHoja(v);
+});
+document.getElementById('btnToggleModo').addEventListener('click', toggleModo);
+document.getElementById('btnBuscar').addEventListener('click', realizarBusqueda);
+document.getElementById('btnLimpiarBusqueda').addEventListener('click', limpiarBusqueda);
+
+// Guardar al salir/cambiar de página
+window.addEventListener('beforeunload', () => { if (!modoLector) guardarSilencioso(); });
+
+/* ============================================================
+   INICIO
+============================================================ */
+cargar();
+renderLista();
+actualizarSelectBusqueda();
+</script>
+</body>
+</html>
