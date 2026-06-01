@@ -11,12 +11,12 @@ const Auth = {
     // Cerrar sesión
     cerrarSesion() {
         sessionStorage.removeItem('cc_sesion');
-        window.location.href = 'login.html';
+        window.location.href = '/conect-charme/login.html';
     },
     // Verificar que hay sesión activa, si no redirige al login
     requiereLogin() {
         const s = this.getSesion();
-        if (!s) window.location.href = 'login.html';
+        if (!s) window.location.href = '/conect-charme/login.html';
         return s;
     },
     // Verificar rol mínimo requerido
@@ -26,7 +26,7 @@ const Auth = {
         if (!s) return null;
         if (roles.indexOf(s.rol) < roles.indexOf(rolMinimo)) {
             alert('No tenés permiso para acceder a esta página');
-            window.location.href = 'index.html';
+            window.location.href = '/conect-charme/index.html';
             return null;
         }
         return s;
