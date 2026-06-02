@@ -1,6 +1,14 @@
 {
   "version": "1.0",
-  "usuarios": [],
+  "usuarios": [
+    {
+      "rut": "22785939-3",
+      "nombre": "Victor Tilleria",
+      "rol": "admin",
+      "password": "75e88104b01b0cbeddca3afb4465171d7ebb041f0c5d7db325454b332e41b725",
+      "fechaRegistro": "2026-06-02T13:50:42.185Z"
+    }
+  ],
   "ruts_autorizados": [
     {
       "rut": "22785939-3",
