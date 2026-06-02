@@ -14,6 +14,11 @@
       "rut": "22785939-3",
       "rol": "admin",
       "nombre": "Victor Tilleria"
+    },
+    {
+      "rut": "22793944-3",
+      "nombre": "Mayckool Perez",
+      "rol": "alumno"
     }
   ]
 }
