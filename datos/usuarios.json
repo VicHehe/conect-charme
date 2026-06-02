@@ -14,6 +14,13 @@
       "rol": "alumno",
       "password": "1b5eb3c620f88f9c7327450305bfc64b9981bc86b52b102bb45961b23aa8cba2",
       "fechaRegistro": "2026-06-02T14:20:19.675Z"
+    },
+    {
+      "rut": "18722587-6",
+      "nombre": "Matias Alcaino",
+      "rol": "profesor",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "fechaRegistro": "2026-06-02T14:30:07.533Z"
     }
   ],
   "ruts_autorizados": [
