@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conect-Charme — Calculadora 🧮</title>
-    <link rel="icon" type="image/png" href="png/favicon.png">
-    <link rel="stylesheet" href="../../Css/styles.css">
+    <link rel="icon" type="image/png" href="../../assets/favicon.png">
+    <link rel="stylesheet" href="../../css/styles.css">
     <style>
         .calc-container {
             display: flex;
@@ -25,7 +25,6 @@
             padding: 20px;
             height: fit-content;
         }
-        /* DISPLAY MÁS COMPACTO (~10% más pequeño) */
         .display {
             background: var(--bg);
             border: 2px solid var(--border);
@@ -44,10 +43,9 @@
         .resultado {
             font-size: 36px;
             font-weight: 800;
-            color: var(--purple-dark);
+            color: var(--blue-dark);
             word-break: break-word;
         }
-        /* BOTONES MÁS COMPACTOS */
         .botones-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -66,26 +64,26 @@
             text-align: center;
         }
         .calc-btn:hover {
-            background: var(--purple-light);
-            border-color: var(--purple);
+            background: var(--blue-light);
+            border-color: var(--blue);
             transform: translateY(-2px);
         }
         .calc-btn.operador {
-            background: var(--purple-light);
-            color: var(--purple-dark);
+            background: var(--blue-light);
+            color: var(--blue-dark);
         }
         .calc-btn.igual {
-            background: var(--purple);
+            background: var(--blue);
             color: white;
-            border-color: var(--purple);
+            border-color: var(--blue);
         }
         .calc-btn.borrar {
-            background: var(--red-light-cl);
-            color: var(--red-cl);
+            background: var(--red-light);
+            color: var(--red);
         }
         .calc-btn.guardar {
-            background: var(--green-light);
-            color: var(--green-dark);
+            background: var(--yellow-light);
+            color: var(--yellow-dark);
         }
         .historial-item {
             background: var(--bg);
@@ -95,11 +93,9 @@
             font-size: 13px;
             cursor: pointer;
             transition: background 0.15s;
-            border-left: 4px solid var(--purple);
+            border-left: 4px solid var(--yellow);
         }
-        .historial-item:hover {
-            background: var(--purple-light);
-        }
+        .historial-item:hover { background: var(--yellow-light); }
         .historial-cuenta {
             font-family: monospace;
             font-weight: 700;
@@ -114,27 +110,23 @@
             margin-top: 12px;
             width: 100%;
             background: none;
-            border: 1px dashed var(--red-cl);
-            color: var(--red-cl);
+            border: 1px dashed var(--red);
+            color: var(--red);
             padding: 8px;
             border-radius: 40px;
             cursor: pointer;
             font-size: 12px;
         }
-        .btn-borrar-historial:hover {
-            background: var(--red-light-cl);
-        }
+        .btn-borrar-historial:hover { background: var(--red-light); }
         .postit-titulo {
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 12px;
-            color: var(--purple-dark);
+            color: var(--blue-dark);
             display: flex;
             align-items: center;
             gap: 6px;
         }
-
-        /* ===== MODAL INTERÉS HORIZONTAL (16:9) ===== */
         .modal-custom {
             display: none;
             position: fixed;
@@ -144,16 +136,14 @@
             align-items: center;
             justify-content: center;
         }
-        .modal-custom.active {
-            display: flex;
-        }
+        .modal-custom.active { display: flex; }
         .modal-custom-content {
             background: white;
             border-radius: 28px;
             padding: 24px;
             max-width: 760px;
             width: 90%;
-            border: 3px solid var(--purple);
+            border: 3px solid var(--yellow);
         }
         .modal-custom-header {
             display: flex;
@@ -164,7 +154,7 @@
         .modal-custom-header h3 {
             font-size: 20px;
             font-weight: 700;
-            color: var(--purple-dark);
+            color: var(--blue-dark);
         }
         .modal-close-custom {
             background: none;
@@ -173,16 +163,12 @@
             cursor: pointer;
             color: var(--text-muted);
         }
-        /* Layout horizontal del modal */
         .modal-split {
             display: flex;
             gap: 24px;
             flex-wrap: wrap;
         }
-        .modal-left {
-            flex: 1;
-            min-width: 200px;
-        }
+        .modal-left { flex: 1; min-width: 200px; }
         .modal-right {
             flex: 1;
             min-width: 180px;
@@ -190,14 +176,12 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        .modal-field {
-            margin-bottom: 14px;
-        }
+        .modal-field { margin-bottom: 14px; }
         .modal-field label {
             display: block;
             font-size: 11px;
             font-weight: 800;
-            color: var(--purple-dark);
+            color: var(--blue-dark);
             text-transform: uppercase;
             margin-bottom: 4px;
         }
@@ -210,7 +194,7 @@
             background: white;
         }
         .modal-result {
-            background: var(--purple-light);
+            background: var(--yellow-light);
             border-radius: 20px;
             padding: 20px;
             text-align: center;
@@ -219,12 +203,9 @@
         .modal-result .interes-num {
             font-size: 32px;
             font-weight: 800;
-            color: var(--purple-dark);
+            color: var(--blue-dark);
         }
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-        }
+        .modal-actions { display: flex; gap: 12px; }
         .modal-actions button {
             flex: 1;
             padding: 14px;
@@ -235,61 +216,59 @@
             transition: all 0.15s;
         }
         .btn-guardar-modal {
-            background: var(--purple);
+            background: var(--blue);
             color: white;
             border: none;
         }
-        .btn-guardar-modal:hover {
-            background: var(--purple-dark);
-        }
+        .btn-guardar-modal:hover { background: var(--blue-dark); }
         .btn-cerrar-modal {
             background: var(--bg);
             border: 2px solid var(--border);
             color: var(--text);
         }
-        .btn-cerrar-modal:hover {
-            background: var(--border);
-        }
+        .btn-cerrar-modal:hover { background: var(--border); }
     </style>
 </head>
 <body>
 
 <header class="app-header">
     <div class="header-left">
-        <a href="../estudios.html" class="back-link">←</a>
-        <div class="logo">
-            <span class="logo-icon">🧮</span>
+        <a href="/conect-charme/index.html" class="back-link">←</a>
+        <a href="/conect-charme/index.html" class="logo">
+            <img src="../../assets/favicon.png" alt="Conect-Charme">
             <span class="logo-text">Calculadora</span>
-        </div>
+        </a>
     </div>
-    <div class="header-right"></div>
+    <div class="header-right">
+        <div class="avatar" id="avatarBtn"></div>
+    </div>
 </header>
 
 <div class="app-body">
     <aside class="sidebar">
         <nav class="sidebar-nav">
-            <a href="../estudios.html" class="nav-item">
-                <span class="nav-icon">←</span>
-                <span>Volver</span>
+            <a href="/conect-charme/index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Inicio</span>
             </a>
+            <hr class="nav-divider">
+            <div style="padding: 16px;">
+                <div class="postit-titulo">📌 Funciones clave</div>
+                <ul style="font-size: 12px; color: var(--text-muted); list-style: none; padding: 0;">
+                    <li style="margin-bottom: 8px;">✅ <strong>%</strong>: Porcentajes</li>
+                    <li style="margin-bottom: 8px;">✅ <strong>√</strong>: Raíz cuadrada</li>
+                    <li style="margin-bottom: 8px;">✅ <strong>xʸ</strong>: Potencias</li>
+                    <li style="margin-bottom: 8px;">✅ <strong>Interés</strong>: Interés simple</li>
+                    <li style="margin-bottom: 8px;">✅ <strong>Guardar</strong>: Guarda resultados</li>
+                </ul>
+            </div>
         </nav>
-        <hr class="nav-divider">
-        <div style="padding: 16px;">
-            <div class="postit-titulo">📌 Funciones clave</div>
-            <ul style="font-size: 12px; color: var(--text-muted); list-style: none; padding: 0;">
-                <li style="margin-bottom: 8px;">✅ <strong>%</strong>: Calcula porcentajes (ej: 200 + 10% = 220)</li>
-                <li style="margin-bottom: 8px;">✅ <strong>√</strong>: Raíz cuadrada</li>
-                <li style="margin-bottom: 8px;">✅ <strong>xʸ</strong>: Potencias</li>
-                <li style="margin-bottom: 8px;">✅ <strong>Interés</strong>: Calculadora con tasa anual/mensual/diaria</li>
-                <li style="margin-bottom: 8px;">✅ <strong>Guardar</strong>: Almacena el resultado en el panel lateral</li>
-            </ul>
-        </div>
     </aside>
 
     <main class="main-content">
         <div class="page-header">
-            <h1>Calculadora de Estudio</h1>
-            <p>Operaciones básicas, porcentajes, interés simple y más. Guarda tus resultados importantes.</p>
+            <h1>Calculadora</h1>
+            <p>Operaciones básicas, porcentajes, interés simple y más.</p>
         </div>
 
         <div class="calc-container">
@@ -298,7 +277,6 @@
                     <div class="expresion" id="expresion">0</div>
                     <div class="resultado" id="resultado">0</div>
                 </div>
-
                 <div class="botones-grid">
                     <button class="calc-btn" data-action="clear">AC</button>
                     <button class="calc-btn" data-action="delete">⌫</button>
@@ -343,16 +321,13 @@
     </main>
 </div>
 
-<!-- Modal personalizado para interés (HORIZONTAL) -->
 <div id="modalInteres" class="modal-custom">
     <div class="modal-custom-content">
         <div class="modal-custom-header">
             <h3>📈 Interés Simple</h3>
             <button class="modal-close-custom" id="cerrarModalInteres">✕</button>
         </div>
-        
         <div class="modal-split">
-            <!-- LADO IZQUIERDO: campos compactos -->
             <div class="modal-left">
                 <div class="modal-field">
                     <label>💰 Capital inicial</label>
@@ -383,8 +358,6 @@
                     </select>
                 </div>
             </div>
-            
-            <!-- LADO DERECHO: resultado grande + botones -->
             <div class="modal-right">
                 <div class="modal-result" id="modalResultadoInteres">
                     <div style="font-size: 13px; color: var(--text-muted);">Interés calculado</div>
@@ -400,62 +373,87 @@
     </div>
 </div>
 
+<div id="toast" class="toast"></div>
+
+<script src="../../js/github.js"></script>
+<script src="../../js/auth.js"></script>
 <script>
-    /* ============================================================
-       CALCULADORA - VICTOR EDITION v2
-       Interés simple con modal personalizado (anual/mensual/diario)
-    ============================================================ */
-    
+    // Verificar sesión
+    const sesion = Auth.requiereLogin();
+    if (!sesion) throw new Error('Sin sesión');
+    document.getElementById('avatarBtn').textContent = sesion.nombre.charAt(0).toUpperCase();
+
+    // Historial — guardado en GitHub por usuario
+    const HISTORIAL_PATH = `datos/usuarios/${sesion.rut}/calculadora.json`;
+    let historial = [];
+    let historialSha = null;
+
+    async function cargarHistorial() {
+        try {
+            const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(HISTORIAL_PATH)}`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.content) {
+                    historial = JSON.parse(atob(data.content.replace(/\n/g, '')));
+                    historialSha = data.sha;
+                }
+            }
+        } catch(e) {}
+        renderHistorial();
+    }
+
+    async function guardarHistorialGitHub() {
+        const body = {
+            message: `update calculadora ${sesion.rut}`,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(historial, null, 2))))
+        };
+        if (historialSha) body.sha = historialSha;
+        try {
+            const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(HISTORIAL_PATH)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) {
+                const data = await res.json();
+                historialSha = data.content?.sha || historialSha;
+            }
+        } catch(e) {}
+    }
+
+    const expresionEl = document.getElementById('expresion');
+    const resultadoEl = document.getElementById('resultado');
+    const historialLista = document.getElementById('historialLista');
+
     let currentInput = "0";
     let previousInput = "";
     let operation = null;
     let waitingForOperand = false;
-    
-    let historial = [];
-    const HISTORIAL_KEY = 'calculadora_historial';
-    
-    const expresionEl = document.getElementById('expresion');
-    const resultadoEl = document.getElementById('resultado');
-    const historialLista = document.getElementById('historialLista');
-    
-    function cargarHistorial() {
-        const guardado = localStorage.getItem(HISTORIAL_KEY);
-        if (guardado) {
-            try {
-                historial = JSON.parse(guardado);
-                renderHistorial();
-            } catch(e) {}
-        }
-    }
-    
-    function guardarHistorial() {
-        localStorage.setItem(HISTORIAL_KEY, JSON.stringify(historial));
-        renderHistorial();
-    }
-    
+
     function añadirAlHistorial(cuenta, resultado) {
         historial.unshift({
-            cuenta: cuenta,
-            resultado: resultado,
+            cuenta,
+            resultado,
             fecha: new Date().toLocaleString('es-CL')
         });
         if (historial.length > 20) historial.pop();
-        guardarHistorial();
+        renderHistorial();
+        guardarHistorialGitHub();
     }
-    
+
     function renderHistorial() {
         if (historial.length === 0) {
             historialLista.innerHTML = `<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Guarda cálculos importantes aquí.</div>`;
             return;
         }
-        historialLista.innerHTML = historial.map((item, idx) => `
+        historialLista.innerHTML = historial.map(item => `
             <div class="historial-item" onclick="copiarAlPortapapeles('${item.resultado}')">
                 <div class="historial-cuenta">${escapeHtml(item.cuenta)} = ${escapeHtml(item.resultado)}</div>
                 <div class="historial-fecha">📅 ${item.fecha}</div>
             </div>
         `).join('');
     }
-    
+
     function updateDisplay() {
         resultadoEl.textContent = currentInput;
         if (operation && !waitingForOperand) {
@@ -466,28 +464,25 @@
             expresionEl.textContent = currentInput;
         }
     }
-    
+
     function getOpSymbol(op) {
-        const symbols = { '+': '+', '-': '-', '*': '×', '/': '÷', 'sqrt': '√', 'pow': '^', 'percent': '%' };
+        const symbols = { '+': '+', '-': '-', '*': '×', '/': '÷', 'sqrt': '√', 'pow': '^' };
         return symbols[op] || op;
     }
-    
+
     function compute() {
         if (!operation || waitingForOperand) return;
         let result;
         const prev = parseFloat(previousInput);
         const current = parseFloat(currentInput);
-        
         switch(operation) {
             case '+': result = prev + current; break;
             case '-': result = prev - current; break;
             case '*': result = prev * current; break;
-            case '/': 
-                if (current === 0) { alert("No se puede dividir por cero"); limpiar(); return; }
+            case '/':
+                if (current === 0) { mostrarToast('No se puede dividir por cero'); limpiar(); return; }
                 result = prev / current; break;
-            case 'sqrt': result = Math.sqrt(prev); break;
             case 'pow': result = Math.pow(prev, current); break;
-            case 'percent': result = prev * (current / 100); break;
             default: return;
         }
         currentInput = String(Math.round(result * 1000000) / 1000000);
@@ -496,61 +491,51 @@
         previousInput = "";
         updateDisplay();
     }
-    
+
     function guardarCalculoActual() {
         const cuentaActual = expresionEl.textContent;
         const resActual = resultadoEl.textContent;
-        if (resActual !== "0" && cuentaActual !== "0" && cuentaActual !== "0") {
+        if (resActual !== "0" && cuentaActual !== "0") {
             añadirAlHistorial(cuentaActual, resActual);
+            mostrarToast('✅ Guardado');
         } else {
-            alert("No hay un cálculo para guardar");
+            mostrarToast('No hay un cálculo para guardar');
         }
     }
-    
-    // Interés simple con modal personalizado
+
     function actualizarVistaPreviaInteres() {
         const capital = parseFloat(document.getElementById('interesCapital').value) || 0;
         let tasa = parseFloat(document.getElementById('interesTasa').value) || 0;
         const periodoTasa = document.getElementById('interesPeriodoTasa').value;
         const tiempo = parseFloat(document.getElementById('interesTiempo').value) || 0;
         const periodoTiempo = document.getElementById('interesPeriodoTiempo').value;
-        
-        // Convertir todo a años para la fórmula I = C * i * t
         let tasaAnual = tasa;
         if (periodoTasa === 'mensual') tasaAnual = tasa * 12;
         if (periodoTasa === 'diario') tasaAnual = tasa * 365;
-        
         let tiempoAnios = tiempo;
         if (periodoTiempo === 'meses') tiempoAnios = tiempo / 12;
         if (periodoTiempo === 'dias') tiempoAnios = tiempo / 365;
-        
         const interes = capital * (tasaAnual / 100) * tiempoAnios;
         const total = capital + interes;
-        
         document.getElementById('interesValor').textContent = `$${Math.round(interes).toLocaleString('es-CL')}`;
         document.getElementById('interesTotal').innerHTML = `Total: $${Math.round(total).toLocaleString('es-CL')}`;
-        
         return { interes, total, capital, tasa, periodoTasa, tiempo, periodoTiempo };
     }
-    
+
     function guardarInteres() {
         const capital = parseFloat(document.getElementById('interesCapital').value) || 0;
-        let tasa = parseFloat(document.getElementById('interesTasa').value) || 0;
+        const tasa = parseFloat(document.getElementById('interesTasa').value) || 0;
         const periodoTasa = document.getElementById('interesPeriodoTasa').value;
         const tiempo = parseFloat(document.getElementById('interesTiempo').value) || 0;
         const periodoTiempo = document.getElementById('interesPeriodoTiempo').value;
-        
         const { interes, total } = actualizarVistaPreviaInteres();
-        
         const cuenta = `Interés: $${capital.toLocaleString('es-CL')} al ${tasa}% ${periodoTasa} por ${tiempo} ${periodoTiempo}`;
         const resultado = `$${Math.round(total).toLocaleString('es-CL')}`;
         añadirAlHistorial(cuenta, resultado);
-        
         document.getElementById('modalInteres').classList.remove('active');
     }
-    
+
     function abrirModalInteres() {
-        // Resetear valores por defecto
         document.getElementById('interesCapital').value = "100000";
         document.getElementById('interesTasa').value = "5.5";
         document.getElementById('interesPeriodoTasa').value = "anual";
@@ -559,71 +544,37 @@
         actualizarVistaPreviaInteres();
         document.getElementById('modalInteres').classList.add('active');
     }
-    
+
     function copiarAlPortapapeles(texto) {
         navigator.clipboard.writeText(texto).then(() => {
-            toast("✅ Copiado: " + texto);
-        }).catch(() => {
-            alert("No se pudo copiar");
+            mostrarToast("✅ Copiado: " + texto);
         });
     }
-    
-    function toast(msg) {
-        const t = document.createElement('div');
+
+    function mostrarToast(msg) {
+        const t = document.getElementById('toast');
         t.textContent = msg;
-        t.style.position = 'fixed';
-        t.style.bottom = '20px';
-        t.style.left = '50%';
-        t.style.transform = 'translateX(-50%)';
-        t.style.backgroundColor = '#1f2937';
-        t.style.color = 'white';
-        t.style.padding = '8px 20px';
-        t.style.borderRadius = '40px';
-        t.style.fontSize = '13px';
-        t.style.zIndex = '999';
-        t.style.pointerEvents = 'none';
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 2000);
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
     }
-    
+
     function limpiar() {
-        currentInput = "0";
-        previousInput = "";
-        operation = null;
-        waitingForOperand = false;
+        currentInput = "0"; previousInput = ""; operation = null; waitingForOperand = false;
         updateDisplay();
     }
-    
+
     function deleteLast() {
         if (waitingForOperand) return;
-        if (currentInput.length === 1 || currentInput === "0") {
-            currentInput = "0";
-        } else {
-            currentInput = currentInput.slice(0, -1);
-        }
+        currentInput = currentInput.length === 1 ? "0" : currentInput.slice(0, -1);
         updateDisplay();
     }
-    
+
     function inputNumber(num) {
-        if (waitingForOperand) {
-            currentInput = num;
-            waitingForOperand = false;
-        } else {
-            currentInput = currentInput === "0" ? num : currentInput + num;
-        }
+        if (waitingForOperand) { currentInput = num; waitingForOperand = false; }
+        else { currentInput = currentInput === "0" ? num : currentInput + num; }
         updateDisplay();
     }
-    
-    function inputDecimal() {
-        if (waitingForOperand) {
-            currentInput = "0.";
-            waitingForOperand = false;
-        } else if (currentInput.indexOf('.') === -1) {
-            currentInput += ".";
-        }
-        updateDisplay();
-    }
-    
+
     function setOperation(op) {
         if (operation && !waitingForOperand) compute();
         previousInput = currentInput;
@@ -631,109 +582,86 @@
         waitingForOperand = true;
         updateDisplay();
     }
-    
+
     function applySqrt() {
         const val = parseFloat(currentInput);
-        if (val < 0) { alert("Raíz cuadrada de número negativo no está soportada"); return; }
+        if (val < 0) { mostrarToast('Raíz de negativo no soportada'); return; }
         const result = Math.sqrt(val);
         añadirAlHistorial(`√(${currentInput})`, String(result));
         currentInput = String(result);
-        operation = null;
-        waitingForOperand = false;
+        operation = null; waitingForOperand = false;
         updateDisplay();
     }
-    
+
     function applyPow() {
-        if (!waitingForOperand && operation === null) {
-            previousInput = currentInput;
-            operation = 'pow';
-            waitingForOperand = true;
-            updateDisplay();
-        } else if (operation) {
-            compute();
-            previousInput = currentInput;
-            operation = 'pow';
-            waitingForOperand = true;
-            updateDisplay();
-        }
-    }
-    
-    function applyPercent() {
-        const val = parseFloat(currentInput);
-        const percentVal = val / 100;
-        currentInput = String(percentVal);
+        previousInput = currentInput;
+        operation = 'pow';
+        waitingForOperand = true;
         updateDisplay();
     }
-    
-    // Eventos
+
+    function applyPercent() {
+        currentInput = String(parseFloat(currentInput) / 100);
+        updateDisplay();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+
+    // Eventos botones
     document.querySelectorAll('[data-num]').forEach(btn => {
-        btn.addEventListener('click', () => inputNumber(btn.dataset.num));
+        btn.addEventListener('click', () => {
+            if (btn.dataset.num === '.') {
+                if (waitingForOperand) { currentInput = "0."; waitingForOperand = false; updateDisplay(); }
+                else if (!currentInput.includes('.')) { currentInput += "."; updateDisplay(); }
+            } else {
+                inputNumber(btn.dataset.num);
+            }
+        });
     });
-    document.querySelector('[data-num="."]').addEventListener('click', inputDecimal);
     document.querySelector('[data-action="clear"]').addEventListener('click', limpiar);
     document.querySelector('[data-action="delete"]').addEventListener('click', deleteLast);
-    document.querySelector('[data-action="equals"]').addEventListener('click', () => compute());
+    document.querySelector('[data-action="equals"]').addEventListener('click', compute);
+    document.querySelector('[data-action="percent"]').addEventListener('click', applyPercent);
+    document.querySelector('[data-action="copy"]').addEventListener('click', () => copiarAlPortapapeles(resultadoEl.textContent));
     document.querySelectorAll('[data-op]').forEach(btn => {
         if (btn.dataset.op === 'sqrt') btn.addEventListener('click', applySqrt);
         else if (btn.dataset.op === 'pow') btn.addEventListener('click', applyPow);
-        else if (btn.dataset.op === 'percent') btn.addEventListener('click', applyPercent);
         else btn.addEventListener('click', () => setOperation(btn.dataset.op));
     });
-    
+
     document.getElementById('btnInteres').addEventListener('click', abrirModalInteres);
     document.getElementById('guardarBtn').addEventListener('click', guardarCalculoActual);
-    document.getElementById('borrarHistorialBtn').addEventListener('click', () => {
-        if (confirm("¿Borrar todo el historial de cálculos guardados?")) {
+    document.getElementById('borrarHistorialBtn').addEventListener('click', async () => {
+        if (confirm('¿Borrar todo el historial?')) {
             historial = [];
-            guardarHistorial();
+            historialSha = null;
+            renderHistorial();
+            await guardarHistorialGitHub();
         }
     });
-    document.querySelector('[data-action="copy"]').addEventListener('click', () => {
-        copiarAlPortapapeles(resultadoEl.textContent);
-    });
-    
-    // Eventos del modal de interés
-    document.getElementById('cerrarModalInteres').addEventListener('click', () => {
-        document.getElementById('modalInteres').classList.remove('active');
-    });
-    document.getElementById('cancelarInteresModal').addEventListener('click', () => {
-        document.getElementById('modalInteres').classList.remove('active');
-    });
+    document.getElementById('cerrarModalInteres').addEventListener('click', () => document.getElementById('modalInteres').classList.remove('active'));
+    document.getElementById('cancelarInteresModal').addEventListener('click', () => document.getElementById('modalInteres').classList.remove('active'));
     document.getElementById('guardarInteresModal').addEventListener('click', guardarInteres);
-    
-    // Actualizar vista previa al cambiar inputs
+
     ['interesCapital', 'interesTasa', 'interesPeriodoTasa', 'interesTiempo', 'interesPeriodoTiempo'].forEach(id => {
         document.getElementById(id).addEventListener('input', actualizarVistaPreviaInteres);
         document.getElementById(id).addEventListener('change', actualizarVistaPreviaInteres);
     });
-    
-    // Atajos de teclado
-    document.addEventListener('keydown', (e) => {
+
+    // Teclado
+    document.addEventListener('keydown', e => {
         if (e.key >= '0' && e.key <= '9') inputNumber(e.key);
-        if (e.key === '.') inputDecimal();
-        if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
-            e.preventDefault();
-            setOperation(e.key);
-        }
+        if (e.key === '.') { if (!currentInput.includes('.')) { currentInput += '.'; updateDisplay(); } }
+        if (['+','-','*','/'].includes(e.key)) { e.preventDefault(); setOperation(e.key); }
         if (e.key === 'Enter' || e.key === '=') compute();
         if (e.key === 'Escape') limpiar();
         if (e.key === 'Backspace') deleteLast();
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            guardarCalculoActual();
-        }
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); guardarCalculoActual(); }
     });
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
+
     cargarHistorial();
     updateDisplay();
 </script>
