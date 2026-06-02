@@ -3,1027 +3,1014 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conect-Charme — Checklist ✅</title>
-    <link rel="icon" type="image/png" href="png/favicon.png">
-    <link rel="stylesheet" href="../../Css/styles.css">
+    <title>Conect-Charme — Tareas</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png">
+    <link rel="stylesheet" href="../../css/styles.css">
     <style>
-        :root {
-            --green: #10b981;
-            --green-dark: #059669;
-            --green-light: #d1fae5;
-            --orange: #f59e0b;
-            --orange-light: #fef3c7;
-            --red-cl: #ef4444;
-            --red-light-cl: #fee2e2;
+        /* ===== LAYOUT CHECKLIST ===== */
+        .checklist-layout {
+            display: flex;
+            gap: 0;
+            height: calc(100vh - 60px);
+            overflow: hidden;
         }
 
-        .stats-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-        }
-        .stat-pill {
+        /* ===== PANEL IZQUIERDO — LISTAS ===== */
+        .listas-panel {
+            width: 240px;
+            min-width: 240px;
             background: white;
-            border: 1.5px solid var(--border);
-            border-radius: 40px;
-            padding: 8px 18px;
-            font-size: 13px;
-            font-weight: 600;
+            border-right: 2px solid var(--border);
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-direction: column;
+            overflow-y: auto;
         }
-        .stat-pill .num {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--purple-dark);
-        }
-        .stat-pill.urgente .num { color: var(--red-cl); }
-        .stat-pill.ok .num { color: var(--green-dark); }
-
-        .filtro-row {
+        .listas-header {
+            padding: 16px 12px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+            justify-content: space-between;
             align-items: center;
         }
-        .filtro-chip {
-            padding: 6px 16px;
-            border-radius: 40px;
-            border: 1.5px solid var(--border);
-            background: white;
-            font-size: 13px;
-            font-weight: 500;
+        .btn-nueva-lista {
+            background: none;
+            border: none;
+            font-size: 20px;
             cursor: pointer;
+            color: var(--blue);
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+        .btn-nueva-lista:hover { background: var(--blue-light); }
+
+        .lista-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 1px 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
             transition: all 0.15s;
             color: var(--text);
         }
-        .filtro-chip:hover { border-color: var(--purple); color: var(--purple-dark); }
-        .filtro-chip.active {
-            background: var(--purple);
-            color: white;
-            border-color: var(--purple);
+        .lista-item:hover { background: var(--bg); }
+        .lista-item.active { background: var(--blue-light); color: var(--blue-dark); font-weight: 700; }
+        .lista-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
+        .lista-nombre { flex: 1; }
+        .lista-count {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 1px 7px;
+            border-radius: 20px;
+        }
+        .lista-item.active .lista-count {
+            background: var(--blue);
+            color: white;
+        }
+        .lista-delete {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-muted);
+            opacity: 0;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+        .lista-item:hover .lista-delete { opacity: 1; }
+        .lista-delete:hover { color: var(--red); background: var(--red-light); }
 
-        .grupos-wrap {
+        .listas-nav-fija {
+            padding: 8px;
+            border-bottom: 1.5px solid var(--border);
+            margin-bottom: 4px;
+        }
+        .nav-fija-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            transition: all 0.15s;
+        }
+        .nav-fija-item:hover { background: var(--bg); }
+        .nav-fija-item.active { background: var(--blue-light); color: var(--blue-dark); font-weight: 700; }
+        .nav-fija-item.active .lista-count { background: var(--blue); color: white; }
+
+        /* ===== PANEL DERECHO — TAREAS ===== */
+        .tareas-panel {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-        }
-
-        .grupo-bloque {
-            background: white;
-            border-radius: 18px;
-            border: 1.5px solid var(--border);
             overflow: hidden;
-            transition: box-shadow 0.2s;
-        }
-        .grupo-bloque:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            background: var(--bg);
         }
 
-        .grupo-cabecera {
+        .tareas-header {
+            background: white;
+            padding: 20px 28px 0;
+            border-bottom: 1.5px solid var(--border);
+        }
+        .tareas-titulo-row {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 16px 20px;
-            border-bottom: 1.5px solid var(--border);
-            cursor: pointer;
-            user-select: none;
+            margin-bottom: 16px;
         }
-        .grupo-dot {
+        .tareas-titulo-dot {
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            flex-shrink: 0;
         }
-        .grupo-nombre {
-            font-size: 16px;
-            font-weight: 700;
+        .tareas-titulo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--black);
             flex: 1;
-            color: var(--text);
         }
-        .grupo-conteo {
-            font-size: 12px;
+        .tareas-count-badge {
+            font-size: 13px;
             color: var(--text-muted);
-            background: var(--bg);
-            padding: 3px 10px;
-            border-radius: 20px;
+            font-weight: 500;
         }
-        .grupo-chevron {
-            font-size: 14px;
-            color: var(--text-muted);
-            transition: transform 0.2s;
+
+        /* FILTROS */
+        .filtros-row {
+            display: flex;
+            gap: 4px;
+            padding-bottom: 0;
         }
-        .grupo-chevron.cerrado { transform: rotate(-90deg); }
-        .grupo-btn-edit {
-            background: none;
+        .filtro-btn {
+            padding: 7px 16px;
             border: none;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 8px;
+            background: none;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
             transition: all 0.15s;
-            opacity: 0;
+            border-radius: 0;
         }
-        .grupo-cabecera:hover .grupo-btn-edit { opacity: 1; }
-        .grupo-btn-edit:hover { background: var(--bg); color: var(--purple-dark); }
-
-        .tareas-body {
-            padding: 8px 12px 12px;
+        .filtro-btn:hover { color: var(--blue); }
+        .filtro-btn.active {
+            color: var(--blue-dark);
+            border-bottom-color: var(--blue);
         }
-        .tareas-body.cerrado { display: none; }
 
-        .tarea-row {
+        /* BARRA DE AGREGAR TAREA */
+        .add-tarea-bar {
+            background: white;
+            margin: 16px 20px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px;
-            border-radius: 12px;
-            transition: background 0.15s;
-            cursor: grab;
+            transition: border-color 0.2s;
+            flex-shrink: 0;
         }
-        .tarea-row:hover { background: var(--bg); }
-        .tarea-row.completada { opacity: 0.55; }
-        .tarea-row.dragging { opacity: 0.3; }
+        .add-tarea-bar:focus-within {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        }
+        .add-tarea-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            background: none;
+            color: var(--text);
+        }
+        .add-tarea-bar input::placeholder { color: var(--text-muted); }
+        .add-btn-icon {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .add-btn-icon:hover { color: var(--blue); }
 
-        .check-btn {
-            width: 22px;
-            height: 22px;
+        /* OPCIONES TAREA AL AGREGAR */
+        .add-opciones {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .add-opcion-btn {
+            background: none;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .add-opcion-btn:hover { border-color: var(--blue); color: var(--blue); }
+        .add-opcion-btn.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+
+        /* LISTA DE TAREAS */
+        .tareas-lista {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 20px;
+        }
+
+        /* TAREA ITEM */
+        .tarea-item {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1.5px solid var(--border);
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .tarea-item:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 2px 12px rgba(245,158,11,0.10);
+        }
+        .tarea-item.completada {
+            opacity: 0.55;
+        }
+        .tarea-item.completada .tarea-texto {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        /* CHECKBOX */
+        .tarea-check {
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             border: 2px solid var(--border);
-            background: white;
-            cursor: pointer;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.15s;
-            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 2px;
         }
-        .check-btn:hover { border-color: var(--green); background: var(--green-light); }
-        .check-btn.hecho {
-            background: var(--green);
-            border-color: var(--green);
+        .tarea-check:hover { border-color: var(--blue); background: var(--blue-light); }
+        .tarea-check.checked {
+            background: var(--blue);
+            border-color: var(--blue);
             color: white;
+            font-size: 11px;
         }
 
-        .tarea-contenido { flex: 1; min-width: 0; }
-        .tarea-titulo-txt {
-            font-size: 14px;
+        /* PRIORIDADES */
+        .tarea-check.p1 { border-color: #ef4444; }
+        .tarea-check.p1:hover, .tarea-check.p1.checked { background: #ef4444; border-color: #ef4444; }
+        .tarea-check.p2 { border-color: #f97316; }
+        .tarea-check.p2:hover, .tarea-check.p2.checked { background: #f97316; border-color: #f97316; }
+        .tarea-check.p3 { border-color: #3b82f6; }
+        .tarea-check.p3:hover, .tarea-check.p3.checked { background: #3b82f6; border-color: #3b82f6; }
+
+        .tarea-body { flex: 1; min-width: 0; }
+        .tarea-texto {
+            font-size: 15px;
             font-weight: 500;
             color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .tarea-row.completada .tarea-titulo-txt {
-            text-decoration: line-through;
-            color: var(--text-muted);
+            margin-bottom: 4px;
+            word-break: break-word;
         }
         .tarea-meta {
             display: flex;
             gap: 8px;
             align-items: center;
-            margin-top: 3px;
             flex-wrap: wrap;
         }
-
-        .badge-tipo {
+        .tarea-fecha {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .tarea-fecha.vencida { color: var(--red); font-weight: 600; }
+        .tarea-fecha.hoy { color: #f97316; font-weight: 600; }
+        .tarea-prioridad-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .badge-p1 { background: #fee2e2; color: #ef4444; }
+        .badge-p2 { background: #ffedd5; color: #f97316; }
+        .badge-p3 { background: #dbeafe; color: #3b82f6; }
+        .tarea-lista-badge {
             font-size: 11px;
             font-weight: 600;
             padding: 2px 8px;
             border-radius: 20px;
-            background: var(--purple-light);
-            color: var(--purple-dark);
-        }
-        .badge-materia {
-            font-size: 11px;
+            background: var(--bg);
             color: var(--text-muted);
-            font-weight: 500;
         }
 
-        .badge-estado {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .badge-estado.ok { background: var(--green-light); color: var(--green-dark); }
-        .badge-estado.pronto { background: var(--orange-light); color: #92400e; }
-        .badge-estado.hoy { background: #fef3c7; color: #92400e; }
-        .badge-estado.urgente { background: var(--red-light-cl); color: var(--red-cl); }
-        .badge-estado.done { background: var(--green-light); color: var(--green-dark); }
-
-        .tarea-acciones {
-            display: flex;
-            gap: 4px;
-            opacity: 0;
-            transition: opacity 0.15s;
-        }
-        .tarea-row:hover .tarea-acciones { opacity: 1; }
-        .tarea-accion-btn {
+        .tarea-delete {
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 8px;
             color: var(--text-muted);
+            opacity: 0;
+            padding: 4px;
+            border-radius: 6px;
             transition: all 0.15s;
+            flex-shrink: 0;
         }
-        .tarea-accion-btn:hover { background: var(--bg); color: var(--purple-dark); }
-        .tarea-accion-btn.danger:hover { background: var(--red-light-cl); color: var(--red-cl); }
+        .tarea-item:hover .tarea-delete { opacity: 1; }
+        .tarea-delete:hover { color: var(--red); background: var(--red-light); }
 
-        .quick-add-row {
+        /* SECCIÓN COMPLETADAS */
+        .completadas-toggle {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1.5px dashed var(--border);
-            margin-top: 6px;
+            padding: 8px 4px;
             cursor: pointer;
-            transition: all 0.15s;
-            background: none;
-            width: 100%;
-            text-align: left;
-        }
-        .quick-add-row:hover {
-            border-color: var(--purple);
-            border-style: solid;
-            background: var(--purple-light);
-        }
-        .quick-add-icon {
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-muted);
-            font-size: 16px;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            user-select: none;
         }
-        .quick-add-row:hover .quick-add-icon {
-            color: var(--purple-dark);
-        }
-        .quick-add-txt {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        .quick-add-row:hover .quick-add-txt {
-            color: var(--purple-dark);
-        }
+        .completadas-toggle:hover { color: var(--text); }
 
-        .empty-grupo {
-            padding: 20px;
+        /* EMPTY STATE */
+        .empty-checklist {
             text-align: center;
+            padding: 60px 20px;
             color: var(--text-muted);
-            font-size: 13px;
         }
+        .empty-checklist .ei { font-size: 52px; margin-bottom: 12px; }
+        .empty-checklist h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 
-        .fab {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            background: var(--purple);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            font-size: 26px;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(109,40,217,0.35);
-            transition: all 0.2s;
-            z-index: 100;
+        /* MODAL NUEVA LISTA */
+        .modal-lista-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 12px;
+            font-family: inherit;
+        }
+        .modal-lista-input:focus { outline: none; border-color: var(--yellow); }
+
+        .colores-grid {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
         }
-        .fab:hover { transform: scale(1.07); background: var(--purple-dark); }
-
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: #1f2937;
-            color: white;
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: transform 0.3s;
-            z-index: 999;
-            pointer-events: none;
-            white-space: nowrap;
+        .color-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: transform 0.15s;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .color-dot:hover { transform: scale(1.15); }
+        .color-dot.selected { border-color: var(--black); transform: scale(1.15); }
 
-        .modal-field { margin-bottom: 14px; }
-        .modal-field label {
+        /* MODAL TAREA */
+        .modal-field-group { margin-bottom: 16px; }
+        .modal-field-group label {
             display: block;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--purple-dark);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--blue-dark);
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            margin-bottom: 6px;
         }
-        .modal-field input,
-        .modal-field select {
+        .modal-field-group input,
+        .modal-field-group select,
+        .modal-field-group textarea {
             width: 100%;
             padding: 10px 14px;
             border: 2px solid var(--border);
             border-radius: 12px;
             font-size: 14px;
             font-family: inherit;
-            color: var(--text);
             background: white;
-            transition: border-color 0.15s;
+            color: var(--text);
         }
-        .modal-field input:focus,
-        .modal-field select:focus {
+        .modal-field-group input:focus,
+        .modal-field-group select:focus,
+        .modal-field-group textarea:focus {
             outline: none;
-            border-color: var(--purple);
+            border-color: var(--yellow);
         }
-        .modal-row { display: flex; gap: 12px; }
-        .modal-row .modal-field { flex: 1; }
-        .modal-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
-
-        .colores-grupo-grid {
+        .prioridad-selector {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 8px;
+            gap: 8px;
         }
-        .color-grupo-opt {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.15s;
-            flex-shrink: 0;
-        }
-        .color-grupo-opt:hover { transform: scale(1.1); }
-        .color-grupo-opt.sel { border-color: #1f2937; transform: scale(1.12); }
-
-        .sidebar-grupo-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 14px;
+        .prio-btn {
+            flex: 1;
+            padding: 9px;
             border-radius: 10px;
-            cursor: pointer;
+            border: 2px solid var(--border);
             font-size: 13px;
-            transition: background 0.15s;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-        }
-        .sidebar-grupo-item:hover { background: var(--bg); }
-        .sidebar-grupo-item .sg-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .sidebar-grupo-item .sg-count {
-            margin-left: auto;
-            font-size: 11px;
             font-weight: 700;
-            color: var(--text-muted);
+            cursor: pointer;
+            background: none;
+            transition: all 0.15s;
         }
+        .prio-btn[data-prio="1"] { color: #ef4444; }
+        .prio-btn[data-prio="1"].selected { background: #fee2e2; border-color: #ef4444; }
+        .prio-btn[data-prio="2"] { color: #f97316; }
+        .prio-btn[data-prio="2"].selected { background: #ffedd5; border-color: #f97316; }
+        .prio-btn[data-prio="3"] { color: #3b82f6; }
+        .prio-btn[data-prio="3"].selected { background: #dbeafe; border-color: #3b82f6; }
+        .prio-btn[data-prio="0"] { color: var(--text-muted); }
+        .prio-btn[data-prio="0"].selected { background: var(--bg); border-color: var(--text-muted); }
 
-        .drag-over-group { background: var(--purple-light) !important; }
+        @media (max-width: 768px) {
+            .listas-panel { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <header class="app-header">
     <div class="header-left">
-        <a href="../estudios.html" class="back-link">←</a>
-        <div class="logo">
-            <span class="logo-icon">✅</span>
-            <span class="logo-text">Checklist de Tareas</span>
-        </div>
+        <a href="/conect-charme/index.html" class="back-link">←</a>
+        <a href="/conect-charme/index.html" class="logo">
+            <img src="../../assets/favicon.png" alt="Conect-Charme">
+            <span class="logo-text">Tareas</span>
+        </a>
     </div>
     <div class="header-right">
-        <button class="btn-primary" id="btnNuevoGrupo">+ Nuevo grupo</button>
+        <div class="avatar" id="avatarBtn"></div>
     </div>
 </header>
 
-<div class="app-body">
+<div class="checklist-layout">
 
-    <aside class="sidebar">
-        <nav class="sidebar-nav">
-            <button class="nav-item active" id="btnVerTodo">
-                <span class="nav-icon">📋</span>
-                <span>Todas las tareas</span>
-            </button>
-            <button class="nav-item" id="btnVerHoy">
-                <span class="nav-icon">🔥</span>
-                <span>Para hoy</span>
-            </button>
-            <button class="nav-item" id="btnVerVencidas">
-                <span class="nav-icon">⚠️</span>
-                <span>Vencidas</span>
-            </button>
-        </nav>
+    <!-- PANEL IZQUIERDO — LISTAS -->
+    <div class="listas-panel">
+        <div class="listas-nav-fija">
+            <div class="nav-fija-item active" data-vista="todas" onclick="cambiarVista('todas', this)">
+                <span>📋</span>
+                <span style="flex:1">Todas</span>
+                <span class="lista-count" id="countTodas">0</span>
+            </div>
+            <div class="nav-fija-item" data-vista="hoy" onclick="cambiarVista('hoy', this)">
+                <span>📅</span>
+                <span style="flex:1">Hoy</span>
+                <span class="lista-count" id="countHoy">0</span>
+            </div>
+            <div class="nav-fija-item" data-vista="urgentes" onclick="cambiarVista('urgentes', this)">
+                <span>🔴</span>
+                <span style="flex:1">Urgentes</span>
+                <span class="lista-count" id="countUrgentes">0</span>
+            </div>
+        </div>
 
-        <hr class="nav-divider">
-        <div style="padding:8px 12px; font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Grupos</div>
-        <div id="sidebarGrupos"></div>
-    </aside>
+        <div class="listas-header">
+            <span>Mis listas</span>
+            <button class="btn-nueva-lista" onclick="abrirModalLista()" title="Nueva lista">+</button>
+        </div>
+        <div id="listasNav"></div>
+    </div>
 
-    <main class="main-content">
-        <div class="stats-bar" id="statsBar"></div>
-        <div class="filtro-row" id="filtroRow"></div>
-        <div class="grupos-wrap" id="gruposWrap"></div>
-    </main>
+    <!-- PANEL DERECHO — TAREAS -->
+    <div class="tareas-panel">
+        <div class="tareas-header">
+            <div class="tareas-titulo-row">
+                <div class="tareas-titulo-dot" id="tituloDot" style="background:#2563EB;"></div>
+                <span class="tareas-titulo" id="tituloVista">Todas</span>
+                <span class="tareas-count-badge" id="countBadge"></span>
+            </div>
+            <div class="filtros-row">
+                <button class="filtro-btn active" onclick="setFiltro('pendientes', this)">Pendientes</button>
+                <button class="filtro-btn" onclick="setFiltro('completadas', this)">Completadas</button>
+                <button class="filtro-btn" onclick="setFiltro('todas', this)">Todas</button>
+            </div>
+        </div>
+
+        <!-- BARRA AGREGAR -->
+        <div class="add-tarea-bar" id="addBar">
+            <span style="font-size:20px; color:var(--text-muted);">+</span>
+            <input type="text" id="inputNuevaTarea" placeholder="Agregar tarea..." maxlength="200">
+            <div class="add-opciones">
+                <button class="add-opcion-btn" id="btnFechaBar" onclick="toggleFechaBar()">📅</button>
+                <input type="date" id="fechaBar" style="display:none; border:1.5px solid var(--border); border-radius:8px; padding:4px 8px; font-size:12px; color:var(--text);">
+                <button class="add-opcion-btn" id="btnPrioBar" data-prio="0" onclick="togglePrioBar()">🚩</button>
+            </div>
+            <button class="add-btn-icon" onclick="agregarTarea()" title="Agregar">↵</button>
+        </div>
+
+        <!-- LISTA TAREAS -->
+        <div class="tareas-lista" id="tareasLista"></div>
+    </div>
 </div>
 
-<button class="fab" id="fabNuevaTarea" title="Nueva tarea">+</button>
-<div class="toast" id="toast"></div>
+<!-- MODAL NUEVA LISTA -->
+<div class="modal-overlay" id="modalLista">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Nueva lista</h3>
+            <button class="modal-close" onclick="cerrarModalLista()">✕</button>
+        </div>
+        <input type="text" class="modal-lista-input" id="inputNombreLista" placeholder="Nombre de la lista..." maxlength="30">
+        <div class="colores-grid" id="coloresGrid"></div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-secondary" style="flex:1" onclick="cerrarModalLista()">Cancelar</button>
+            <button class="btn-primary" style="flex:1" onclick="crearLista()">Crear lista</button>
+        </div>
+    </div>
+</div>
 
-<!-- Modal tarea -->
+<!-- MODAL EDITAR TAREA -->
 <div class="modal-overlay" id="modalTarea">
     <div class="modal-box" style="max-width:480px;">
         <div class="modal-header">
-            <h3 id="modalTareaTitle">✏️ Nueva tarea</h3>
-            <button class="modal-close" id="btnCerrarTarea">✕</button>
+            <h3>Editar tarea</h3>
+            <button class="modal-close" onclick="cerrarModalTarea()">✕</button>
         </div>
-        <div class="modal-field">
-            <label>Título *</label>
-            <input type="text" id="tTitulo" placeholder="Ej: Estudiar capítulo 3">
+        <div class="modal-field-group">
+            <label>Tarea</label>
+            <input type="text" id="editTexto" maxlength="200">
         </div>
-        <div class="modal-row">
-            <div class="modal-field">
-                <label>Materia (opcional)</label>
-                <input type="text" id="tMateria" placeholder="Ej: Matemáticas">
-            </div>
-            <div class="modal-field">
-                <label>Fecha límite *</label>
-                <input type="date" id="tFecha">
-            </div>
+        <div class="modal-field-group">
+            <label>Fecha de entrega</label>
+            <input type="date" id="editFecha">
         </div>
-        <div class="modal-row">
-            <div class="modal-field">
-                <label>Tipo</label>
-                <select id="tTipo">
-                    <option value="Tarea">📝 Tarea</option>
-                    <option value="Guía">📖 Guía</option>
-                    <option value="Prueba">✍️ Prueba</option>
-                    <option value="Evaluación">📝 Evaluación</option>
-                    <option value="Disertación">🎤 Disertación</option>
-                    <option value="Proyecto">🏗️ Proyecto</option>
-                    <option value="Presentación">📊 Presentación</option>
-                    <option value="Ensayo">📄 Ensayo</option>
-                    <option value="Lectura">📚 Lectura</option>
-                    <option value="Trabajo grupal">👥 Trabajo grupal</option>
-                    <option value="Informe">📑 Informe</option>
-                    <option value="Evento">🎉 Evento</option>
-                </select>
-            </div>
-            <div class="modal-field">
-                <label>Grupo</label>
-                <select id="tGrupo"></select>
+        <div class="modal-field-group">
+            <label>Prioridad</label>
+            <div class="prioridad-selector">
+                <button class="prio-btn" data-prio="1" onclick="selectPrio(1)">🔴 Alta</button>
+                <button class="prio-btn" data-prio="2" onclick="selectPrio(2)">🟠 Media</button>
+                <button class="prio-btn" data-prio="3" onclick="selectPrio(3)">🔵 Normal</button>
+                <button class="prio-btn" data-prio="0" onclick="selectPrio(0)">⚪ Sin prioridad</button>
             </div>
         </div>
-        <div class="modal-actions">
-            <button class="btn-secondary" id="btnCancelarTareaModal">Cancelar</button>
-            <button class="btn-primary" id="btnGuardarTarea">Guardar tarea</button>
+        <div class="modal-field-group">
+            <label>Lista</label>
+            <select id="editLista"></select>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:8px;">
+            <button class="btn-secondary" style="flex:1" onclick="cerrarModalTarea()">Cancelar</button>
+            <button class="btn-primary" style="flex:1" onclick="guardarEdicion()">Guardar</button>
         </div>
     </div>
 </div>
 
-<!-- Modal grupo -->
-<div class="modal-overlay" id="modalGrupo">
-    <div class="modal-box" style="max-width:400px;">
-        <div class="modal-header">
-            <h3 id="modalGrupoTitle">📁 Nuevo grupo</h3>
-            <button class="modal-close" id="btnCerrarGrupo">✕</button>
-        </div>
-        <div class="modal-field">
-            <label>Nombre del grupo *</label>
-            <input type="text" id="gNombre" placeholder="Ej: Matemáticas, Pendientes...">
-        </div>
-        <div class="modal-field">
-            <label>Color</label>
-            <div class="colores-grupo-grid" id="coloresGrupoGrid"></div>
-        </div>
-        <div class="modal-actions">
-            <button class="btn-secondary" id="btnCancelarGrupo">Cancelar</button>
-            <button class="btn-primary" id="btnGuardarGrupo">Guardar</button>
-        </div>
-    </div>
-</div>
+<div id="toast" class="toast"></div>
 
+<script src="../../js/github.js"></script>
+<script src="../../js/auth.js"></script>
 <script>
-/* ============================================================
-   ESTADO
-============================================================ */
-const STORAGE_KEY = 'checklist_data';
+    const sesion = Auth.requiereLogin();
+    if (!sesion) throw new Error('Sin sesión');
+    document.getElementById('avatarBtn').textContent = sesion.nombre.charAt(0).toUpperCase();
 
-let grupos = [];
-let filtroVista = 'todo';
-let filtroTipo = 'todos';
-let tareaEditandoRef = null;
-let grupoEditandoIdx = null;
-let colorGrupoSel = null;
-let dragging = null;
+    const DATA_PATH = `datos/usuarios/${sesion.rut}/checklist.json`;
 
-const COLORES_GRUPO = [
-    '#8B5CF6','#6D28D9','#10b981','#059669',
-    '#f59e0b','#ef4444','#3b82f6','#0ea5e9',
-    '#ec4899','#14b8a6','#f97316','#84cc16',
-    '#6366f1','#a855f7','#9CA3AF','#1f2937'
-];
+    const COLORES = ['#ef4444','#f97316','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#6b7280'];
 
-const TIPOS = ['Tarea','Guía','Prueba','Evaluación','Disertación','Proyecto',
-               'Presentación','Ensayo','Lectura','Trabajo grupal','Informe','Evento'];
+    let data = { listas: [], tareas: [] };
+    let dataSha = null;
+    let vistaActiva = 'todas';
+    let listaActivaId = null;
+    let filtroActivo = 'pendientes';
+    let colorSeleccionado = COLORES[4];
+    let prioBarActual = 0;
+    let tareaEditandoId = null;
+    let prioEditando = 0;
+    let mostrarCompletadas = false;
 
-/* ============================================================
-   STORAGE
-============================================================ */
-function cargar() {
-    const d = localStorage.getItem(STORAGE_KEY);
-    if (d) {
-        grupos = JSON.parse(d);
-    } else {
-        grupos = [{ id: Date.now(), nombre: 'Sin grupo', color: '#9CA3AF', tareas: [] }];
-        guardar();
-    }
-    verificarAutoEliminar();
-}
-
-function guardar() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(grupos));
-}
-
-/* ============================================================
-   UTILIDADES
-============================================================ */
-function esc(t) {
-    if (!t) return '';
-    const d = document.createElement('div');
-    d.textContent = t;
-    return d.innerHTML;
-}
-
-function hoy() {
-    return new Date().toISOString().split('T')[0];
-}
-
-function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => el.classList.remove('show'), 2800);
-}
-
-function estadoTarea(tarea) {
-    if (tarea.completada) return { txt: '✅ Hecho', cls: 'done' };
-    if (!tarea.fecha) return { txt: 'Sin fecha', cls: 'ok' };
-    const hoyDate = new Date(); hoyDate.setHours(0,0,0,0);
-    const ft = new Date(tarea.fecha); ft.setHours(0,0,0,0);
-    const diff = Math.ceil((ft - hoyDate) / 86400000);
-    if (diff < 0)  return { txt: `⚠️ ${Math.abs(diff)}d atrasado`, cls: 'urgente' };
-    if (diff === 0) return { txt: '🔥 Hoy', cls: 'hoy' };
-    if (diff === 1) return { txt: '📅 Mañana', cls: 'pronto' };
-    if (diff <= 4) return { txt: `⏳ ${diff} días`, cls: 'pronto' };
-    return { txt: `📆 ${diff} días`, cls: 'ok' };
-}
-
-/* ============================================================
-   RENDER PRINCIPAL
-============================================================ */
-function render() {
-    renderStats();
-    renderFiltros();
-    renderGrupos();
-    renderSidebar();
-}
-
-/* --- STATS --- */
-function renderStats() {
-    const bar = document.getElementById('statsBar');
-    let total = 0, completadas = 0, hoyCount = 0, vencidas = 0;
-    grupos.forEach(g => g.tareas.forEach(t => {
-        total++;
-        if (t.completada) { completadas++; return; }
-        const e = estadoTarea(t);
-        if (e.cls === 'hoy') hoyCount++;
-        if (e.cls === 'urgente') vencidas++;
-    }));
-    bar.innerHTML = `
-        <div class="stat-pill"><span>Total</span><span class="num">${total}</span></div>
-        <div class="stat-pill urgente"><span>⚠️ Vencidas</span><span class="num">${vencidas}</span></div>
-        <div class="stat-pill"><span>🔥 Hoy</span><span class="num">${hoyCount}</span></div>
-        <div class="stat-pill ok"><span>✅ Hechas</span><span class="num">${completadas}</span></div>
-        <div class="stat-pill"><span>Pendientes</span><span class="num">${total - completadas}</span></div>
-    `;
-}
-
-/* --- FILTROS TIPO --- */
-function renderFiltros() {
-    const row = document.getElementById('filtroRow');
-    const existentes = new Set();
-    grupos.forEach(g => g.tareas.forEach(t => existentes.add(t.tipo)));
-    const chips = ['todos', ...TIPOS].filter(t => t === 'todos' || existentes.has(t));
-    row.innerHTML = `<span style="font-size:13px;font-weight:600;color:var(--text-muted);">Tipo:</span>` +
-        chips.map(t => `
-            <button class="filtro-chip${filtroTipo === t ? ' active' : ''}" onclick="setFiltroTipo('${t}')">
-                ${t === 'todos' ? 'Todos' : t}
-            </button>
-        `).join('');
-}
-
-function setFiltroTipo(tipo) {
-    filtroTipo = tipo;
-    render();
-}
-
-/* --- GRUPOS --- */
-function renderGrupos() {
-    const wrap = document.getElementById('gruposWrap');
-
-    const gruposFiltrados = grupos.map((g, gIdx) => {
-        let tareas = g.tareas;
-        if (filtroVista === 'hoy') tareas = tareas.filter(t => !t.completada && estadoTarea(t).cls === 'hoy');
-        if (filtroVista === 'vencidas') tareas = tareas.filter(t => !t.completada && estadoTarea(t).cls === 'urgente');
-        if (filtroTipo !== 'todos') tareas = tareas.filter(t => t.tipo === filtroTipo);
-        return { g, gIdx, tareas };
-    }).filter(({ tareas }) => filtroVista !== 'todo' ? tareas.length > 0 : true);
-
-    if (gruposFiltrados.length === 0) {
-        wrap.innerHTML = `<div class="empty-state" style="max-width:500px;">
-            <div class="empty-icon">📭</div>
-            <h3>Sin tareas aquí</h3>
-            <p>Crea una tarea con el botón +</p>
-        </div>`;
-        return;
+    // ===== STORAGE =====
+    async function cargarDatos() {
+        try {
+            const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(DATA_PATH)}`);
+            if (res.ok) {
+                const d = await res.json();
+                if (d.content) {
+                    data = JSON.parse(atob(d.content.replace(/\n/g,'')));
+                    dataSha = d.sha;
+                }
+            }
+        } catch(e) {}
+        render();
     }
 
-    wrap.innerHTML = gruposFiltrados.map(({ g, gIdx, tareas }) => {
-        const pendientes = tareas.filter(t => !t.completada).length;
-        const esDefault = g.nombre === 'Sin grupo';
+    async function guardarDatos() {
+        const body = {
+            message: `update checklist ${sesion.rut}`,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))))
+        };
+        if (dataSha) body.sha = dataSha;
+        try {
+            const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(DATA_PATH)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) {
+                const d = await res.json();
+                dataSha = d.content?.sha || dataSha;
+            }
+        } catch(e) {}
+    }
 
-        return `
-        <div class="grupo-bloque" data-gidx="${gIdx}"
-             ondragover="onDragOverGrupo(event, ${gIdx})"
-             ondragleave="onDragLeaveGrupo(event)"
-             ondrop="onDropGrupo(event, ${gIdx})">
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
-            <div class="grupo-cabecera" onclick="toggleGrupo(${gIdx})">
-                <div class="grupo-dot" style="background:${g.color};"></div>
-                <span class="grupo-nombre">${esc(g.nombre)}</span>
-                <span class="grupo-conteo">${pendientes} pendiente${pendientes !== 1 ? 's' : ''}</span>
-                ${!esDefault ? `<button class="grupo-btn-edit" onclick="event.stopPropagation(); abrirEditarGrupo(${gIdx})">✏️</button>` : ''}
-                ${!esDefault ? `<button class="grupo-btn-edit" onclick="event.stopPropagation(); eliminarGrupo(${gIdx})" style="color:var(--red-cl);">🗑️</button>` : ''}
-                <span class="grupo-chevron ${g.cerrado ? 'cerrado' : ''}">▾</span>
-            </div>
+    // ===== RENDER PRINCIPAL =====
+    function render() {
+        renderListas();
+        renderTareas();
+        actualizarContadores();
+    }
 
-            <div class="tareas-body ${g.cerrado ? 'cerrado' : ''}">
-                ${tareas.length === 0 ? '<div class="empty-grupo">Sin tareas en este grupo</div>' : ''}
-                ${tareas.map((t) => {
-                    const e = estadoTarea(t);
-                    const realTIdx = g.tareas.indexOf(t);
-                    return `
-                    <div class="tarea-row ${t.completada ? 'completada' : ''}"
-                         draggable="true"
-                         ondragstart="onDragStart(event, ${gIdx}, ${realTIdx})"
-                         ondragend="onDragEnd(event)">
-                        <button class="check-btn ${t.completada ? 'hecho' : ''}"
-                                onclick="toggleCompletar(${gIdx}, ${realTIdx})"
-                                title="${t.completada ? 'Deshacer' : 'Completar'}">
-                            ${t.completada ? '✓' : ''}
-                        </button>
-                        <div class="tarea-contenido">
-                            <div class="tarea-titulo-txt">${esc(t.titulo)}</div>
-                            <div class="tarea-meta">
-                                <span class="badge-tipo">${esc(t.tipo)}</span>
-                                ${t.materia ? `<span class="badge-materia">${esc(t.materia)}</span>` : ''}
-                                ${t.fecha ? `<span style="font-size:11px;color:var(--text-muted);">📅 ${t.fecha}</span>` : ''}
-                            </div>
-                        </div>
-                        <span class="badge-estado ${e.cls}">${e.txt}</span>
-                        <div class="tarea-acciones">
-                            <button class="tarea-accion-btn" onclick="abrirEditarTarea(${gIdx}, ${realTIdx})">✏️</button>
-                            <button class="tarea-accion-btn danger" onclick="eliminarTarea(${gIdx}, ${realTIdx})">🗑️</button>
+    function renderListas() {
+        const nav = document.getElementById('listasNav');
+        nav.innerHTML = data.listas.map(l => {
+            const count = data.tareas.filter(t => t.listaId === l.id && !t.completada).length;
+            const activa = vistaActiva === 'lista' && listaActivaId === l.id;
+            return `
+                <div class="lista-item ${activa ? 'active' : ''}" onclick="cambiarVista('lista', null, '${l.id}')">
+                    <div class="lista-dot" style="background:${l.color};"></div>
+                    <span class="lista-nombre">${escHtml(l.nombre)}</span>
+                    ${count > 0 ? `<span class="lista-count">${count}</span>` : ''}
+                    <button class="lista-delete" onclick="event.stopPropagation(); eliminarLista('${l.id}')" title="Eliminar">✕</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function getTareasFiltradas() {
+        let tareas = [...data.tareas];
+
+        // Filtro por vista
+        if (vistaActiva === 'hoy') {
+            const hoy = new Date().toISOString().slice(0,10);
+            tareas = tareas.filter(t => t.fecha === hoy);
+        } else if (vistaActiva === 'urgentes') {
+            tareas = tareas.filter(t => t.prioridad === 1);
+        } else if (vistaActiva === 'lista') {
+            tareas = tareas.filter(t => t.listaId === listaActivaId);
+        }
+
+        // Filtro completadas/pendientes
+        if (filtroActivo === 'pendientes') tareas = tareas.filter(t => !t.completada);
+        else if (filtroActivo === 'completadas') tareas = tareas.filter(t => t.completada);
+
+        // Ordenar: prioridad desc, fecha asc
+        tareas.sort((a, b) => {
+            if (a.completada !== b.completada) return a.completada ? 1 : -1;
+            if (a.prioridad !== b.prioridad) return (a.prioridad || 9) - (b.prioridad || 9);
+            if (a.fecha && b.fecha) return a.fecha.localeCompare(b.fecha);
+            if (a.fecha) return -1;
+            if (b.fecha) return 1;
+            return 0;
+        });
+
+        return tareas;
+    }
+
+    function renderTareas() {
+        const lista = document.getElementById('tareasLista');
+        const tareas = getTareasFiltradas();
+
+        if (tareas.length === 0) {
+            const msgs = {
+                pendientes: { icon: '✅', title: '¡Todo al día!', sub: 'No hay tareas pendientes' },
+                completadas: { icon: '📋', title: 'Sin completadas', sub: 'Completá tareas para verlas acá' },
+                todas: { icon: '📝', title: 'Sin tareas', sub: 'Agregá tu primera tarea arriba' }
+            };
+            const m = msgs[filtroActivo] || msgs.todas;
+            lista.innerHTML = `<div class="empty-checklist"><div class="ei">${m.icon}</div><h3>${m.title}</h3><p>${m.sub}</p></div>`;
+            return;
+        }
+
+        const hoy = new Date().toISOString().slice(0,10);
+        lista.innerHTML = tareas.map(t => {
+            const prioClass = t.prioridad ? `p${t.prioridad}` : '';
+            const listaNombre = data.listas.find(l => l.id === t.listaId)?.nombre;
+            const listaColor = data.listas.find(l => l.id === t.listaId)?.color;
+
+            let fechaHtml = '';
+            if (t.fecha) {
+                let fechaClass = 'tarea-fecha';
+                let fechaIcon = '📅';
+                if (t.fecha < hoy && !t.completada) { fechaClass += ' vencida'; fechaIcon = '⚠️'; }
+                else if (t.fecha === hoy) { fechaClass += ' hoy'; fechaIcon = '🔔'; }
+                fechaHtml = `<span class="${fechaClass}">${fechaIcon} ${formatFecha(t.fecha)}</span>`;
+            }
+
+            let prioHtml = '';
+            if (t.prioridad === 1) prioHtml = `<span class="tarea-prioridad-badge badge-p1">🔴 Alta</span>`;
+            else if (t.prioridad === 2) prioHtml = `<span class="tarea-prioridad-badge badge-p2">🟠 Media</span>`;
+            else if (t.prioridad === 3) prioHtml = `<span class="tarea-prioridad-badge badge-p3">🔵 Normal</span>`;
+
+            let listaHtml = '';
+            if (listaNombre && vistaActiva !== 'lista') {
+                listaHtml = `<span class="tarea-lista-badge" style="background:${listaColor}22; color:${listaColor};">● ${escHtml(listaNombre)}</span>`;
+            }
+
+            return `
+                <div class="tarea-item ${t.completada ? 'completada' : ''}" onclick="abrirModalTarea('${t.id}')">
+                    <div class="tarea-check ${prioClass} ${t.completada ? 'checked' : ''}"
+                         onclick="event.stopPropagation(); toggleTarea('${t.id}')">
+                        ${t.completada ? '✓' : ''}
+                    </div>
+                    <div class="tarea-body">
+                        <div class="tarea-texto">${escHtml(t.texto)}</div>
+                        <div class="tarea-meta">
+                            ${fechaHtml}
+                            ${prioHtml}
+                            ${listaHtml}
                         </div>
                     </div>
-                    `;
-                }).join('')}
-
-                <button class="quick-add-row" onclick="abrirNuevaTarea(${gIdx})">
-                    <span class="quick-add-icon">＋</span>
-                    <span class="quick-add-txt">Añadir tarea a este grupo...</span>
-                </button>
-            </div>
-        </div>
-        `;
-    }).join('');
-}
-
-/* --- SIDEBAR --- */
-function renderSidebar() {
-    const container = document.getElementById('sidebarGrupos');
-    container.innerHTML = grupos.map((g, gIdx) => {
-        const count = g.tareas.filter(t => !t.completada).length;
-        return `<button class="sidebar-grupo-item" onclick="scrollToGrupo(${gIdx})">
-            <div class="sg-dot" style="background:${g.color};"></div>
-            <span>${esc(g.nombre)}</span>
-            <span class="sg-count">${count}</span>
-        </button>`;
-    }).join('');
-
-    // Sincronizar botones de vista con filtroVista actual
-    document.getElementById('btnVerTodo').classList.toggle('active', filtroVista === 'todo');
-    document.getElementById('btnVerHoy').classList.toggle('active', filtroVista === 'hoy');
-    document.getElementById('btnVerVencidas').classList.toggle('active', filtroVista === 'vencidas');
-}
-
-/* ============================================================
-   GRUPOS CRUD
-============================================================ */
-function toggleGrupo(gIdx) {
-    grupos[gIdx].cerrado = !grupos[gIdx].cerrado;
-    guardar();
-    render();
-}
-
-function abrirNuevoGrupo() {
-    grupoEditandoIdx = null;
-    colorGrupoSel = COLORES_GRUPO[0];
-    document.getElementById('modalGrupoTitle').textContent = '📁 Nuevo grupo';
-    document.getElementById('gNombre').value = '';
-    renderColoresGrupo();
-    document.getElementById('modalGrupo').classList.add('active');
-    setTimeout(() => document.getElementById('gNombre').focus(), 100);
-}
-
-function abrirEditarGrupo(gIdx) {
-    grupoEditandoIdx = gIdx;
-    colorGrupoSel = grupos[gIdx].color;
-    document.getElementById('modalGrupoTitle').textContent = '✏️ Editar grupo';
-    document.getElementById('gNombre').value = grupos[gIdx].nombre;
-    renderColoresGrupo();
-    document.getElementById('modalGrupo').classList.add('active');
-}
-
-function renderColoresGrupo() {
-    const grid = document.getElementById('coloresGrupoGrid');
-    grid.innerHTML = COLORES_GRUPO.map(c => `
-        <div class="color-grupo-opt ${c === colorGrupoSel ? 'sel' : ''}"
-             style="background:${c};"
-             onclick="selColorGrupo('${c}')"></div>
-    `).join('');
-}
-
-function selColorGrupo(c) {
-    colorGrupoSel = c;
-    renderColoresGrupo();
-}
-
-function guardarGrupo() {
-    const nombre = document.getElementById('gNombre').value.trim();
-    if (!nombre) { alert('Escribe un nombre'); return; }
-    if (!colorGrupoSel) { alert('Elige un color'); return; }
-    if (grupoEditandoIdx !== null) {
-        grupos[grupoEditandoIdx].nombre = nombre;
-        grupos[grupoEditandoIdx].color = colorGrupoSel;
-        toast('✏️ Grupo actualizado');
-    } else {
-        grupos.push({ id: Date.now(), nombre, color: colorGrupoSel, tareas: [] });
-        toast('📁 Grupo creado');
+                    <button class="tarea-delete" onclick="event.stopPropagation(); eliminarTarea('${t.id}')" title="Eliminar">🗑️</button>
+                </div>
+            `;
+        }).join('');
     }
-    guardar();
-    cerrarModalGrupo();
-    render();
-}
 
-function eliminarGrupo(gIdx) {
-    if (grupos[gIdx].nombre === 'Sin grupo') return;
-    if (!confirm(`¿Eliminar "${grupos[gIdx].nombre}"? Las tareas se moverán a "Sin grupo".`)) return;
-    const sinGrupo = grupos.find(g => g.nombre === 'Sin grupo');
-    if (sinGrupo) sinGrupo.tareas.push(...grupos[gIdx].tareas);
-    grupos.splice(gIdx, 1);
-    guardar();
-    render();
-    toast('🗑️ Grupo eliminado');
-}
+    function actualizarContadores() {
+        const hoy = new Date().toISOString().slice(0,10);
+        const pendientes = data.tareas.filter(t => !t.completada);
+        document.getElementById('countTodas').textContent = pendientes.length || '';
+        document.getElementById('countHoy').textContent = pendientes.filter(t => t.fecha === hoy).length || '';
+        document.getElementById('countUrgentes').textContent = pendientes.filter(t => t.prioridad === 1).length || '';
 
-function cerrarModalGrupo() {
-    document.getElementById('modalGrupo').classList.remove('active');
-}
+        // Badge header
+        const tareas = getTareasFiltradas();
+        document.getElementById('countBadge').textContent = tareas.length > 0 ? `${tareas.length} tarea${tareas.length !== 1 ? 's' : ''}` : '';
+    }
 
-function scrollToGrupo(gIdx) {
-    const el = document.querySelector(`.grupo-bloque[data-gidx="${gIdx}"]`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+    // ===== NAVEGACIÓN =====
+    function cambiarVista(vista, el, listaId = null) {
+        vistaActiva = vista;
+        listaActivaId = listaId;
 
-/* ============================================================
-   TAREAS CRUD
-============================================================ */
-function abrirNuevaTarea(gIdx = 0) {
-    tareaEditandoRef = null;
-    document.getElementById('modalTareaTitle').textContent = '✏️ Nueva tarea';
-    document.getElementById('tTitulo').value = '';
-    document.getElementById('tMateria').value = '';
-    document.getElementById('tFecha').value = hoy();
-    document.getElementById('tTipo').value = 'Tarea';
-    actualizarSelectGrupos(gIdx);
-    document.getElementById('modalTarea').classList.add('active');
-    setTimeout(() => document.getElementById('tTitulo').focus(), 100);
-}
+        // Actualizar UI nav fija
+        document.querySelectorAll('.nav-fija-item').forEach(i => i.classList.remove('active'));
+        if (el) el.classList.add('active');
 
-function abrirEditarTarea(gIdx, tIdx) {
-    tareaEditandoRef = { gIdx, tIdx };
-    const t = grupos[gIdx].tareas[tIdx];
-    document.getElementById('modalTareaTitle').textContent = '✏️ Editar tarea';
-    document.getElementById('tTitulo').value = t.titulo;
-    document.getElementById('tMateria').value = t.materia || '';
-    document.getElementById('tFecha').value = t.fecha || hoy();
-    document.getElementById('tTipo').value = t.tipo || 'Tarea';
-    actualizarSelectGrupos(gIdx);
-    document.getElementById('modalTarea').classList.add('active');
-}
-
-function actualizarSelectGrupos(selIdx = 0) {
-    const sel = document.getElementById('tGrupo');
-    sel.innerHTML = grupos.map((g, i) =>
-        `<option value="${i}" ${i === selIdx ? 'selected' : ''}>${esc(g.nombre)}</option>`
-    ).join('');
-}
-
-function guardarTarea() {
-    const titulo = document.getElementById('tTitulo').value.trim();
-    if (!titulo) { alert('⚠️ El título es obligatorio'); return; }
-    const fecha = document.getElementById('tFecha').value;
-    if (!fecha) { alert('⚠️ La fecha es obligatoria'); return; }
-
-    const tarea = {
-        id: Date.now(),
-        titulo,
-        materia: document.getElementById('tMateria').value.trim(),
-        tipo: document.getElementById('tTipo').value,
-        fecha,
-        completada: false,
-        fechaCompletada: null
-    };
-
-    const gDestino = parseInt(document.getElementById('tGrupo').value);
-
-    if (tareaEditandoRef !== null) {
-        const { gIdx, tIdx } = tareaEditandoRef;
-        const original = grupos[gIdx].tareas[tIdx];
-        tarea.completada = original.completada;
-        tarea.fechaCompletada = original.fechaCompletada;
-        tarea.id = original.id;
-        if (gDestino !== gIdx) {
-            grupos[gIdx].tareas.splice(tIdx, 1);
-            grupos[gDestino].tareas.push(tarea);
+        // Título
+        const titulos = { todas: 'Todas', hoy: 'Hoy', urgentes: 'Urgentes' };
+        const colores = { todas: '#2563EB', hoy: '#f97316', urgentes: '#ef4444' };
+        if (vista === 'lista') {
+            const l = data.listas.find(x => x.id === listaId);
+            document.getElementById('tituloVista').textContent = l?.nombre || 'Lista';
+            document.getElementById('tituloDot').style.background = l?.color || '#2563EB';
         } else {
-            grupos[gIdx].tareas[tIdx] = tarea;
+            document.getElementById('tituloVista').textContent = titulos[vista];
+            document.getElementById('tituloDot').style.background = colores[vista];
         }
-        toast('✏️ Tarea actualizada');
-    } else {
-        grupos[gDestino].tareas.push(tarea);
-        toast('✅ Tarea creada');
+
+        render();
     }
 
-    guardar();
-    cerrarModalTarea();
-    render();
-}
+    function setFiltro(filtro, el) {
+        filtroActivo = filtro;
+        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        renderTareas();
+        actualizarContadores();
+    }
 
-function eliminarTarea(gIdx, tIdx) {
-    if (!confirm('¿Eliminar esta tarea?')) return;
-    grupos[gIdx].tareas.splice(tIdx, 1);
-    guardar();
-    render();
-    toast('🗑️ Tarea eliminada');
-}
+    // ===== AGREGAR TAREA =====
+    function toggleFechaBar() {
+        const inp = document.getElementById('fechaBar');
+        const btn = document.getElementById('btnFechaBar');
+        if (inp.style.display === 'none') {
+            inp.style.display = '';
+            btn.classList.add('selected');
+        } else {
+            inp.style.display = 'none';
+            inp.value = '';
+            btn.classList.remove('selected');
+        }
+    }
 
-function toggleCompletar(gIdx, tIdx) {
-    const t = grupos[gIdx].tareas[tIdx];
-    t.completada = !t.completada;
-    t.fechaCompletada = t.completada ? Date.now() : null;
-    guardar();
+    const prioLabels = { 0: '🚩', 1: '🔴', 2: '🟠', 3: '🔵' };
+    function togglePrioBar() {
+        prioBarActual = (prioBarActual + 1) % 4;
+        const btn = document.getElementById('btnPrioBar');
+        btn.textContent = prioLabels[prioBarActual];
+        btn.classList.toggle('selected', prioBarActual > 0);
+    }
 
-    // Renderizar en 'todo' para que la tarea no desaparezca al marcar/desmarcar
-    const vistaActual = filtroVista;
-    filtroVista = 'todo';
-    render();
-    filtroVista = vistaActual;
-    // Resincronizar botones del sidebar con la vista real
-    document.getElementById('btnVerTodo').classList.toggle('active', vistaActual === 'todo');
-    document.getElementById('btnVerHoy').classList.toggle('active', vistaActual === 'hoy');
-    document.getElementById('btnVerVencidas').classList.toggle('active', vistaActual === 'vencidas');
+    async function agregarTarea() {
+        const input = document.getElementById('inputNuevaTarea');
+        const texto = input.value.trim();
+        if (!texto) return;
 
-    if (t.completada) toast(`✅ "${t.titulo}" completada`);
-    else toast(`↩️ "${t.titulo}" pendiente`);
-}
+        const fecha = document.getElementById('fechaBar').value || null;
+        const prioridad = prioBarActual || null;
+        const listaId = vistaActiva === 'lista' ? listaActivaId : null;
 
-function verificarAutoEliminar() {
-    let cambios = false;
-    grupos.forEach(g => {
-        const antes = g.tareas.length;
-        g.tareas = g.tareas.filter(t => {
-            if (t.completada && t.fechaCompletada) {
-                return Date.now() - t.fechaCompletada < 24 * 3600 * 1000;
-            }
-            return true;
+        data.tareas.push({
+            id: genId(),
+            texto,
+            completada: false,
+            prioridad,
+            fecha,
+            listaId,
+            creadoEl: new Date().toISOString()
         });
-        if (g.tareas.length !== antes) cambios = true;
+
+        input.value = '';
+        document.getElementById('fechaBar').value = '';
+        document.getElementById('fechaBar').style.display = 'none';
+        document.getElementById('btnFechaBar').classList.remove('selected');
+        prioBarActual = 0;
+        document.getElementById('btnPrioBar').textContent = '🚩';
+        document.getElementById('btnPrioBar').classList.remove('selected');
+
+        render();
+        guardarDatos();
+    }
+
+    document.getElementById('inputNuevaTarea').addEventListener('keydown', e => {
+        if (e.key === 'Enter') agregarTarea();
     });
-    if (cambios) { guardar(); render(); }
-}
 
-function cerrarModalTarea() {
-    document.getElementById('modalTarea').classList.remove('active');
-}
+    // ===== TOGGLE COMPLETADA =====
+    async function toggleTarea(id) {
+        const t = data.tareas.find(x => x.id === id);
+        if (!t) return;
+        t.completada = !t.completada;
+        if (t.completada) t.completadaEl = new Date().toISOString();
+        else delete t.completadaEl;
+        render();
+        guardarDatos();
+        mostrarToast(t.completada ? '✅ Tarea completada' : '↩️ Tarea reabierta');
+    }
 
-/* ============================================================
-   DRAG & DROP
-============================================================ */
-function onDragStart(e, gIdx, tIdx) {
-    dragging = { gIdx, tIdx };
-    e.currentTarget.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-}
+    // ===== ELIMINAR =====
+    async function eliminarTarea(id) {
+        data.tareas = data.tareas.filter(t => t.id !== id);
+        render();
+        guardarDatos();
+        mostrarToast('🗑️ Tarea eliminada');
+    }
 
-function onDragEnd(e) {
-    e.currentTarget.classList.remove('dragging');
-    dragging = null;
-}
+    async function eliminarLista(id) {
+        if (!confirm('¿Eliminar esta lista? Las tareas dentro quedarán sin lista.')) return;
+        data.listas = data.listas.filter(l => l.id !== id);
+        data.tareas.forEach(t => { if (t.listaId === id) t.listaId = null; });
+        if (listaActivaId === id) { vistaActiva = 'todas'; listaActivaId = null; }
+        render();
+        guardarDatos();
+    }
 
-function onDragOverGrupo(e, gIdx) {
-    e.preventDefault();
-    e.currentTarget.classList.add('drag-over-group');
-}
+    // ===== MODAL NUEVA LISTA =====
+    function renderColores() {
+        document.getElementById('coloresGrid').innerHTML = COLORES.map(c => `
+            <div class="color-dot ${c === colorSeleccionado ? 'selected' : ''}"
+                 style="background:${c};"
+                 onclick="selectColor('${c}')"></div>
+        `).join('');
+    }
 
-function onDragLeaveGrupo(e) {
-    e.currentTarget.classList.remove('drag-over-group');
-}
+    function selectColor(c) {
+        colorSeleccionado = c;
+        renderColores();
+    }
 
-function onDropGrupo(e, gIdx) {
-    e.preventDefault();
-    e.currentTarget.classList.remove('drag-over-group');
-    if (!dragging || dragging.gIdx === gIdx) return;
-    const tarea = grupos[dragging.gIdx].tareas.splice(dragging.tIdx, 1)[0];
-    grupos[gIdx].tareas.push(tarea);
-    guardar();
-    render();
-    toast(`📦 Tarea movida a "${grupos[gIdx].nombre}"`);
-    dragging = null;
-}
+    function abrirModalLista() {
+        document.getElementById('inputNombreLista').value = '';
+        colorSeleccionado = COLORES[4];
+        renderColores();
+        document.getElementById('modalLista').classList.add('active');
+        setTimeout(() => document.getElementById('inputNombreLista').focus(), 100);
+    }
 
-/* ============================================================
-   FILTROS VISTA
-============================================================ */
-function setVista(vista) {
-    filtroVista = vista;
-    render();
-}
+    function cerrarModalLista() {
+        document.getElementById('modalLista').classList.remove('active');
+    }
 
-/* ============================================================
-   EVENTOS
-============================================================ */
-document.getElementById('btnNuevoGrupo').addEventListener('click', abrirNuevoGrupo);
-document.getElementById('fabNuevaTarea').addEventListener('click', () => abrirNuevaTarea(0));
-document.getElementById('btnCerrarTarea').addEventListener('click', cerrarModalTarea);
-document.getElementById('btnCancelarTareaModal').addEventListener('click', cerrarModalTarea);
-document.getElementById('btnGuardarTarea').addEventListener('click', guardarTarea);
-document.getElementById('btnCerrarGrupo').addEventListener('click', cerrarModalGrupo);
-document.getElementById('btnCancelarGrupo').addEventListener('click', cerrarModalGrupo);
-document.getElementById('btnGuardarGrupo').addEventListener('click', guardarGrupo);
-document.getElementById('btnVerTodo').addEventListener('click', () => setVista('todo'));
-document.getElementById('btnVerHoy').addEventListener('click', () => setVista('hoy'));
-document.getElementById('btnVerVencidas').addEventListener('click', () => setVista('vencidas'));
+    async function crearLista() {
+        const nombre = document.getElementById('inputNombreLista').value.trim();
+        if (!nombre) return mostrarToast('Escribí un nombre para la lista');
+        data.listas.push({ id: genId(), nombre, color: colorSeleccionado });
+        cerrarModalLista();
+        render();
+        guardarDatos();
+        mostrarToast('✅ Lista creada');
+    }
 
-document.getElementById('modalTarea').addEventListener('click', e => {
-    if (e.target === document.getElementById('modalTarea')) cerrarModalTarea();
-});
-document.getElementById('modalGrupo').addEventListener('click', e => {
-    if (e.target === document.getElementById('modalGrupo')) cerrarModalGrupo();
-});
+    document.getElementById('inputNombreLista').addEventListener('keydown', e => {
+        if (e.key === 'Enter') crearLista();
+    });
 
-document.getElementById('tTitulo').addEventListener('keydown', e => {
-    if (e.key === 'Enter') guardarTarea();
-});
+    // ===== MODAL EDITAR TAREA =====
+    function abrirModalTarea(id) {
+        tareaEditandoId = id;
+        const t = data.tareas.find(x => x.id === id);
+        if (!t) return;
+        document.getElementById('editTexto').value = t.texto;
+        document.getElementById('editFecha').value = t.fecha || '';
+        prioEditando = t.prioridad || 0;
+        document.querySelectorAll('.prio-btn').forEach(b => {
+            b.classList.toggle('selected', parseInt(b.dataset.prio) === prioEditando);
+        });
+        // Select listas
+        const sel = document.getElementById('editLista');
+        sel.innerHTML = `<option value="">Sin lista</option>` +
+            data.listas.map(l => `<option value="${l.id}" ${t.listaId === l.id ? 'selected' : ''}>${escHtml(l.nombre)}</option>`).join('');
+        document.getElementById('modalTarea').classList.add('active');
+    }
 
-setInterval(verificarAutoEliminar, 60000);
+    function cerrarModalTarea() {
+        document.getElementById('modalTarea').classList.remove('active');
+        tareaEditandoId = null;
+    }
 
-/* ============================================================
-   INICIO
-============================================================ */
-cargar();
-render();
+    function selectPrio(p) {
+        prioEditando = p;
+        document.querySelectorAll('.prio-btn').forEach(b => {
+            b.classList.toggle('selected', parseInt(b.dataset.prio) === p);
+        });
+    }
+
+    async function guardarEdicion() {
+        const t = data.tareas.find(x => x.id === tareaEditandoId);
+        if (!t) return;
+        const texto = document.getElementById('editTexto').value.trim();
+        if (!texto) return mostrarToast('La tarea no puede estar vacía');
+        t.texto = texto;
+        t.fecha = document.getElementById('editFecha').value || null;
+        t.prioridad = prioEditando || null;
+        t.listaId = document.getElementById('editLista').value || null;
+        cerrarModalTarea();
+        render();
+        guardarDatos();
+        mostrarToast('✅ Tarea actualizada');
+    }
+
+    // ===== UTILS =====
+    function formatFecha(iso) {
+        const [y, m, d] = iso.split('-');
+        return `${d}/${m}/${y}`;
+    }
+
+    function escHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function mostrarToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Cerrar modales al hacer click afuera
+    document.getElementById('modalLista').addEventListener('click', e => {
+        if (e.target === document.getElementById('modalLista')) cerrarModalLista();
+    });
+    document.getElementById('modalTarea').addEventListener('click', e => {
+        if (e.target === document.getElementById('modalTarea')) cerrarModalTarea();
+    });
+
+    cargarDatos();
 </script>
 </body>
 </html>
