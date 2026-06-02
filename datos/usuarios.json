@@ -31,6 +31,11 @@
       "rut": "22622757-1",
       "nombre": "Cris Diaz",
       "rol": "alumno"
+    },
+    {
+      "rut": "18722587-6",
+      "nombre": "Matias Alcaino",
+      "rol": "profesor"
     }
   ]
 }
