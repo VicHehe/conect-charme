@@ -24,11 +24,12 @@
     {
       "id": "mpxb8uuq3eukphrobcj",
       "texto": "Trabajo de historia",
-      "completada": false,
+      "completada": true,
       "prioridad": 1,
       "fecha": "2026-06-03",
       "listaId": "mpxbbjzmr1s4o7ub4e9",
-      "creadoEl": "2026-06-03T00:10:41.330Z"
+      "creadoEl": "2026-06-03T00:10:41.330Z",
+      "completadaEl": "2026-06-03T00:19:05.603Z"
     },
     {
       "id": "mpxbamsz5r3p95hjp8o",
