@@ -8,14 +8,6 @@
     <link rel="stylesheet" href="../../css/styles.css">
     <style>
         /* ===== LAYOUT CHECKLIST ===== */
-.checklist-layout {
-    display: flex;
-    height: calc(100vh - 60px);
-    margin-top: 0;
-    overflow: hidden;
-    align-items: stretch;    /* ← fuerza a los hijos a tener la misma altura */
-}
-
 .listas-panel {
     width: 260px;
     min-width: 260px;
@@ -23,8 +15,14 @@
     border-right: 2px solid var(--border);
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    /* height: 100%;  ← BORRAR o comentar */
+    min-height: 100%;      /* ← nueva */
+    height: 100%;          /* ← nueva */
+}
+
+.checklist-layout {
+    display: flex;
+    align-items: stretch;  /* ← que ambos paneles se estiren igual */
+    height: calc(100vh - 60px);
 }
 
 .listas-nav-fija {
