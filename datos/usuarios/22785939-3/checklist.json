@@ -35,11 +35,12 @@
     {
       "id": "mpxbamsz5r3p95hjp8o",
       "texto": "Avance en el trabajo de CCI",
-      "completada": false,
+      "completada": true,
       "prioridad": 3,
       "fecha": "2026-06-04",
       "listaId": "mpxbbjzmr1s4o7ub4e9",
-      "creadoEl": "2026-06-03T00:12:04.211Z"
+      "creadoEl": "2026-06-03T00:12:04.211Z",
+      "completadaEl": "2026-06-03T00:19:08.449Z"
     }
   ]
 }
