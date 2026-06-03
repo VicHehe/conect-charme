@@ -431,15 +431,25 @@
     let waitingForOperand = false;
 
     function añadirAlHistorial(cuenta, resultado) {
-        historial.unshift({
-            cuenta,
-            resultado,
-            fecha: new Date().toLocaleString('es-CL')
-        });
-        if (historial.length > 20) historial.pop();
-        renderHistorial();
-        guardarHistorialGitHub();
-    }
+    historial.unshift({
+        cuenta: normalizeString(cuenta),
+        resultado: normalizeString(resultado),
+        fecha: new Date().toLocaleString('es-CL')
+    });
+    if (historial.length > 20) historial.pop();
+    renderHistorial();
+    guardarHistorialGitHub();
+}
+
+function normalizeString(str) {
+    return str.normalize("NFKD").replace(/[^\u0000-\u007F]/g, function(c) {
+        return {
+            'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
+            'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U',
+            'ñ': 'n', 'Ñ': 'N'
+        }[c] || c;
+    });
+}
 
     function renderHistorial() {
         if (historial.length === 0) {
@@ -493,15 +503,24 @@
     }
 
     function guardarCalculoActual() {
-        const cuentaActual = expresionEl.textContent;
-        const resActual = resultadoEl.textContent;
-        if (resActual !== "0" && cuentaActual !== "0") {
-            añadirAlHistorial(cuentaActual, resActual);
-            mostrarToast('✅ Guardado');
-        } else {
-            mostrarToast('No hay un cálculo para guardar');
-        }
+    const cuentaActual = expresionEl.textContent;
+    const resActual = resultadoEl.textContent;
+    
+    // No guardar si la expresión está incompleta (termina en operador)
+    if (cuentaActual.match(/[\+\-\*\/]\s*$/)) {
+        mostrarToast('Completá la operación antes de guardar');
+        return;
     }
+    
+    // No guardar si el resultado es "0" y la expresión también es "0"
+    if (resActual === "0" && cuentaActual === "0") {
+        mostrarToast('No hay un cálculo para guardar');
+        return;
+    }
+    
+    añadirAlHistorial(cuentaActual, resActual);
+    mostrarToast('✅ Guardado');
+}
 
     function actualizarVistaPreviaInteres() {
         const capital = parseFloat(document.getElementById('interesCapital').value) || 0;
