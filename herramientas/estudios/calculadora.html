@@ -475,26 +475,33 @@ function normalizeString(str) {
     }
 
     function compute() {
-        if (!operation || waitingForOperand) return;
-        let result;
-        const prev = parseFloat(previousInput);
-        const current = parseFloat(currentInput);
-        switch(operation) {
-            case '+': result = prev + current; break;
-            case '-': result = prev - current; break;
-            case '*': result = prev * current; break;
-            case '/':
-                if (current === 0) { mostrarToast('No se puede dividir por cero'); limpiar(); return; }
-                result = prev / current; break;
-            case 'pow': result = Math.pow(prev, current); break;
-            default: return;
-        }
-        currentInput = String(Math.round(result * 1000000) / 1000000);
-        operation = null;
-        waitingForOperand = false;
-        previousInput = "";
-        updateDisplay();
+    if (!operation || waitingForOperand) return;
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+    let cuentaCompleta = `${previousInput} ${getOpSymbol(operation)} ${currentInput}`;
+    
+    switch(operation) {
+        case '+': result = prev + current; break;
+        case '-': result = prev - current; break;
+        case '*': result = prev * current; break;
+        case '/':
+            if (current === 0) { mostrarToast('No se puede dividir por cero'); limpiar(); return; }
+            result = prev / current; break;
+        case 'pow': result = Math.pow(prev, current); break;
+        default: return;
     }
+    
+    currentInput = String(Math.round(result * 1000000) / 1000000);
+    operation = null;
+    waitingForOperand = false;
+    previousInput = "";
+    updateDisplay();
+    
+    // Guardar automáticamente después de cada cálculo
+    añadirAlHistorial(cuentaCompleta, currentInput);
+    mostrarToast('✅ Guardado automático');
+}
 
     function guardarCalculoActual() {
     const cuentaActual = expresionEl.textContent;
