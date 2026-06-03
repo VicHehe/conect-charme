@@ -4,6 +4,11 @@
       "id": "mpxbbjzmr1s4o7ub4e9",
       "nombre": "Materias generales",
       "color": "#8b5cf6"
+    },
+    {
+      "id": "mpxbcetdglbozu5yy1",
+      "nombre": "Materias de programacion",
+      "color": "#6b7280"
     }
   ],
   "tareas": [
