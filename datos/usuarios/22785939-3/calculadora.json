@@ -1,5 +1,10 @@
 [
   {
+    "cuenta": "Interés: $100.000 al 5.5% anual por 6 meses",
+    "resultado": "$102.750",
+    "fecha": "03-06-2026, 2:39:00 p. m."
+  },
+  {
     "cuenta": "6 + 3",
     "resultado": "9",
     "fecha": "02-06-2026, 10:05:33 p. m."
@@ -25,7 +30,7 @@
     "fecha": "02-06-2026, 8:22:22 p. m."
   },
   {
-    "cuenta": "InterÃÂ©s: $20.000 al 7% anual por 5 anios",
+    "cuenta": "InterÃÂÃÂ©s: $20.000 al 7% anual por 5 anios",
     "resultado": "$27.000",
     "fecha": "02-06-2026, 7:39:51 p. m."
   }
