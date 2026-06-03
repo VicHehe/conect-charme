@@ -378,12 +378,10 @@
 <script src="../../js/github.js"></script>
 <script src="../../js/auth.js"></script>
 <script>
-    // Verificar sesión
     const sesion = Auth.requiereLogin();
     if (!sesion) throw new Error('Sin sesión');
     document.getElementById('avatarBtn').textContent = sesion.nombre.charAt(0).toUpperCase();
 
-    // Historial — guardado en GitHub por usuario
     const HISTORIAL_PATH = `datos/usuarios/${sesion.rut}/calculadora.json`;
     let historial = [];
     let historialSha = null;
@@ -403,11 +401,15 @@
     }
 
     async function guardarHistorialGitHub() {
+        const contenido = JSON.stringify(historial, null, 2);
+        const contentBase64 = btoa(unescape(encodeURIComponent(contenido)));
+        
         const body = {
             message: `update calculadora ${sesion.rut}`,
-            content: btoa(unescape(encodeURIComponent(JSON.stringify(historial, null, 2))))
+            content: contentBase64
         };
         if (historialSha) body.sha = historialSha;
+        
         try {
             const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(HISTORIAL_PATH)}`, {
                 method: 'PUT',
@@ -416,9 +418,13 @@
             });
             if (res.ok) {
                 const data = await res.json();
-                historialSha = data.content?.sha || historialSha;
+                historialSha = data.content?.sha || data.commit?.sha || historialSha;
+                return true;
             }
-        } catch(e) {}
+        } catch(e) {
+            console.error('Error guardando:', e);
+        }
+        return false;
     }
 
     const expresionEl = document.getElementById('expresion');
@@ -430,20 +436,21 @@
     let operation = null;
     let waitingForOperand = false;
 
-    function añadirAlHistorial(cuenta, resultado) {
-    historial.unshift({
-        cuenta: normalizeString(cuenta),
-        resultado: normalizeString(resultado),
-        fecha: new Date().toLocaleString('es-CL')
-    });
-    if (historial.length > 20) historial.pop();
-    renderHistorial();
-    guardarHistorialGitHub();
-}
+    function fixAcentos(str) {
+        if (!str) return '';
+        return str.normalize("NFC");
+    }
 
-function normalizeString(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, '');
-}
+    function añadirAlHistorial(cuenta, resultado) {
+        historial.unshift({
+            cuenta: fixAcentos(cuenta),
+            resultado: fixAcentos(resultado),
+            fecha: new Date().toLocaleString('es-CL')
+        });
+        if (historial.length > 20) historial.pop();
+        renderHistorial();
+        guardarHistorialGitHub();
+    }
 
     function renderHistorial() {
         if (historial.length === 0) {
@@ -451,7 +458,7 @@ function normalizeString(str) {
             return;
         }
         historialLista.innerHTML = historial.map(item => `
-            <div class="historial-item" onclick="copiarAlPortapapeles('${item.resultado}')">
+            <div class="historial-item" onclick="copiarAlPortapapeles('${escapeHtml(item.resultado)}')">
                 <div class="historial-cuenta">${escapeHtml(item.cuenta)} = ${escapeHtml(item.resultado)}</div>
                 <div class="historial-fecha">📅 ${item.fecha}</div>
             </div>
@@ -475,53 +482,32 @@ function normalizeString(str) {
     }
 
     function compute() {
-    if (!operation || waitingForOperand) return;
-    let result;
-    const prev = parseFloat(previousInput);
-    const current = parseFloat(currentInput);
-    let cuentaCompleta = `${previousInput} ${getOpSymbol(operation)} ${currentInput}`;
-    
-    switch(operation) {
-        case '+': result = prev + current; break;
-        case '-': result = prev - current; break;
-        case '*': result = prev * current; break;
-        case '/':
-            if (current === 0) { mostrarToast('No se puede dividir por cero'); limpiar(); return; }
-            result = prev / current; break;
-        case 'pow': result = Math.pow(prev, current); break;
-        default: return;
+        if (!operation || waitingForOperand) return;
+        let result;
+        const prev = parseFloat(previousInput);
+        const current = parseFloat(currentInput);
+        let cuentaCompleta = `${previousInput} ${getOpSymbol(operation)} ${currentInput}`;
+        
+        switch(operation) {
+            case '+': result = prev + current; break;
+            case '-': result = prev - current; break;
+            case '*': result = prev * current; break;
+            case '/':
+                if (current === 0) { mostrarToast('No se puede dividir por cero'); limpiar(); return; }
+                result = prev / current; break;
+            case 'pow': result = Math.pow(prev, current); break;
+            default: return;
+        }
+        
+        currentInput = String(Math.round(result * 1000000) / 1000000);
+        operation = null;
+        waitingForOperand = false;
+        previousInput = "";
+        updateDisplay();
+        
+        añadirAlHistorial(cuentaCompleta, currentInput);
+        mostrarToast('✅ Guardado');
     }
-    
-    currentInput = String(Math.round(result * 1000000) / 1000000);
-    operation = null;
-    waitingForOperand = false;
-    previousInput = "";
-    updateDisplay();
-    
-    // Guardar automáticamente después de cada cálculo
-    añadirAlHistorial(cuentaCompleta, currentInput);
-    mostrarToast('✅ Guardado automático');
-}
-
-    function guardarCalculoActual() {
-    const cuentaActual = expresionEl.textContent;
-    const resActual = resultadoEl.textContent;
-    
-    // No guardar si la expresión es solo un número (sin operación)
-    if (!cuentaActual.match(/[\+\-\*\/\^√]/)) {
-        mostrarToast('Realizá una operación antes de guardar');
-        return;
-    }
-    
-    // No guardar si la expresión está incompleta (termina en operador)
-    if (cuentaActual.match(/[\+\-\*\/]\s*$/)) {
-        mostrarToast('Completá la operación antes de guardar');
-        return;
-    }
-    
-    añadirAlHistorial(cuentaActual, resActual);
-    mostrarToast('✅ Guardado');
-}
 
     function actualizarVistaPreviaInteres() {
         const capital = parseFloat(document.getElementById('interesCapital').value) || 0;
@@ -548,7 +534,7 @@ function normalizeString(str) {
         const periodoTasa = document.getElementById('interesPeriodoTasa').value;
         const tiempo = parseFloat(document.getElementById('interesTiempo').value) || 0;
         const periodoTiempo = document.getElementById('interesPeriodoTiempo').value;
-        const { interes, total } = actualizarVistaPreviaInteres();
+        const { total } = actualizarVistaPreviaInteres();
         const cuenta = `Interés: $${capital.toLocaleString('es-CL')} al ${tasa}% ${periodoTasa} por ${tiempo} ${periodoTiempo}`;
         const resultado = `$${Math.round(total).toLocaleString('es-CL')}`;
         añadirAlHistorial(cuenta, resultado);
@@ -630,7 +616,6 @@ function normalizeString(str) {
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 
-    // Eventos botones
     document.querySelectorAll('[data-num]').forEach(btn => {
         btn.addEventListener('click', () => {
             if (btn.dataset.num === '.') {
@@ -653,13 +638,13 @@ function normalizeString(str) {
     });
 
     document.getElementById('btnInteres').addEventListener('click', abrirModalInteres);
-    document.getElementById('guardarBtn').addEventListener('click', guardarCalculoActual);
     document.getElementById('borrarHistorialBtn').addEventListener('click', async () => {
         if (confirm('¿Borrar todo el historial?')) {
             historial = [];
             historialSha = null;
             renderHistorial();
             await guardarHistorialGitHub();
+            mostrarToast('🗑️ Historial limpiado');
         }
     });
     document.getElementById('cerrarModalInteres').addEventListener('click', () => document.getElementById('modalInteres').classList.remove('active'));
@@ -671,7 +656,6 @@ function normalizeString(str) {
         document.getElementById(id).addEventListener('change', actualizarVistaPreviaInteres);
     });
 
-    // Teclado
     document.addEventListener('keydown', e => {
         if (e.key >= '0' && e.key <= '9') inputNumber(e.key);
         if (e.key === '.') { if (!currentInput.includes('.')) { currentInput += '.'; updateDisplay(); } }
@@ -679,7 +663,6 @@ function normalizeString(str) {
         if (e.key === 'Enter' || e.key === '=') compute();
         if (e.key === 'Escape') limpiar();
         if (e.key === 'Backspace') deleteLast();
-        if (e.ctrlKey && e.key === 's') { e.preventDefault(); guardarCalculoActual(); }
     });
 
     cargarHistorial();
