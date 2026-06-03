@@ -21,6 +21,13 @@
       "rol": "profesor",
       "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
       "fechaRegistro": "2026-06-02T14:30:07.533Z"
+    },
+    {
+      "rut": "22793944-3",
+      "nombre": "MK",
+      "rol": "alumno",
+      "password": "c86f813a4de1d47ec72ed3936cb126992bcc7ed4b432d3c3ea2b59ad8f270cee",
+      "fechaRegistro": "2026-06-03T16:27:15.753Z"
     }
   ],
   "ruts_autorizados": [
