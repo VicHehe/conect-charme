@@ -1,5 +1,11 @@
 {
-  "listas": [],
+  "listas": [
+    {
+      "id": "mpxbbjzmr1s4o7ub4e9",
+      "nombre": "Materias generales",
+      "color": "#8b5cf6"
+    }
+  ],
   "tareas": [
     {
       "id": "mpxb8cs0bdea2gg9t2s",
