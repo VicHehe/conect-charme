@@ -7,480 +7,488 @@
     <link rel="icon" type="image/png" href="../../assets/favicon.png">
     <link rel="stylesheet" href="../../css/styles.css">
     <style>
-        /* ===== LAYOUT CHECKLIST ===== */
-.listas-panel {
-    width: 260px;
-    min-width: 260px;
-    background: white;
-    border-right: 2px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding-top: 60px;
-    padding-bottom: 60px;
-}
+        /* ===== ESTILOS EXCLUSIVOS DEL CHECKLIST ===== */
+        .tareas-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg);
+        }
 
-.checklist-layout {
-    display: flex;
-    align-items: stretch;  /* ← que ambos paneles se estiren igual */
-    height: calc(100vh - 60px);
-}
+        .tareas-header {
+            background: white;
+            padding: 22px 28px 0;
+            border-bottom: 1.5px solid var(--border);
+        }
 
-.listas-nav-fija {
-    padding: 16px 12px 12px;
-    border-bottom: 1.5px solid var(--border);
-}
+        .tareas-titulo-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
 
-.nav-fija-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    transition: all 0.15s;
-    margin-bottom: 2px;
-}
-.nav-fija-item:hover { background: var(--bg); }
-.nav-fija-item.active {
-    background: var(--blue-light);
-    color: var(--blue-dark);
-    font-weight: 700;
-}
-.nav-fija-item .nav-icon-wrap {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    background: var(--bg);
-    flex-shrink: 0;
-}
-.nav-fija-item.active .nav-icon-wrap {
-    background: var(--blue);
-}
+        .tareas-titulo-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
 
-.listas-header {
-    padding: 16px 16px 6px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .tareas-titulo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--black);
+            flex: 1;
+        }
 
-.btn-nueva-lista {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: var(--blue);
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-    font-weight: 700;
-}
-.btn-nueva-lista:hover { background: var(--blue-light); }
+        .tareas-count-badge {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            background: var(--bg);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
 
-.lista-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: 10px;
-    margin: 1px 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.15s;
-    color: var(--text);
-}
-.lista-item:hover { background: var(--bg); }
-.lista-item.active {
-    background: var(--blue-light);
-    color: var(--blue-dark);
-    font-weight: 700;
-}
-.lista-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-.lista-nombre { flex: 1; }
-.lista-count {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    min-width: 20px;
-    text-align: right;
-}
-.lista-item.active .lista-count { color: var(--blue-dark); }
-.lista-delete {
-    background: none;
-    border: none;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--text-muted);
-    opacity: 0;
-    padding: 2px 5px;
-    border-radius: 4px;
-    transition: all 0.15s;
-}
-.lista-item:hover .lista-delete { opacity: 1; }
-.lista-delete:hover { color: var(--red); background: var(--red-light); }
+        .filtros-row {
+            display: flex;
+            gap: 0;
+        }
 
-/* ===== PANEL DERECHO ===== */
-.tareas-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--bg);
-}
+        .filtro-btn {
+            padding: 8px 18px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.15s;
+        }
 
-.tareas-header {
-    background: white;
-    padding: 22px 28px 0;
-    border-bottom: 1.5px solid var(--border);
-}
-.tareas-titulo-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-}
-.tareas-titulo-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-.tareas-titulo {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--black);
-    flex: 1;
-}
-.tareas-count-badge {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 500;
-    background: var(--bg);
-    padding: 3px 10px;
-    border-radius: 20px;
-}
+        .filtro-btn:hover { color: var(--blue-dark); }
 
-/* FILTROS */
-.filtros-row {
-    display: flex;
-    gap: 0;
-}
-.filtro-btn {
-    padding: 8px 18px;
-    border: none;
-    background: none;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.15s;
-}
-.filtro-btn:hover { color: var(--blue-dark); }
-.filtro-btn.active {
-    color: var(--blue-dark);
-    border-bottom-color: var(--blue);
-}
+        .filtro-btn.active {
+            color: var(--blue-dark);
+            border-bottom-color: var(--blue);
+        }
 
-/* BARRA AGREGAR */
-.add-tarea-bar {
-    background: white;
-    margin: 16px 24px 8px;
-    border-radius: 14px;
-    border: 1.5px solid var(--border);
-    padding: 11px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.2s;
-    flex-shrink: 0;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.add-tarea-bar:focus-within {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
-}
-.add-plus {
-    font-size: 18px;
-    color: var(--blue);
-    font-weight: 700;
-    line-height: 1;
-    flex-shrink: 0;
-}
-.add-tarea-bar input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    background: none;
-    color: var(--text);
-}
-.add-tarea-bar input::placeholder { color: var(--text-muted); }
+        .add-tarea-bar {
+            background: white;
+            margin: 16px 24px 8px;
+            border-radius: 14px;
+            border: 1.5px solid var(--border);
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
 
-.add-opciones {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-.add-opcion-btn {
-    background: none;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 4px 9px;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--text-muted);
-    transition: all 0.15s;
-}
-.add-opcion-btn:hover { border-color: var(--blue); color: var(--blue); }
-.add-opcion-btn.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+        .add-tarea-bar:focus-within {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        }
 
-.add-btn-icon {
-    background: var(--blue);
-    border: none;
-    color: white;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-    flex-shrink: 0;
-}
-.add-btn-icon:hover { background: var(--blue-dark); }
+        .add-tarea-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            background: none;
+            color: var(--text);
+        }
 
-/* LISTA TAREAS */
-.tareas-lista {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px 24px 24px;
-}
+        .add-tarea-bar input::placeholder { color: var(--text-muted); }
 
-/* TAREA ITEM */
-.tarea-item {
-    background: white;
-    border-radius: 12px;
-    padding: 13px 16px;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    border: 1.5px solid var(--border);
-    transition: all 0.18s;
-    cursor: pointer;
-    position: relative;
-}
-.tarea-item:hover {
-    border-color: var(--yellow);
-    box-shadow: 0 2px 10px rgba(245,158,11,0.10);
-    transform: translateY(-1px);
-}
-.tarea-item.completada { opacity: 0.5; }
-.tarea-item.completada .tarea-texto {
-    text-decoration: line-through;
-    color: var(--text-muted);
-}
+        .add-opciones {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
 
-/* CHECKBOX */
-.tarea-check {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.18s;
-    margin-top: 1px;
-    font-size: 11px;
-}
-.tarea-check:hover { border-color: var(--blue); background: var(--blue-light); }
-.tarea-check.checked { background: var(--blue); border-color: var(--blue); color: white; }
-.tarea-check.p1 { border-color: #ef4444; }
-.tarea-check.p1:hover, .tarea-check.p1.checked { background: #ef4444; border-color: #ef4444; color: white; }
-.tarea-check.p2 { border-color: #f97316; }
-.tarea-check.p2:hover, .tarea-check.p2.checked { background: #f97316; border-color: #f97316; color: white; }
-.tarea-check.p3 { border-color: #3b82f6; }
-.tarea-check.p3:hover, .tarea-check.p3.checked { background: #3b82f6; border-color: #3b82f6; color: white; }
+        .add-opcion-btn {
+            background: none;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 4px 9px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
 
-.tarea-body { flex: 1; min-width: 0; }
-.tarea-texto {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 5px;
-    word-break: break-word;
-    line-height: 1.4;
-}
-.tarea-meta {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-.tarea-fecha {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    font-weight: 500;
-}
-.tarea-fecha.vencida { color: #ef4444; font-weight: 700; }
-.tarea-fecha.hoy { color: #f97316; font-weight: 700; }
+        .add-opcion-btn:hover { border-color: var(--blue); color: var(--blue); }
+        .add-opcion-btn.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
 
-.tarea-prioridad-badge {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 20px;
-}
-.badge-p1 { background: #fee2e2; color: #ef4444; }
-.badge-p2 { background: #ffedd5; color: #f97316; }
-.badge-p3 { background: #dbeafe; color: #3b82f6; }
+        .add-btn-icon {
+            background: var(--blue);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
 
-.tarea-lista-badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 20px;
-}
+        .add-btn-icon:hover { background: var(--blue-dark); }
 
-.tarea-delete {
-    background: none;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    color: var(--text-muted);
-    opacity: 0;
-    padding: 4px;
-    border-radius: 6px;
-    transition: all 0.15s;
-    flex-shrink: 0;
-}
-.tarea-item:hover .tarea-delete { opacity: 1; }
-.tarea-delete:hover { color: var(--red); background: var(--red-light); }
+        .tareas-lista {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 24px 24px;
+        }
 
-/* EMPTY STATE */
-.empty-checklist {
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--text-muted);
-}
-.empty-checklist .ei { font-size: 48px; margin-bottom: 14px; }
-.empty-checklist h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.empty-checklist p { font-size: 13px; }
+        .tarea-item {
+            background: white;
+            border-radius: 12px;
+            padding: 13px 16px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1.5px solid var(--border);
+            transition: all 0.18s;
+            cursor: pointer;
+            position: relative;
+        }
 
-/* MODAL NUEVA LISTA */
-.modal-lista-input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 15px;
-    margin-bottom: 14px;
-    font-family: inherit;
-    color: var(--text);
-}
-.modal-lista-input:focus { outline: none; border-color: var(--yellow); }
+        .tarea-item:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 2px 10px rgba(245,158,11,0.10);
+            transform: translateY(-1px);
+        }
 
-.colores-grid {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-}
-.color-dot {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: transform 0.15s;
-}
-.color-dot:hover { transform: scale(1.12); }
-.color-dot.selected { border-color: var(--black); transform: scale(1.12); }
+        .tarea-item.completada { opacity: 0.5; }
 
-/* MODAL TAREA */
-.modal-field-group { margin-bottom: 16px; }
-.modal-field-group label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--blue-dark);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-.modal-field-group input,
-.modal-field-group select {
-    width: 100%;
-    padding: 10px 14px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: inherit;
-    background: white;
-    color: var(--text);
-}
-.modal-field-group input:focus,
-.modal-field-group select:focus { outline: none; border-color: var(--yellow); }
+        .tarea-item.completada .tarea-texto {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
 
-.prioridad-selector { display: flex; gap: 6px; }
-.prio-btn {
-    flex: 1;
-    padding: 8px 4px;
-    border-radius: 10px;
-    border: 2px solid var(--border);
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    background: none;
-    transition: all 0.15s;
-    text-align: center;
-}
-.prio-btn[data-prio="1"] { color: #ef4444; }
-.prio-btn[data-prio="1"].selected { background: #fee2e2; border-color: #ef4444; }
-.prio-btn[data-prio="2"] { color: #f97316; }
-.prio-btn[data-prio="2"].selected { background: #ffedd5; border-color: #f97316; }
-.prio-btn[data-prio="3"] { color: #3b82f6; }
-.prio-btn[data-prio="3"].selected { background: #dbeafe; border-color: #3b82f6; }
-.prio-btn[data-prio="0"] { color: var(--text-muted); }
-.prio-btn[data-prio="0"].selected { background: var(--bg); border-color: var(--text-muted); }
+        .tarea-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s;
+            margin-top: 1px;
+            font-size: 11px;
+        }
 
-@media (max-width: 768px) {
-    .listas-panel { display: none; }
-    .tareas-lista { padding: 8px 12px 20px; }
-    .add-tarea-bar { margin: 12px; }
-}
+        .tarea-check:hover { border-color: var(--blue); background: var(--blue-light); }
+        .tarea-check.checked { background: var(--blue); border-color: var(--blue); color: white; }
+        .tarea-check.p1 { border-color: #ef4444; }
+        .tarea-check.p1:hover, .tarea-check.p1.checked { background: #ef4444; border-color: #ef4444; color: white; }
+        .tarea-check.p2 { border-color: #f97316; }
+        .tarea-check.p2:hover, .tarea-check.p2.checked { background: #f97316; border-color: #f97316; color: white; }
+        .tarea-check.p3 { border-color: #3b82f6; }
+        .tarea-check.p3:hover, .tarea-check.p3.checked { background: #3b82f6; border-color: #3b82f6; color: white; }
+
+        .tarea-body { flex: 1; min-width: 0; }
+
+        .tarea-texto {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 5px;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .tarea-meta {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tarea-fecha {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .tarea-fecha.vencida { color: #ef4444; font-weight: 700; }
+        .tarea-fecha.hoy { color: #f97316; font-weight: 700; }
+
+        .tarea-prioridad-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+        }
+
+        .badge-p1 { background: #fee2e2; color: #ef4444; }
+        .badge-p2 { background: #ffedd5; color: #f97316; }
+        .badge-p3 { background: #dbeafe; color: #3b82f6; }
+
+        .tarea-lista-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 20px;
+        }
+
+        .tarea-delete {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-muted);
+            opacity: 0;
+            padding: 4px;
+            border-radius: 6px;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .tarea-item:hover .tarea-delete { opacity: 1; }
+        .tarea-delete:hover { color: var(--red); background: var(--red-light); }
+
+        .empty-checklist {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-checklist .ei { font-size: 48px; margin-bottom: 14px; }
+        .empty-checklist h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+        .empty-checklist p { font-size: 13px; }
+
+        .modal-lista-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 14px;
+            font-family: inherit;
+            color: var(--text);
+        }
+
+        .modal-lista-input:focus { outline: none; border-color: var(--yellow); }
+
+        .colores-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .color-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: transform 0.15s;
+        }
+
+        .color-dot:hover { transform: scale(1.12); }
+        .color-dot.selected { border-color: var(--black); transform: scale(1.12); }
+
+        .modal-field-group { margin-bottom: 16px; }
+
+        .modal-field-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--blue-dark);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-field-group input,
+        .modal-field-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            color: var(--text);
+        }
+
+        .modal-field-group input:focus,
+        .modal-field-group select:focus { outline: none; border-color: var(--yellow); }
+
+        .prioridad-selector { display: flex; gap: 6px; }
+
+        .prio-btn {
+            flex: 1;
+            padding: 8px 4px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            background: none;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .prio-btn[data-prio="1"] { color: #ef4444; }
+        .prio-btn[data-prio="1"].selected { background: #fee2e2; border-color: #ef4444; }
+        .prio-btn[data-prio="2"] { color: #f97316; }
+        .prio-btn[data-prio="2"].selected { background: #ffedd5; border-color: #f97316; }
+        .prio-btn[data-prio="3"] { color: #3b82f6; }
+        .prio-btn[data-prio="3"].selected { background: #dbeafe; border-color: #3b82f6; }
+        .prio-btn[data-prio="0"] { color: var(--text-muted); }
+        .prio-btn[data-prio="0"].selected { background: var(--bg); border-color: var(--text-muted); }
+
+        /* ===== NAVEGACIÓN SIDEBAR ===== */
+        .nav-fija-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            transition: all 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .nav-fija-item:hover { background: var(--bg); }
+
+        .nav-fija-item.active {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+            font-weight: 700;
+        }
+
+        .nav-icon-wrap {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .nav-fija-item.active .nav-icon-wrap {
+            background: var(--blue);
+            color: white;
+        }
+
+        .listas-header {
+            padding: 16px 14px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-nueva-lista {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--blue);
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            font-weight: 700;
+        }
+
+        .btn-nueva-lista:hover { background: var(--blue-light); }
+
+        .lista-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            margin: 1px 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.15s;
+            color: var(--text);
+        }
+
+        .lista-item:hover { background: var(--bg); }
+
+        .lista-item.active {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+            font-weight: 700;
+        }
+
+        .lista-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .lista-nombre { flex: 1; }
+
+        .lista-count {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            min-width: 20px;
+            text-align: right;
+        }
+
+        .lista-item.active .lista-count { color: var(--blue-dark); }
+
+        .lista-delete {
+            background: none;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text-muted);
+            opacity: 0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+
+        .lista-item:hover .lista-delete { opacity: 1; }
+        .lista-delete:hover { color: var(--red); background: var(--red-light); }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .tareas-lista { padding: 8px 12px 20px; }
+            .add-tarea-bar { margin: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -498,68 +506,67 @@
     </div>
 </header>
 
-<div class="checklist-layout">
-
-<!-- PANEL IZQUIERDO — LISTAS -->
-<div class="listas-panel">
-    <div class="listas-nav-fija">
-        <div class="nav-fija-item active" data-vista="todas" onclick="cambiarVista('todas', this)">
-            <div class="nav-icon-wrap">📋</div>
-            <span style="flex:1">Todas</span>
-            <span class="lista-count" id="countTodas"></span>
-        </div>
-        <div class="nav-fija-item" data-vista="hoy" onclick="cambiarVista('hoy', this)">
-            <div class="nav-icon-wrap">📅</div>
-            <span style="flex:1">Hoy</span>
-            <span class="lista-count" id="countHoy"></span>
-        </div>
-        <div class="nav-fija-item" data-vista="urgentes" onclick="cambiarVista('urgentes', this)">
-            <div class="nav-icon-wrap">🔴</div>
-            <span style="flex:1">Urgentes</span>
-            <span class="lista-count" id="countUrgentes"></span>
-        </div>
-    </div>
-
-        <div class="listas-header">
-            <span>Mis listas</span>
-            <button class="btn-nueva-lista" onclick="abrirModalLista()" title="Nueva lista">+</button>
-        </div>
-        <div id="listasNav"></div>
-    </div>
-
-    <!-- PANEL DERECHO — TAREAS -->
-    <div class="tareas-panel">
-        <div class="tareas-header">
-            <div class="tareas-titulo-row">
-                <div class="tareas-titulo-dot" id="tituloDot" style="background:#2563EB;"></div>
-                <span class="tareas-titulo" id="tituloVista">Todas</span>
-                <span class="tareas-count-badge" id="countBadge"></span>
+<div class="app-body">
+    <!-- SIDEBAR - exactamente igual al de calculadora.html -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <div class="nav-fija-item active" data-vista="todas" onclick="cambiarVista('todas', this)">
+                <div class="nav-icon-wrap">📋</div>
+                <span style="flex:1">Todas</span>
+                <span class="lista-count" id="countTodas"></span>
             </div>
-            <div class="filtros-row">
-                <button class="filtro-btn active" onclick="setFiltro('pendientes', this)">Pendientes</button>
-                <button class="filtro-btn" onclick="setFiltro('completadas', this)">Completadas</button>
-                <button class="filtro-btn" onclick="setFiltro('todas', this)">Todas</button>
+            <div class="nav-fija-item" data-vista="hoy" onclick="cambiarVista('hoy', this)">
+                <div class="nav-icon-wrap">📅</div>
+                <span style="flex:1">Hoy</span>
+                <span class="lista-count" id="countHoy"></span>
             </div>
-        </div>
-
-        <!-- BARRA AGREGAR -->
-        <div class="add-tarea-bar" id="addBar">
-            <span style="font-size:20px; color:var(--text-muted);">+</span>
-            <input type="text" id="inputNuevaTarea" placeholder="Agregar tarea..." maxlength="200">
-            <div class="add-opciones">
-                <button class="add-opcion-btn" id="btnFechaBar" onclick="toggleFechaBar()">📅</button>
-                <input type="date" id="fechaBar" style="display:none; border:1.5px solid var(--border); border-radius:8px; padding:4px 8px; font-size:12px; color:var(--text);">
-                <button class="add-opcion-btn" id="btnPrioBar" data-prio="0" onclick="togglePrioBar()">🚩</button>
+            <div class="nav-fija-item" data-vista="urgentes" onclick="cambiarVista('urgentes', this)">
+                <div class="nav-icon-wrap">🔴</div>
+                <span style="flex:1">Urgentes</span>
+                <span class="lista-count" id="countUrgentes"></span>
             </div>
-            <button class="add-btn-icon" onclick="agregarTarea()" title="Agregar">↵</button>
-        </div>
+            <hr class="nav-divider">
+            <div class="listas-header">
+                <span>Mis listas</span>
+                <button class="btn-nueva-lista" onclick="abrirModalLista()" title="Nueva lista">+</button>
+            </div>
+            <div id="listasNav"></div>
+        </nav>
+    </aside>
 
-        <!-- LISTA TAREAS -->
-        <div class="tareas-lista" id="tareasLista"></div>
-    </div>
+    <!-- MAIN CONTENT -->
+    <main class="main-content" style="padding: 0; background: var(--bg);">
+        <div class="tareas-panel">
+            <div class="tareas-header">
+                <div class="tareas-titulo-row">
+                    <div class="tareas-titulo-dot" id="tituloDot" style="background:#2563EB;"></div>
+                    <span class="tareas-titulo" id="tituloVista">Todas</span>
+                    <span class="tareas-count-badge" id="countBadge"></span>
+                </div>
+                <div class="filtros-row">
+                    <button class="filtro-btn active" onclick="setFiltro('pendientes', this)">Pendientes</button>
+                    <button class="filtro-btn" onclick="setFiltro('completadas', this)">Completadas</button>
+                    <button class="filtro-btn" onclick="setFiltro('todas', this)">Todas</button>
+                </div>
+            </div>
+
+            <div class="add-tarea-bar" id="addBar">
+                <span style="font-size:20px; color:var(--text-muted);">+</span>
+                <input type="text" id="inputNuevaTarea" placeholder="Agregar tarea..." maxlength="200">
+                <div class="add-opciones">
+                    <button class="add-opcion-btn" id="btnFechaBar" onclick="toggleFechaBar()">📅</button>
+                    <input type="date" id="fechaBar" style="display:none; border:1.5px solid var(--border); border-radius:8px; padding:4px 8px; font-size:12px; color:var(--text);">
+                    <button class="add-opcion-btn" id="btnPrioBar" data-prio="0" onclick="togglePrioBar()">🚩</button>
+                </div>
+                <button class="add-btn-icon" onclick="agregarTarea()" title="Agregar">↵</button>
+            </div>
+
+            <div class="tareas-lista" id="tareasLista"></div>
+        </div>
+    </main>
 </div>
 
-<!-- MODAL NUEVA LISTA -->
+<!-- MODALES (sin cambios) -->
 <div class="modal-overlay" id="modalLista">
     <div class="modal-box">
         <div class="modal-header">
@@ -575,7 +582,6 @@
     </div>
 </div>
 
-<!-- MODAL EDITAR TAREA -->
 <div class="modal-overlay" id="modalTarea">
     <div class="modal-box" style="max-width:480px;">
         <div class="modal-header">
@@ -632,9 +638,7 @@
     let prioBarActual = 0;
     let tareaEditandoId = null;
     let prioEditando = 0;
-    let mostrarCompletadas = false;
 
-    // ===== STORAGE =====
     async function cargarDatos() {
         try {
             const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(DATA_PATH)}`);
@@ -670,7 +674,6 @@
 
     function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
-    // ===== RENDER PRINCIPAL =====
     function render() {
         renderListas();
         renderTareas();
@@ -696,7 +699,6 @@
     function getTareasFiltradas() {
         let tareas = [...data.tareas];
 
-        // Filtro por vista
         if (vistaActiva === 'hoy') {
             const hoy = new Date().toISOString().slice(0,10);
             tareas = tareas.filter(t => t.fecha === hoy);
@@ -706,11 +708,9 @@
             tareas = tareas.filter(t => t.listaId === listaActivaId);
         }
 
-        // Filtro completadas/pendientes
         if (filtroActivo === 'pendientes') tareas = tareas.filter(t => !t.completada);
         else if (filtroActivo === 'completadas') tareas = tareas.filter(t => t.completada);
 
-        // Ordenar: prioridad desc, fecha asc
         tareas.sort((a, b) => {
             if (a.completada !== b.completada) return a.completada ? 1 : -1;
             if (a.prioridad !== b.prioridad) return (a.prioridad || 9) - (b.prioridad || 9);
@@ -790,21 +790,17 @@
         document.getElementById('countHoy').textContent = pendientes.filter(t => t.fecha === hoy).length || '';
         document.getElementById('countUrgentes').textContent = pendientes.filter(t => t.prioridad === 1).length || '';
 
-        // Badge header
         const tareas = getTareasFiltradas();
         document.getElementById('countBadge').textContent = tareas.length > 0 ? `${tareas.length} tarea${tareas.length !== 1 ? 's' : ''}` : '';
     }
 
-    // ===== NAVEGACIÓN =====
     function cambiarVista(vista, el, listaId = null) {
         vistaActiva = vista;
         listaActivaId = listaId;
 
-        // Actualizar UI nav fija
         document.querySelectorAll('.nav-fija-item').forEach(i => i.classList.remove('active'));
         if (el) el.classList.add('active');
 
-        // Título
         const titulos = { todas: 'Todas', hoy: 'Hoy', urgentes: 'Urgentes' };
         const colores = { todas: '#2563EB', hoy: '#f97316', urgentes: '#ef4444' };
         if (vista === 'lista') {
@@ -827,7 +823,6 @@
         actualizarContadores();
     }
 
-    // ===== AGREGAR TAREA =====
     function toggleFechaBar() {
         const inp = document.getElementById('fechaBar');
         const btn = document.getElementById('btnFechaBar');
@@ -884,7 +879,6 @@
         if (e.key === 'Enter') agregarTarea();
     });
 
-    // ===== TOGGLE COMPLETADA =====
     async function toggleTarea(id) {
         const t = data.tareas.find(x => x.id === id);
         if (!t) return;
@@ -896,7 +890,6 @@
         mostrarToast(t.completada ? '✅ Tarea completada' : '↩️ Tarea reabierta');
     }
 
-    // ===== ELIMINAR =====
     async function eliminarTarea(id) {
         data.tareas = data.tareas.filter(t => t.id !== id);
         render();
@@ -913,7 +906,6 @@
         guardarDatos();
     }
 
-    // ===== MODAL NUEVA LISTA =====
     function renderColores() {
         document.getElementById('coloresGrid').innerHTML = COLORES.map(c => `
             <div class="color-dot ${c === colorSeleccionado ? 'selected' : ''}"
@@ -953,7 +945,6 @@
         if (e.key === 'Enter') crearLista();
     });
 
-    // ===== MODAL EDITAR TAREA =====
     function abrirModalTarea(id) {
         tareaEditandoId = id;
         const t = data.tareas.find(x => x.id === id);
@@ -964,7 +955,6 @@
         document.querySelectorAll('.prio-btn').forEach(b => {
             b.classList.toggle('selected', parseInt(b.dataset.prio) === prioEditando);
         });
-        // Select listas
         const sel = document.getElementById('editLista');
         sel.innerHTML = `<option value="">Sin lista</option>` +
             data.listas.map(l => `<option value="${l.id}" ${t.listaId === l.id ? 'selected' : ''}>${escHtml(l.nombre)}</option>`).join('');
@@ -998,7 +988,6 @@
         mostrarToast('✅ Tarea actualizada');
     }
 
-    // ===== UTILS =====
     function formatFecha(iso) {
         const [y, m, d] = iso.split('-');
         return `${d}/${m}/${y}`;
@@ -1016,7 +1005,6 @@
         setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    // Cerrar modales al hacer click afuera
     document.getElementById('modalLista').addEventListener('click', e => {
         if (e.target === document.getElementById('modalLista')) cerrarModalLista();
     });
