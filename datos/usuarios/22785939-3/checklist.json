@@ -18,6 +18,15 @@
       "fecha": "2026-06-03",
       "listaId": null,
       "creadoEl": "2026-06-03T00:10:41.330Z"
+    },
+    {
+      "id": "mpxbamsz5r3p95hjp8o",
+      "texto": "Avanze en el trabajo de CCI",
+      "completada": false,
+      "prioridad": 3,
+      "fecha": "2026-06-04",
+      "listaId": null,
+      "creadoEl": "2026-06-03T00:12:04.211Z"
     }
   ]
 }
