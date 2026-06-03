@@ -15,12 +15,11 @@
     {
       "id": "mpxb8cs0bdea2gg9t2s",
       "texto": "Disertacion de ingles",
-      "completada": true,
+      "completada": false,
       "prioridad": 2,
       "fecha": "2026-06-04",
       "listaId": "mpxbbjzmr1s4o7ub4e9",
-      "creadoEl": "2026-06-03T00:10:17.904Z",
-      "completadaEl": "2026-06-03T00:19:07.567Z"
+      "creadoEl": "2026-06-03T00:10:17.904Z"
     },
     {
       "id": "mpxb8uuq3eukphrobcj",
