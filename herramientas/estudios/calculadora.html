@@ -442,13 +442,7 @@
 }
 
 function normalizeString(str) {
-    return str.normalize("NFKD").replace(/[^\u0000-\u007F]/g, function(c) {
-        return {
-            'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
-            'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U',
-            'ñ': 'n', 'Ñ': 'N'
-        }[c] || c;
-    });
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, '');
 }
 
     function renderHistorial() {
@@ -506,15 +500,15 @@ function normalizeString(str) {
     const cuentaActual = expresionEl.textContent;
     const resActual = resultadoEl.textContent;
     
-    // No guardar si la expresión está incompleta (termina en operador)
-    if (cuentaActual.match(/[\+\-\*\/]\s*$/)) {
-        mostrarToast('Completá la operación antes de guardar');
+    // No guardar si la expresión es solo un número (sin operación)
+    if (!cuentaActual.match(/[\+\-\*\/\^√]/)) {
+        mostrarToast('Realizá una operación antes de guardar');
         return;
     }
     
-    // No guardar si el resultado es "0" y la expresión también es "0"
-    if (resActual === "0" && cuentaActual === "0") {
-        mostrarToast('No hay un cálculo para guardar');
+    // No guardar si la expresión está incompleta (termina en operador)
+    if (cuentaActual.match(/[\+\-\*\/]\s*$/)) {
+        mostrarToast('Completá la operación antes de guardar');
         return;
     }
     
