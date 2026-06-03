@@ -8,465 +8,478 @@
     <link rel="stylesheet" href="../../css/styles.css">
     <style>
         /* ===== LAYOUT CHECKLIST ===== */
-        .checklist-layout {
-            display: flex;
-            gap: 0;
-            height: calc(100vh - 60px);
-            overflow: hidden;
-        }
+.checklist-layout {
+    display: flex;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
 
-        /* ===== PANEL IZQUIERDO — LISTAS ===== */
-        .listas-panel {
-            width: 240px;
-            min-width: 240px;
-            background: white;
-            border-right: 2px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        .listas-header {
-            padding: 16px 12px 8px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .btn-nueva-lista {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--blue);
-            line-height: 1;
-            padding: 2px 6px;
-            border-radius: 6px;
-            transition: background 0.15s;
-        }
-        .btn-nueva-lista:hover { background: var(--blue-light); }
+/* ===== PANEL IZQUIERDO ===== */
+.listas-panel {
+    width: 260px;
+    min-width: 260px;
+    background: white;
+    border-right: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 
-        .lista-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            margin: 1px 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.15s;
-            color: var(--text);
-        }
-        .lista-item:hover { background: var(--bg); }
-        .lista-item.active { background: var(--blue-light); color: var(--blue-dark); font-weight: 700; }
-        .lista-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .lista-nombre { flex: 1; }
-        .lista-count {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            background: var(--bg);
-            padding: 1px 7px;
-            border-radius: 20px;
-        }
-        .lista-item.active .lista-count {
-            background: var(--blue);
-            color: white;
-        }
-        .lista-delete {
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            color: var(--text-muted);
-            opacity: 0;
-            padding: 2px 4px;
-            border-radius: 4px;
-            transition: all 0.15s;
-        }
-        .lista-item:hover .lista-delete { opacity: 1; }
-        .lista-delete:hover { color: var(--red); background: var(--red-light); }
+.listas-nav-fija {
+    padding: 16px 12px 12px;
+    border-bottom: 1.5px solid var(--border);
+}
 
-        .listas-nav-fija {
-            padding: 8px;
-            border-bottom: 1.5px solid var(--border);
-            margin-bottom: 4px;
-        }
-        .nav-fija-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text);
-            transition: all 0.15s;
-        }
-        .nav-fija-item:hover { background: var(--bg); }
-        .nav-fija-item.active { background: var(--blue-light); color: var(--blue-dark); font-weight: 700; }
-        .nav-fija-item.active .lista-count { background: var(--blue); color: white; }
+.nav-fija-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+}
+.nav-fija-item:hover { background: var(--bg); }
+.nav-fija-item.active {
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    font-weight: 700;
+}
+.nav-fija-item .nav-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    background: var(--bg);
+    flex-shrink: 0;
+}
+.nav-fija-item.active .nav-icon-wrap {
+    background: var(--blue);
+}
 
-        /* ===== PANEL DERECHO — TAREAS ===== */
-        .tareas-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: var(--bg);
-        }
+.listas-header {
+    padding: 16px 16px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .tareas-header {
-            background: white;
-            padding: 20px 28px 0;
-            border-bottom: 1.5px solid var(--border);
-        }
-        .tareas-titulo-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .tareas-titulo-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-        }
-        .tareas-titulo {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--black);
-            flex: 1;
-        }
-        .tareas-count-badge {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
+.btn-nueva-lista {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--blue);
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    font-weight: 700;
+}
+.btn-nueva-lista:hover { background: var(--blue-light); }
 
-        /* FILTROS */
-        .filtros-row {
-            display: flex;
-            gap: 4px;
-            padding-bottom: 0;
-        }
-        .filtro-btn {
-            padding: 7px 16px;
-            border: none;
-            background: none;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.15s;
-            border-radius: 0;
-        }
-        .filtro-btn:hover { color: var(--blue); }
-        .filtro-btn.active {
-            color: var(--blue-dark);
-            border-bottom-color: var(--blue);
-        }
+.lista-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    margin: 1px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+    color: var(--text);
+}
+.lista-item:hover { background: var(--bg); }
+.lista-item.active {
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    font-weight: 700;
+}
+.lista-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.lista-nombre { flex: 1; }
+.lista-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 20px;
+    text-align: right;
+}
+.lista-item.active .lista-count { color: var(--blue-dark); }
+.lista-delete {
+    background: none;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+.lista-item:hover .lista-delete { opacity: 1; }
+.lista-delete:hover { color: var(--red); background: var(--red-light); }
 
-        /* BARRA DE AGREGAR TAREA */
-        .add-tarea-bar {
-            background: white;
-            margin: 16px 20px;
-            border-radius: 14px;
-            border: 2px solid var(--border);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: border-color 0.2s;
-            flex-shrink: 0;
-        }
-        .add-tarea-bar:focus-within {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
-        }
-        .add-tarea-bar input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 15px;
-            background: none;
-            color: var(--text);
-        }
-        .add-tarea-bar input::placeholder { color: var(--text-muted); }
-        .add-btn-icon {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            color: var(--text-muted);
-            padding: 0;
-            line-height: 1;
-            transition: color 0.15s;
-        }
-        .add-btn-icon:hover { color: var(--blue); }
+/* ===== PANEL DERECHO ===== */
+.tareas-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+}
 
-        /* OPCIONES TAREA AL AGREGAR */
-        .add-opciones {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .add-opcion-btn {
-            background: none;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-weight: 600;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-        .add-opcion-btn:hover { border-color: var(--blue); color: var(--blue); }
-        .add-opcion-btn.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.tareas-header {
+    background: white;
+    padding: 22px 28px 0;
+    border-bottom: 1.5px solid var(--border);
+}
+.tareas-titulo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.tareas-titulo-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.tareas-titulo {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--black);
+    flex: 1;
+}
+.tareas-count-badge {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    background: var(--bg);
+    padding: 3px 10px;
+    border-radius: 20px;
+}
 
-        /* LISTA DE TAREAS */
-        .tareas-lista {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 20px 20px;
-        }
+/* FILTROS */
+.filtros-row {
+    display: flex;
+    gap: 0;
+}
+.filtro-btn {
+    padding: 8px 18px;
+    border: none;
+    background: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+}
+.filtro-btn:hover { color: var(--blue-dark); }
+.filtro-btn.active {
+    color: var(--blue-dark);
+    border-bottom-color: var(--blue);
+}
 
-        /* TAREA ITEM */
-        .tarea-item {
-            background: white;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            border: 1.5px solid var(--border);
-            transition: all 0.2s;
-            cursor: pointer;
-            position: relative;
-        }
-        .tarea-item:hover {
-            border-color: var(--yellow);
-            box-shadow: 0 2px 12px rgba(245,158,11,0.10);
-        }
-        .tarea-item.completada {
-            opacity: 0.55;
-        }
-        .tarea-item.completada .tarea-texto {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
+/* BARRA AGREGAR */
+.add-tarea-bar {
+    background: white;
+    margin: 16px 24px 8px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.add-tarea-bar:focus-within {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+}
+.add-plus {
+    font-size: 18px;
+    color: var(--blue);
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.add-tarea-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: none;
+    color: var(--text);
+}
+.add-tarea-bar input::placeholder { color: var(--text-muted); }
 
-        /* CHECKBOX */
-        .tarea-check {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 2px;
-        }
-        .tarea-check:hover { border-color: var(--blue); background: var(--blue-light); }
-        .tarea-check.checked {
-            background: var(--blue);
-            border-color: var(--blue);
-            color: white;
-            font-size: 11px;
-        }
+.add-opciones {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.add-opcion-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s;
+}
+.add-opcion-btn:hover { border-color: var(--blue); color: var(--blue); }
+.add-opcion-btn.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
 
-        /* PRIORIDADES */
-        .tarea-check.p1 { border-color: #ef4444; }
-        .tarea-check.p1:hover, .tarea-check.p1.checked { background: #ef4444; border-color: #ef4444; }
-        .tarea-check.p2 { border-color: #f97316; }
-        .tarea-check.p2:hover, .tarea-check.p2.checked { background: #f97316; border-color: #f97316; }
-        .tarea-check.p3 { border-color: #3b82f6; }
-        .tarea-check.p3:hover, .tarea-check.p3.checked { background: #3b82f6; border-color: #3b82f6; }
+.add-btn-icon {
+    background: var(--blue);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.add-btn-icon:hover { background: var(--blue-dark); }
 
-        .tarea-body { flex: 1; min-width: 0; }
-        .tarea-texto {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text);
-            margin-bottom: 4px;
-            word-break: break-word;
-        }
-        .tarea-meta {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .tarea-fecha {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .tarea-fecha.vencida { color: var(--red); font-weight: 600; }
-        .tarea-fecha.hoy { color: #f97316; font-weight: 600; }
-        .tarea-prioridad-badge {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 20px;
-        }
-        .badge-p1 { background: #fee2e2; color: #ef4444; }
-        .badge-p2 { background: #ffedd5; color: #f97316; }
-        .badge-p3 { background: #dbeafe; color: #3b82f6; }
-        .tarea-lista-badge {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 20px;
-            background: var(--bg);
-            color: var(--text-muted);
-        }
+/* LISTA TAREAS */
+.tareas-lista {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 24px 24px;
+}
 
-        .tarea-delete {
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            color: var(--text-muted);
-            opacity: 0;
-            padding: 4px;
-            border-radius: 6px;
-            transition: all 0.15s;
-            flex-shrink: 0;
-        }
-        .tarea-item:hover .tarea-delete { opacity: 1; }
-        .tarea-delete:hover { color: var(--red); background: var(--red-light); }
+/* TAREA ITEM */
+.tarea-item {
+    background: white;
+    border-radius: 12px;
+    padding: 13px 16px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1.5px solid var(--border);
+    transition: all 0.18s;
+    cursor: pointer;
+    position: relative;
+}
+.tarea-item:hover {
+    border-color: var(--yellow);
+    box-shadow: 0 2px 10px rgba(245,158,11,0.10);
+    transform: translateY(-1px);
+}
+.tarea-item.completada { opacity: 0.5; }
+.tarea-item.completada .tarea-texto {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
 
-        /* SECCIÓN COMPLETADAS */
-        .completadas-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-top: 8px;
-            margin-bottom: 4px;
-            user-select: none;
-        }
-        .completadas-toggle:hover { color: var(--text); }
+/* CHECKBOX */
+.tarea-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    margin-top: 1px;
+    font-size: 11px;
+}
+.tarea-check:hover { border-color: var(--blue); background: var(--blue-light); }
+.tarea-check.checked { background: var(--blue); border-color: var(--blue); color: white; }
+.tarea-check.p1 { border-color: #ef4444; }
+.tarea-check.p1:hover, .tarea-check.p1.checked { background: #ef4444; border-color: #ef4444; color: white; }
+.tarea-check.p2 { border-color: #f97316; }
+.tarea-check.p2:hover, .tarea-check.p2.checked { background: #f97316; border-color: #f97316; color: white; }
+.tarea-check.p3 { border-color: #3b82f6; }
+.tarea-check.p3:hover, .tarea-check.p3.checked { background: #3b82f6; border-color: #3b82f6; color: white; }
 
-        /* EMPTY STATE */
-        .empty-checklist {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-        .empty-checklist .ei { font-size: 52px; margin-bottom: 12px; }
-        .empty-checklist h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tarea-body { flex: 1; min-width: 0; }
+.tarea-texto {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 5px;
+    word-break: break-word;
+    line-height: 1.4;
+}
+.tarea-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.tarea-fecha {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 500;
+}
+.tarea-fecha.vencida { color: #ef4444; font-weight: 700; }
+.tarea-fecha.hoy { color: #f97316; font-weight: 700; }
 
-        /* MODAL NUEVA LISTA */
-        .modal-lista-input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 15px;
-            margin-bottom: 12px;
-            font-family: inherit;
-        }
-        .modal-lista-input:focus { outline: none; border-color: var(--yellow); }
+.tarea-prioridad-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+}
+.badge-p1 { background: #fee2e2; color: #ef4444; }
+.badge-p2 { background: #ffedd5; color: #f97316; }
+.badge-p3 { background: #dbeafe; color: #3b82f6; }
 
-        .colores-grid {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .color-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: transform 0.15s;
-        }
-        .color-dot:hover { transform: scale(1.15); }
-        .color-dot.selected { border-color: var(--black); transform: scale(1.15); }
+.tarea-lista-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+}
 
-        /* MODAL TAREA */
-        .modal-field-group { margin-bottom: 16px; }
-        .modal-field-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--blue-dark);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .modal-field-group input,
-        .modal-field-group select,
-        .modal-field-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: inherit;
-            background: white;
-            color: var(--text);
-        }
-        .modal-field-group input:focus,
-        .modal-field-group select:focus,
-        .modal-field-group textarea:focus {
-            outline: none;
-            border-color: var(--yellow);
-        }
-        .prioridad-selector {
-            display: flex;
-            gap: 8px;
-        }
-        .prio-btn {
-            flex: 1;
-            padding: 9px;
-            border-radius: 10px;
-            border: 2px solid var(--border);
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            background: none;
-            transition: all 0.15s;
-        }
-        .prio-btn[data-prio="1"] { color: #ef4444; }
-        .prio-btn[data-prio="1"].selected { background: #fee2e2; border-color: #ef4444; }
-        .prio-btn[data-prio="2"] { color: #f97316; }
-        .prio-btn[data-prio="2"].selected { background: #ffedd5; border-color: #f97316; }
-        .prio-btn[data-prio="3"] { color: #3b82f6; }
-        .prio-btn[data-prio="3"].selected { background: #dbeafe; border-color: #3b82f6; }
-        .prio-btn[data-prio="0"] { color: var(--text-muted); }
-        .prio-btn[data-prio="0"].selected { background: var(--bg); border-color: var(--text-muted); }
+.tarea-delete {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+.tarea-item:hover .tarea-delete { opacity: 1; }
+.tarea-delete:hover { color: var(--red); background: var(--red-light); }
 
-        @media (max-width: 768px) {
-            .listas-panel { display: none; }
-        }
+/* EMPTY STATE */
+.empty-checklist {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+}
+.empty-checklist .ei { font-size: 48px; margin-bottom: 14px; }
+.empty-checklist h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.empty-checklist p { font-size: 13px; }
+
+/* MODAL NUEVA LISTA */
+.modal-lista-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    margin-bottom: 14px;
+    font-family: inherit;
+    color: var(--text);
+}
+.modal-lista-input:focus { outline: none; border-color: var(--yellow); }
+
+.colores-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+.color-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: transform 0.15s;
+}
+.color-dot:hover { transform: scale(1.12); }
+.color-dot.selected { border-color: var(--black); transform: scale(1.12); }
+
+/* MODAL TAREA */
+.modal-field-group { margin-bottom: 16px; }
+.modal-field-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.modal-field-group input,
+.modal-field-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: white;
+    color: var(--text);
+}
+.modal-field-group input:focus,
+.modal-field-group select:focus { outline: none; border-color: var(--yellow); }
+
+.prioridad-selector { display: flex; gap: 6px; }
+.prio-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: none;
+    transition: all 0.15s;
+    text-align: center;
+}
+.prio-btn[data-prio="1"] { color: #ef4444; }
+.prio-btn[data-prio="1"].selected { background: #fee2e2; border-color: #ef4444; }
+.prio-btn[data-prio="2"] { color: #f97316; }
+.prio-btn[data-prio="2"].selected { background: #ffedd5; border-color: #f97316; }
+.prio-btn[data-prio="3"] { color: #3b82f6; }
+.prio-btn[data-prio="3"].selected { background: #dbeafe; border-color: #3b82f6; }
+.prio-btn[data-prio="0"] { color: var(--text-muted); }
+.prio-btn[data-prio="0"].selected { background: var(--bg); border-color: var(--text-muted); }
+
+@media (max-width: 768px) {
+    .listas-panel { display: none; }
+    .tareas-lista { padding: 8px 12px 20px; }
+    .add-tarea-bar { margin: 12px; }
+}
     </style>
 </head>
 <body>
@@ -486,25 +499,25 @@
 
 <div class="checklist-layout">
 
-    <!-- PANEL IZQUIERDO — LISTAS -->
-    <div class="listas-panel">
-        <div class="listas-nav-fija">
-            <div class="nav-fija-item active" data-vista="todas" onclick="cambiarVista('todas', this)">
-                <span>📋</span>
-                <span style="flex:1">Todas</span>
-                <span class="lista-count" id="countTodas">0</span>
-            </div>
-            <div class="nav-fija-item" data-vista="hoy" onclick="cambiarVista('hoy', this)">
-                <span>📅</span>
-                <span style="flex:1">Hoy</span>
-                <span class="lista-count" id="countHoy">0</span>
-            </div>
-            <div class="nav-fija-item" data-vista="urgentes" onclick="cambiarVista('urgentes', this)">
-                <span>🔴</span>
-                <span style="flex:1">Urgentes</span>
-                <span class="lista-count" id="countUrgentes">0</span>
-            </div>
+<!-- PANEL IZQUIERDO — LISTAS -->
+<div class="listas-panel">
+    <div class="listas-nav-fija">
+        <div class="nav-fija-item active" data-vista="todas" onclick="cambiarVista('todas', this)">
+            <div class="nav-icon-wrap">📋</div>
+            <span style="flex:1">Todas</span>
+            <span class="lista-count" id="countTodas"></span>
         </div>
+        <div class="nav-fija-item" data-vista="hoy" onclick="cambiarVista('hoy', this)">
+            <div class="nav-icon-wrap">📅</div>
+            <span style="flex:1">Hoy</span>
+            <span class="lista-count" id="countHoy"></span>
+        </div>
+        <div class="nav-fija-item" data-vista="urgentes" onclick="cambiarVista('urgentes', this)">
+            <div class="nav-icon-wrap">🔴</div>
+            <span style="flex:1">Urgentes</span>
+            <span class="lista-count" id="countUrgentes"></span>
+        </div>
+    </div>
 
         <div class="listas-header">
             <span>Mis listas</span>
