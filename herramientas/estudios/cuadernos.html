@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conect-Charme — Cuadernos 📓</title>
-    <link rel="icon" type="image/png" href="png/favicon.png">
-    <link rel="stylesheet" href="../../Css/styles.css">
+    <link rel="icon" type="image/png" href="../../assets/favicon.png">
+    <link rel="stylesheet" href="../../css/styles.css">
     <style>
         #autoSaveIndicator {
             position: fixed;
@@ -33,7 +33,6 @@
             padding: 14px 16px 6px;
         }
 
-        /* Botones de herramienta en sidebar */
         .tool-btn {
             display: flex;
             align-items: center;
@@ -50,7 +49,7 @@
             border-radius: 10px;
             transition: all 0.15s;
         }
-        .tool-btn:hover { background: var(--purple-light); color: var(--purple-dark); }
+        .tool-btn:hover { background: var(--yellow-light); color: var(--yellow-dark); }
         .tool-btn .tool-icon { font-size: 16px; width: 22px; text-align: center; }
         .tool-btn .tool-shortcut {
             margin-left: auto;
@@ -62,7 +61,6 @@
             font-family: monospace;
         }
 
-        /* Textarea editor */
         #inLineas {
             font-family: 'Georgia', serif;
             font-size: 14px;
@@ -71,7 +69,6 @@
             white-space: pre-wrap;
         }
 
-        /* Modo lector */
         .reader-page {
             max-width: 680px;
             background: #fffef5;
@@ -90,7 +87,7 @@
             top: 0;
             bottom: 0;
             width: 1.5px;
-            background: rgba(220, 80, 80, 0.22);
+            background: rgba(220,80,80,0.22);
         }
         .reader-lines {
             background-image: repeating-linear-gradient(
@@ -128,8 +125,8 @@
         }
         .reader-line { line-height: 32px; min-height: 32px; display: block; color: #222; font-size: 14px; }
         .reader-line.h1 { font-size: 16px; font-weight: 700; color: #1e1e6b; text-decoration: underline; text-underline-offset: 3px; }
-        .reader-line.h2 { font-size: 14px; font-weight: 700; color: #4a3da8; font-style: italic; }
-        .reader-line.bullet::before { content: '• '; color: var(--purple); }
+        .reader-line.h2 { font-size: 14px; font-weight: 700; color: #1D4ED8; font-style: italic; }
+        .reader-line.bullet::before { content: '• '; color: var(--blue); }
         .reader-line.bullet { padding-left: 8px; }
         .reader-line.empty { color: transparent; }
         .reader-page-num {
@@ -148,11 +145,10 @@
             font-weight: 700;
             padding: 3px 10px;
             border-radius: 20px;
-            background: #f0ebff;
-            color: #5b21b6;
+            background: var(--yellow-light);
+            color: var(--yellow-dark);
         }
 
-        /* Tabla de contenidos */
         .toc-item {
             display: block;
             padding: 6px 10px;
@@ -166,11 +162,10 @@
             width: 100%;
             text-align: left;
         }
-        .toc-item:hover { background: var(--purple-light); color: var(--purple-dark); }
+        .toc-item:hover { background: var(--yellow-light); color: var(--yellow-dark); }
         .toc-item.sin-titulo { color: var(--text-muted); font-style: italic; }
         .toc-item-num { font-size: 10px; color: var(--text-muted); margin-right: 6px; font-weight: 700; }
 
-        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -178,17 +173,16 @@
             padding: 12px;
         }
         .stat-box {
-            background: var(--purple-light);
+            background: var(--yellow-light);
             border-radius: 10px;
             padding: 10px;
             text-align: center;
         }
-        .stat-box .stat-num { font-size: 20px; font-weight: 700; color: var(--purple-dark); }
+        .stat-box .stat-num { font-size: 20px; font-weight: 700; color: var(--blue-dark); }
         .stat-box .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-        /* Buscador resultados */
         .search-result-item {
-            background: var(--purple-light);
+            background: var(--yellow-light);
             border-radius: 10px;
             padding: 10px 12px;
             margin-top: 8px;
@@ -197,8 +191,8 @@
             border: 1px solid transparent;
             transition: border-color 0.15s;
         }
-        .search-result-item:hover { border-color: var(--purple); }
-        .search-result-item strong { font-size: 13px; display: block; margin-bottom: 2px; }
+        .search-result-item:hover { border-color: var(--yellow); }
+        .search-result-item strong { font-size: 13px; display: block; margin-bottom: 2px; color: var(--blue-dark); }
         .search-result-item span { color: var(--text-muted); }
 
         .nav-page-btns {
@@ -218,9 +212,9 @@
             font-size: 13px;
             transition: all 0.15s;
         }
-        .nav-page-btns button:hover:not(:disabled) { background: var(--purple); color: white; border-color: var(--purple); }
+        .nav-page-btns button:hover:not(:disabled) { background: var(--blue); color: white; border-color: var(--blue); }
         .nav-page-btns button:disabled { opacity: 0.3; cursor: not-allowed; }
-        .nav-page-info { font-size: 13px; font-weight: 700; color: var(--purple-dark); min-width: 50px; text-align: center; }
+        .nav-page-info { font-size: 13px; font-weight: 700; color: var(--blue-dark); min-width: 50px; text-align: center; }
 
         .page-jump-row {
             display: flex;
@@ -240,7 +234,7 @@
         }
         .page-jump-row button {
             padding: 5px 12px;
-            background: var(--purple);
+            background: var(--blue);
             color: white;
             border: none;
             border-radius: 8px;
@@ -261,8 +255,8 @@
             font-weight: 600;
         }
         .mode-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-        .mode-badge.editor { background: var(--purple); color: white; }
-        .mode-badge.reader { background: var(--gray-mid); color: white; }
+        .mode-badge.editor { background: var(--blue); color: white; }
+        .mode-badge.reader { background: var(--text-muted); color: white; }
         .btn-toggle-mode {
             background: none; border: none; font-size: 18px;
             cursor: pointer; padding: 4px; border-radius: 8px; transition: background 0.15s;
@@ -273,10 +267,10 @@
 
         .cuaderno-header-bar {
             margin-bottom: 20px;
-            border-left: 6px solid var(--purple);
+            border-left: 6px solid var(--yellow);
             padding-left: 14px;
         }
-        .cuaderno-header-bar h1 { font-size: 22px; font-weight: 700; color: var(--purple-dark); margin-bottom: 2px; }
+        .cuaderno-header-bar h1 { font-size: 22px; font-weight: 700; color: var(--blue-dark); margin-bottom: 2px; }
         .cuaderno-header-bar p { font-size: 13px; color: var(--text-muted); }
 
         .hoja-card {
@@ -289,7 +283,7 @@
         .editor-field { margin-bottom: 16px; }
         .editor-field label {
             display: block; font-size: 11px; font-weight: 800;
-            color: var(--purple-dark); margin-bottom: 6px;
+            color: var(--blue-dark); margin-bottom: 6px;
             text-transform: uppercase; letter-spacing: 0.04em;
         }
         .editor-field input, .editor-field textarea {
@@ -299,7 +293,7 @@
             transition: border-color 0.2s; background: white; color: var(--text);
         }
         .editor-field input:focus, .editor-field textarea:focus {
-            outline: none; border-color: var(--purple);
+            outline: none; border-color: var(--yellow);
         }
         .editor-row { display: flex; gap: 14px; margin-bottom: 16px; }
         .editor-row .editor-field { flex: 1; margin-bottom: 0; }
@@ -307,33 +301,66 @@
         .lineas-counter { font-size: 12px; text-align: right; margin-top: 5px; color: var(--text-muted); }
         .lineas-counter.warning { color: #d97706; }
         .lineas-counter.danger { color: var(--red); font-weight: 700; }
-
         .words-counter { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-
         .editor-actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+
+        /* COLOR GRID */
+        .color-category-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 10px 4px 4px;
+        }
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .color-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        .color-option:hover { border-color: var(--yellow); background: var(--yellow-light); }
+        .color-option.selected { border-color: var(--blue); background: var(--blue-light); }
+        .color-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+        .color-name { font-size: 12px; font-weight: 600; color: var(--text); }
+        .color-hex { font-size: 10px; color: var(--text-muted); font-family: monospace; }
     </style>
 </head>
 <body>
 
 <header class="app-header">
     <div class="header-left">
-        <a href="../estudios.html" class="back-link">←</a>
-        <div class="logo">
-            <span class="logo-icon">📓</span>
-            <span class="logo-text">Cuadernos Digitales</span>
-        </div>
+        <a href="/conect-charme/index.html" class="back-link">←</a>
+        <a href="/conect-charme/index.html" class="logo">
+            <img src="../../assets/favicon.png" alt="Conect-Charme">
+            <span class="logo-text">Cuadernos</span>
+        </a>
     </div>
     <div class="header-right">
+        <div class="avatar" id="avatarBtn"></div>
         <button class="btn-primary" id="btnNuevoCuaderno">+ Crear cuaderno</button>
     </div>
 </header>
 
 <div class="app-body">
 
-    <!-- ========== SIDEBAR ========== -->
     <aside class="sidebar" id="sidebar">
-
-        <!-- NAV -->
         <nav class="sidebar-nav">
             <button class="nav-item active" id="btnVerLista">
                 <span class="nav-icon">📓</span>
@@ -341,7 +368,6 @@
             </button>
         </nav>
 
-        <!-- ===== VISTA LISTA: buscador ===== -->
         <div id="seccionBusqueda">
             <div class="sidebar-section-title">Buscar hojas</div>
             <div class="sidebar-section-inner">
@@ -361,10 +387,7 @@
             </div>
         </div>
 
-        <!-- ===== VISTA EDITOR/LECTOR ===== -->
         <div id="seccionEditor" style="display:none;">
-
-            <!-- Modo -->
             <div class="mode-toggle-row">
                 <span>Modo:</span>
                 <div style="display:flex;align-items:center;gap:8px;">
@@ -373,7 +396,6 @@
                 </div>
             </div>
 
-            <!-- Navegación -->
             <div class="sidebar-section-title">Navegación</div>
             <div class="nav-page-btns">
                 <button id="btnPrimera" title="Primera">⏮</button>
@@ -388,7 +410,6 @@
                 <button id="btnSaltar">Ir</button>
             </div>
 
-            <!-- Herramientas de formato (solo en editor) -->
             <div id="seccionFormato">
                 <div class="sidebar-section-title">Formato de texto</div>
                 <div class="sidebar-section-inner">
@@ -404,7 +425,7 @@
                     </button>
                     <button class="tool-btn" data-fmt="- ">
                         <span class="tool-icon">•</span>
-                        <span>Viñeta / lista</span>
+                        <span>Viñeta</span>
                         <span class="tool-shortcut">- </span>
                     </button>
                     <button class="tool-btn" data-fmt-wrap="**">
@@ -425,13 +446,11 @@
                 </div>
             </div>
 
-            <!-- Tabla de contenidos -->
             <div class="sidebar-section-title">Tabla de contenidos</div>
             <div class="sidebar-section-inner">
                 <div id="tocContainer" style="max-height:200px; overflow-y:auto;"></div>
             </div>
 
-            <!-- Estadísticas -->
             <div class="sidebar-section-title">Estadísticas</div>
             <div class="stats-grid" id="statsGrid">
                 <div class="stat-box"><div class="stat-num" id="statHojas">0</div><div class="stat-label">Hojas</div></div>
@@ -439,15 +458,10 @@
                 <div class="stat-box"><div class="stat-num" id="statPalabras">0</div><div class="stat-label">Palabras</div></div>
                 <div class="stat-box"><div class="stat-num" id="statFecha">—</div><div class="stat-label">Últ. edición</div></div>
             </div>
-
         </div>
-
     </aside>
 
-    <!-- ========== MAIN ========== -->
     <main class="main-content" id="mainContent">
-
-        <!-- Vista lista -->
         <div id="vistaLista">
             <div class="page-header">
                 <h1>Mis cuadernos</h1>
@@ -456,16 +470,13 @@
             <div class="card-grid" id="gridCuadernos"></div>
         </div>
 
-        <!-- Vista editor/lector -->
         <div id="vistaEditor" style="display:none;">
             <div class="cuaderno-header-bar" id="cuadernoHeaderBar"></div>
             <div id="hojaContenido"></div>
         </div>
-
     </main>
 </div>
 
-<!-- Modal selector de color -->
 <div class="modal-overlay" id="modalColor">
     <div class="modal-box" style="max-width:560px; max-height:80vh; overflow-y:auto;">
         <div class="modal-header">
@@ -479,17 +490,27 @@
     </div>
 </div>
 
-<!-- Autosave indicator -->
 <div id="autoSaveIndicator">✅ Guardado automáticamente</div>
+<div id="toast" class="toast"></div>
 
+<script src="../../js/github.js"></script>
+<script src="../../js/auth.js"></script>
 <script>
+/* ============================================================
+   AUTH
+============================================================ */
+const sesion = Auth.requiereLogin();
+if (!sesion) throw new Error('Sin sesión');
+document.getElementById('avatarBtn').textContent = sesion.nombre.charAt(0).toUpperCase();
+
 /* ============================================================
    ESTADO Y CONSTANTES
 ============================================================ */
-const STORAGE_KEY = 'cuadernos_data';
+const DATA_PATH = `datos/usuarios/${sesion.rut}/cuadernos.json`;
 const MAX_LINEAS = 32;
 
 let cuadernos = [];
+let dataSha = null;
 let idxCuaderno = null;
 let idxHoja = 0;
 let modoLector = false;
@@ -499,23 +520,49 @@ let autoSaveTimer = null;
    COLORES
 ============================================================ */
 const COLORES = {
-    "🌸 Rosas":     [{ n:"Baby Pink",    h:"#FADADD" },{ n:"Blush",       h:"#F9C6C9" },{ n:"Pastel Red",  h:"#FF6961" },{ n:"Salmon",     h:"#FFA6C9" }],
-    "💜 Morados":   [{ n:"Lavender",     h:"#E6E6FA" },{ n:"Thistle",     h:"#D8BFD8" },{ n:"Pastel Púrp", h:"#CBAACB" },{ n:"Mauve",      h:"#E0B0FF" }],
-    "💙 Azules":    [{ n:"Baby Blue",    h:"#AEEEEE" },{ n:"Powder Blue", h:"#B0E0E6" },{ n:"Periwinkle",  h:"#CCCCFF" },{ n:"Ice Blue",   h:"#D6F5FF" }],
-    "💚 Verdes":    [{ n:"Mint",         h:"#98FF98" },{ n:"Tea Green",   h:"#D0F0C0" },{ n:"Celadon",     h:"#ACE1AF" },{ n:"Pistachio",  h:"#77DD77" }],
-    "💛 Amarillos": [{ n:"Lemon",        h:"#FFFACD" },{ n:"Champagne",   h:"#F7E7CE" },{ n:"Apricot",     h:"#FBCEB1" },{ n:"Pale Gold",  h:"#E6BE8A" }],
-    "🧡 Naranjas":  [{ n:"P. Orange",    h:"#FFD8B1" },{ n:"Melon",       h:"#FFE5B4" },{ n:"Peach",       h:"#FFCBA4" },{ n:"Desert Sand",h:"#EDC9AF" }]
+    "🌸 Rosas":     [{ n:"Baby Pink",    h:"#FADADD" },{ n:"Blush",       h:"#F9C6C9" },{ n:"Pastel Red",  h:"#FF6961" },{ n:"Salmon",      h:"#FFA6C9" }],
+    "💜 Morados":   [{ n:"Lavender",     h:"#E6E6FA" },{ n:"Thistle",     h:"#D8BFD8" },{ n:"Pastel Púrp", h:"#CBAACB" },{ n:"Mauve",       h:"#E0B0FF" }],
+    "💙 Azules":    [{ n:"Baby Blue",    h:"#AEEEEE" },{ n:"Powder Blue", h:"#B0E0E6" },{ n:"Periwinkle",  h:"#CCCCFF" },{ n:"Ice Blue",    h:"#D6F5FF" }],
+    "💚 Verdes":    [{ n:"Mint",         h:"#98FF98" },{ n:"Tea Green",   h:"#D0F0C0" },{ n:"Celadon",     h:"#ACE1AF" },{ n:"Pistachio",   h:"#77DD77" }],
+    "💛 Amarillos": [{ n:"Lemon",        h:"#FFFACD" },{ n:"Champagne",   h:"#F7E7CE" },{ n:"Apricot",     h:"#FBCEB1" },{ n:"Pale Gold",   h:"#E6BE8A" }],
+    "🧡 Naranjas":  [{ n:"P. Orange",    h:"#FFD8B1" },{ n:"Melon",       h:"#FFE5B4" },{ n:"Peach",       h:"#FFCBA4" },{ n:"Desert Sand", h:"#EDC9AF" }]
 };
 
 /* ============================================================
-   STORAGE
+   STORAGE — GITHUB
 ============================================================ */
-function cargar() {
-    const d = localStorage.getItem(STORAGE_KEY);
-    cuadernos = d ? JSON.parse(d) : [];
+async function cargar() {
+    try {
+        const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(DATA_PATH)}`);
+        if (res.ok) {
+            const d = await res.json();
+            if (d.content) {
+                cuadernos = JSON.parse(atob(d.content.replace(/\n/g, '')));
+                dataSha = d.sha;
+            }
+        }
+    } catch(e) {}
+    renderLista();
+    actualizarSelectBusqueda();
 }
-function guardar() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cuadernos));
+
+async function guardar() {
+    const body = {
+        message: `update cuadernos ${sesion.rut}`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(cuadernos, null, 2))))
+    };
+    if (dataSha) body.sha = dataSha;
+    try {
+        const res = await fetch(`https://yellow-pine-f67f.victortilleria116.workers.dev/?path=${encodeURIComponent(DATA_PATH)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (res.ok) {
+            const d = await res.json();
+            dataSha = d.content?.sha || dataSha;
+        }
+    } catch(e) {}
 }
 
 /* ============================================================
@@ -527,9 +574,7 @@ function esc(t) {
     d.textContent = t;
     return d.innerHTML;
 }
-function hoy() {
-    return new Date().toISOString().split('T')[0];
-}
+function hoy() { return new Date().toISOString().split('T')[0]; }
 function mostrarAutoSave() {
     const el = document.getElementById('autoSaveIndicator');
     el.classList.add('show');
@@ -537,7 +582,7 @@ function mostrarAutoSave() {
 }
 
 /* ============================================================
-   PARSEAR MARKDOWN SIMPLE → HTML (modo lector)
+   PARSEAR MARKDOWN SIMPLE → HTML
 ============================================================ */
 function parsearLinea(texto) {
     if (texto === undefined || texto === null) return '<span class="reader-line empty"> </span>';
@@ -548,7 +593,6 @@ function parsearLinea(texto) {
     if (t.trim() === '')      return `<span class="reader-line empty"> </span>`;
     return `<span class="reader-line">${parsearInline(t)}</span>`;
 }
-
 function parsearInline(t) {
     return esc(t)
         .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
@@ -610,7 +654,7 @@ async function crearCuaderno() {
         colorNombre: color.nombre,
         hojas: [{ titulo:'', fecha:hoy(), objetivo:'', lineas:[] }]
     });
-    guardar();
+    await guardar();
     renderLista();
     actualizarSelectBusqueda();
 }
@@ -671,7 +715,6 @@ function abrirCuaderno(idx) {
 }
 
 function volverLista() {
-    // Guardar antes de salir si estamos en editor
     if (idxCuaderno !== null && !modoLector) guardarSilencioso();
     idxCuaderno = null;
     document.getElementById('vistaLista').style.display = '';
@@ -718,20 +761,17 @@ function actualizarModoBadge() {
 function renderEditor() {
     if (idxCuaderno === null) return;
     const cuaderno = cuadernos[idxCuaderno];
-
     if (!cuaderno.hojas[idxHoja]) {
         cuaderno.hojas[idxHoja] = { titulo:'', fecha:hoy(), objetivo:'', lineas:[] };
         guardar();
     }
     const hoja = cuaderno.hojas[idxHoja];
 
-    // Header
     document.getElementById('cuadernoHeaderBar').innerHTML = `
         <h1 style="border-left-color:${cuaderno.color};">📓 ${esc(cuaderno.asignatura)}</h1>
         <p>Hoja ${idxHoja + 1} de ${cuaderno.hojas.length}</p>
     `;
 
-    // Navegador
     document.getElementById('paginaInfo').textContent = `${idxHoja + 1} / ${cuaderno.hojas.length}`;
     document.getElementById('saltarA').max = cuaderno.hojas.length;
     document.getElementById('saltarA').value = idxHoja + 1;
@@ -741,7 +781,6 @@ function renderEditor() {
     document.getElementById('btnUltima').disabled = idxHoja === cuaderno.hojas.length - 1;
 
     renderTOC();
-
     if (modoLector) renderLector(cuaderno, hoja);
     else renderFormEditor(cuaderno, hoja);
 }
@@ -788,17 +827,12 @@ function renderFormEditor(cuaderno, hoja) {
     `;
 
     const ta = document.getElementById('inLineas');
-    ta.addEventListener('input', () => {
-        actualizarContador();
-        programarAutoSave();
-    });
+    ta.addEventListener('input', () => { actualizarContador(); programarAutoSave(); });
     ta.addEventListener('keydown', manejarAtajos);
-
     document.getElementById('btnGuardar').addEventListener('click', guardarHoja);
     document.getElementById('btnNuevaHoja').addEventListener('click', () => nuevaHoja());
     document.getElementById('btnEliminarHoja').addEventListener('click', eliminarHoja);
 
-    // Botones de formato del sidebar
     document.querySelectorAll('.tool-btn[data-fmt]').forEach(btn => {
         btn.onclick = () => insertarPrefijo(btn.dataset.fmt);
     });
@@ -837,15 +871,12 @@ function renderTOC() {
     const cuaderno = cuadernos[idxCuaderno];
     const container = document.getElementById('tocContainer');
     if (!container) return;
-
     if (cuaderno.hojas.length === 0) {
         container.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px;">Sin hojas aún</div>';
         return;
     }
-
     container.innerHTML = cuaderno.hojas.map((h, i) => {
-        const cls = i === idxHoja ? 'toc-item' + (h.titulo ? '' : ' sin-titulo') + '; background:var(--purple-light);color:var(--purple-dark);' : '';
-        const style = i === idxHoja ? 'background:var(--purple-light);color:var(--purple-dark);' : '';
+        const style = i === idxHoja ? 'background:var(--yellow-light);color:var(--yellow-dark);' : '';
         return `<button class="toc-item${!h.titulo ? ' sin-titulo' : ''}" style="${style}" onclick="saltarHoja(${i + 1})">
             <span class="toc-item-num">${i + 1}.</span>${h.titulo ? esc(h.titulo) : 'Sin título'}
         </button>`;
@@ -890,7 +921,7 @@ function leerCampos() {
 function guardarSilencioso() {
     if (idxCuaderno === null || modoLector) return;
     const campos = leerCampos();
-    if (!campos.titulo && campos.lineas.every(l => !l.trim())) return; // hoja vacía, no guardar
+    if (!campos.titulo && campos.lineas.every(l => !l.trim())) return;
     const hoja = cuadernos[idxCuaderno].hojas[idxHoja];
     hoja.titulo = campos.titulo;
     hoja.fecha = campos.fecha;
@@ -913,7 +944,6 @@ function guardarHoja() {
     const campos = leerCampos();
     if (!campos.titulo) { alert('⚠️ El título es obligatorio'); return; }
     if (!campos.fecha) { alert('⚠️ La fecha es obligatoria'); return; }
-
     const hoja = cuadernos[idxCuaderno].hojas[idxHoja];
     hoja.titulo = campos.titulo;
     hoja.fecha = campos.fecha;
@@ -923,7 +953,6 @@ function guardarHoja() {
     actualizarStats();
     renderTOC();
     mostrarAutoSave();
-
     const lineasReales = campos.lineas.filter(l => l.trim()).length;
     if (lineasReales >= MAX_LINEAS) {
         if (confirm(`✨ ¡Llegaste al máximo de ${MAX_LINEAS} líneas!\n¿Crear nueva hoja automáticamente?`)) {
@@ -936,7 +965,6 @@ function guardarHoja() {
    NUEVA HOJA / ELIMINAR HOJA
 ============================================================ */
 function nuevaHoja() {
-    // Guardar la hoja actual primero
     guardarSilencioso();
     const cuaderno = cuadernos[idxCuaderno];
     cuaderno.hojas.push({ titulo:'', fecha:hoy(), objetivo:'', lineas:[] });
@@ -984,15 +1012,13 @@ function saltarHoja(n) {
 }
 
 /* ============================================================
-   FORMATO: insertar en textarea
+   FORMATO
 ============================================================ */
 function insertarPrefijo(prefijo) {
     const ta = document.getElementById('inLineas');
     if (!ta) return;
     const start = ta.selectionStart;
-    const end = ta.selectionEnd;
     const val = ta.value;
-    // Encontrar inicio de línea
     const lineStart = val.lastIndexOf('\n', start - 1) + 1;
     ta.value = val.slice(0, lineStart) + prefijo + val.slice(lineStart);
     ta.selectionStart = ta.selectionEnd = lineStart + prefijo.length + (start - lineStart);
@@ -1015,9 +1041,6 @@ function envolverSeleccion(marca) {
     programarAutoSave();
 }
 
-/* ============================================================
-   ATAJOS DE TECLADO EN TEXTAREA
-============================================================ */
 function manejarAtajos(e) {
     if (e.ctrlKey || e.metaKey) {
         if (e.key === 's') { e.preventDefault(); guardarHoja(); }
@@ -1040,9 +1063,7 @@ function actualizarContador() {
         counter.textContent = `${n} / ${MAX_LINEAS} líneas`;
         counter.className = 'lineas-counter' + (n >= MAX_LINEAS ? ' danger' : n >= MAX_LINEAS * 0.8 ? ' warning' : '');
     }
-    if (wCounter) {
-        wCounter.textContent = `${contarPalabras(ta.value)} palabras`;
-    }
+    if (wCounter) wCounter.textContent = `${contarPalabras(ta.value)} palabras`;
 }
 
 /* ============================================================
@@ -1059,26 +1080,21 @@ function realizarBusqueda() {
     const fecha = document.getElementById('buscarFecha').value;
     const titulo = document.getElementById('buscarTitulo').value.toLowerCase().trim();
     const div = document.getElementById('resultadosBusqueda');
-
     if (selIdx === '') { alert('⚠️ Debes elegir un cuaderno'); return; }
     if (!fecha && !titulo) { alert('⚠️ Indica al menos una fecha o un título'); return; }
-
     const cIdx = parseInt(selIdx);
     const cuaderno = cuadernos[cIdx];
     const resultados = [];
-
     cuaderno.hojas.forEach((h, hIdx) => {
         let ok = true;
         if (fecha && h.fecha !== fecha) ok = false;
         if (titulo && !(h.titulo || '').toLowerCase().includes(titulo)) ok = false;
         if (ok) resultados.push({ hIdx, titulo: h.titulo || 'Sin título', fecha: h.fecha || '—' });
     });
-
     if (resultados.length === 0) {
         div.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px;text-align:center;">Sin resultados</div>';
         return;
     }
-
     div.innerHTML = resultados.map(r => `
         <div class="search-result-item" onclick="irAResultado(${cIdx}, ${r.hIdx})">
             <strong>${esc(r.titulo)}</strong>
@@ -1113,7 +1129,6 @@ document.getElementById('btnVerLista').addEventListener('click', e => { e.preven
 document.getElementById('btnCerrarColor').addEventListener('click', cerrarModalColor);
 document.getElementById('btnCancelarColor').addEventListener('click', cerrarModalColor);
 document.getElementById('modalColor').addEventListener('click', e => { if (e.target === document.getElementById('modalColor')) cerrarModalColor(); });
-
 document.getElementById('btnPrimera').addEventListener('click', () => saltarHoja(1));
 document.getElementById('btnAnterior').addEventListener('click', () => cambiarHoja(-1));
 document.getElementById('btnSiguiente').addEventListener('click', () => cambiarHoja(1));
@@ -1125,16 +1140,12 @@ document.getElementById('btnSaltar').addEventListener('click', () => {
 document.getElementById('btnToggleModo').addEventListener('click', toggleModo);
 document.getElementById('btnBuscar').addEventListener('click', realizarBusqueda);
 document.getElementById('btnLimpiarBusqueda').addEventListener('click', limpiarBusqueda);
-
-// Guardar al salir/cambiar de página
 window.addEventListener('beforeunload', () => { if (!modoLector) guardarSilencioso(); });
 
 /* ============================================================
    INICIO
 ============================================================ */
 cargar();
-renderLista();
-actualizarSelectBusqueda();
 </script>
 </body>
 </html>
