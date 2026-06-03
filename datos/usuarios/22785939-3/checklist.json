@@ -5,7 +5,7 @@
       "id": "mpxb8cs0bdea2gg9t2s",
       "texto": "Disertacion de ingles",
       "completada": false,
-      "prioridad": null,
+      "prioridad": 2,
       "fecha": "2026-06-03",
       "listaId": null,
       "creadoEl": "2026-06-03T00:10:17.904Z"
