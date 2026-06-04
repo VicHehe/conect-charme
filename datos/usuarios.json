@@ -28,6 +28,13 @@
       "rol": "alumno",
       "password": "c86f813a4de1d47ec72ed3936cb126992bcc7ed4b432d3c3ea2b59ad8f270cee",
       "fechaRegistro": "2026-06-03T16:27:15.753Z"
+    },
+    {
+      "rut": "23038451-7",
+      "nombre": "Lushianin",
+      "rol": "alumno",
+      "password": "9c455715389b675edfd4f7f3ff079ff830c54cf9f3711ecbb5ade25fe3417c77",
+      "fechaRegistro": "2026-06-04T17:03:24.532Z"
     }
   ],
   "ruts_autorizados": [
