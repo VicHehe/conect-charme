@@ -50,6 +50,11 @@
       "rut": "18722587-6",
       "nombre": "Matias Alcaino",
       "rol": "profesor"
+    },
+    {
+      "rut": "23038451-7",
+      "nombre": "Luciano Navarro",
+      "rol": "alumno"
     }
   ]
 }
